@@ -98,6 +98,12 @@ how it will actually look before you send it.
 - macOS builds are signed and notarized with an Apple Developer ID, so they open without warnings.
 - Windows builds aren't code-signed yet, so **SmartScreen shows a warning** —
   choose **More info → Run anyway** and it installs.
+  - **If there is no "Run anyway" at all**, that PC has **Smart App Control** turned on. It blocks
+    unsigned apps with no per-app exception. Check under **Settings → Privacy & security →
+    Windows Security → App & browser control**; it is only on by default on **clean installs** of
+    Windows 11 (not on upgraded PCs or Windows 10).
+  - Execution is also blocked if **Reputation-based protection → Check apps and files** is set to
+    **Block** on that same screen. Switching it to **Warn** lets you through.
 - No account, no sign-in. Every feature is free to use today.
 
 ## Your first sixty seconds
