@@ -9,9 +9,9 @@
 생각을 트리로 적어 내려가면, 그대로 마크다운이 됩니다.
 
 [![최신 버전](https://img.shields.io/github/v/release/mcnorton/thinkdown?label=최신%20버전&color=2563eb)](https://github.com/mcnorton/thinkdown/releases/latest)
-![플랫폼](https://img.shields.io/badge/macOS-Apple_Silicon-000)
+![플랫폼](https://img.shields.io/badge/macOS_·_Windows_·_Linux-000)
 
-**[⬇︎ macOS용 내려받기](https://github.com/mcnorton/thinkdown/releases/latest)** · [English](README.en.md)
+**[⬇︎ 내려받기](https://github.com/mcnorton/thinkdown/releases/latest)** · [English](README.en.md)
 
 </div>
 
@@ -74,7 +74,7 @@ Thinkdown은 **옮겨 적는 단계를 없앱니다.** 맵이 곧 문서입니�
 | ↩️ **되돌리기 / 다시실행** | `⌘Z` · `⇧⌘Z`. 연속으로 친 글자는 한 단계로 묶입니다. |
 | 🌗 **라이트 · 다크** | 시스템 설정을 따라가거나 직접 고릅니다. 브랜치별 컬러테마도 켤 수 있습니다. |
 | 💾 **파일로 오갑니다** | `.md` 가져오기 / 내보내기, 전체 문서를 `.zip`으로 백업하고 복구합니다. |
-| 🔄 **알아서 최신** | Apple 공증을 마친 앱이라 새 버전이 나오면 조용히 받아 두고 재시작할 때 적용됩니다. |
+| 🔄 **알아서 최신** | 새 버전이 나오면 조용히 받아 두고 재시작할 때 적용됩니다. macOS · Windows · Linux 모두 됩니다. |
 
 ![다크 모드 — 오른쪽은 렌더링된 미리보기](assets/screenshot-dark.png)
 
@@ -83,14 +83,21 @@ Thinkdown은 **옮겨 적는 단계를 없앱니다.** 맵이 곧 문서입니�
 
 ## 내려받기
 
-**[⬇︎ 최신 버전 내려받기 (.dmg)](https://github.com/mcnorton/thinkdown/releases/latest)**
+**[⬇︎ 최신 릴리스에서 내 운영체제용 파일 받기](https://github.com/mcnorton/thinkdown/releases/latest)**
 
-- **macOS 11 이상 · Apple Silicon(M1 이상)** 용 빌드입니다. Windows · Linux는 준비 중입니다.
-- Apple Developer ID로 서명·공증되어 있어 경고 없이 바로 열립니다.
-- 계정을 만들 필요도, 로그인할 필요도 없습니다. 받아서 바로 씁니다.
-- 현재 모든 기능을 무료로 쓸 수 있습니다.
+| 운영체제 | 받을 파일 | 설치 |
+|---|---|---|
+| **macOS** — Apple Silicon(M1 이상) | `Thinkdown-<버전>-arm64.dmg` | 열어서 **Thinkdown**을 응용 프로그램 폴더로 드래그 |
+| **macOS** — Intel | `Thinkdown-<버전>-x64.dmg` | 위와 같습니다 |
+| **Windows** 10 · 11 (64비트) | `Thinkdown-Setup-<버전>.exe` | 실행하면 설치됩니다(관리자 권한 필요 없음) |
+| **Linux** (64비트) | `Thinkdown-<버전>.AppImage` 또는 `.deb` | AppImage는 `chmod +x` 후 실행, deb는 `sudo dpkg -i` |
 
-설치는 DMG를 열어 **Thinkdown**을 응용 프로그램 폴더로 끌어다 놓으면 끝입니다.
+- 내 Mac의 칩은 **Apple 메뉴 → 이 Mac에 관하여**에서 볼 수 있습니다. "Apple M…"이면 arm64,
+  "Intel"이면 x64입니다.
+- macOS 빌드는 Apple Developer ID로 서명·공증되어 있어 경고 없이 바로 열립니다.
+- Windows 빌드는 아직 코드서명 전이라 **SmartScreen 경고**가 뜹니다 —
+  **추가 정보 → 실행**을 누르면 설치됩니다.
+- 계정을 만들 필요도, 로그인할 필요도 없습니다. 현재 모든 기능을 무료로 쓸 수 있습니다.
 
 ## 처음 60초
 
@@ -208,9 +215,10 @@ Thinkdown은 **옮겨 적는 단계를 없앱니다.** 맵이 곧 문서입니�
 
 ## 이 저장소에 대해
 
-Thinkdown의 소스 코드는 비공개 저장소에서 관리되고, 여기에는 서명·공증된 **릴리스 자산(DMG / zip)과
-자동 업데이트 피드**가 게시됩니다. 앱이 새 버전을 확인할 때 보는 곳도 여기입니다.
-버전별 변경 내용은 [릴리스 목록](https://github.com/mcnorton/thinkdown/releases)에 정리돼 있습니다.
+Thinkdown의 소스 코드는 비공개 저장소에서 관리되고, 여기에는 서명·공증된 **릴리스 자산(DMG / zip /
+exe / AppImage / deb)과 자동 업데이트 피드**가 게시됩니다. 앱이 새 버전을 확인할 때 보는 곳도
+여기입니다. 버전별 변경 내용은 [릴리스 목록](https://github.com/mcnorton/thinkdown/releases)에
+정리돼 있습니다.
 
 ---
 

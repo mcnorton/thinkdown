@@ -9,9 +9,9 @@
 Write your thinking down as a tree — it is already Markdown.
 
 [![Latest release](https://img.shields.io/github/v/release/mcnorton/thinkdown?label=latest&color=2563eb)](https://github.com/mcnorton/thinkdown/releases/latest)
-![Platform](https://img.shields.io/badge/macOS-Apple_Silicon-000)
+![Platform](https://img.shields.io/badge/macOS_·_Windows_·_Linux-000)
 
-**[⬇︎ Download for macOS](https://github.com/mcnorton/thinkdown/releases/latest)** · [한국어](README.md)
+**[⬇︎ Download](https://github.com/mcnorton/thinkdown/releases/latest)** · [한국어](README.md)
 
 </div>
 
@@ -75,7 +75,7 @@ follow it. Handy when you only need one slice of a long document.
 | ↩️ **Undo / redo** | `⌘Z` and `⇧⌘Z`. A run of typing collapses into a single step. |
 | 🌗 **Light and dark** | Follow the system or pick one. An optional colour theme tints each branch. |
 | 💾 **Files in, files out** | Import and export `.md`, back up everything to a `.zip` and restore it. |
-| 🔄 **Stays current** | The app is notarized by Apple and picks up new versions quietly, applying them on the next restart. |
+| 🔄 **Stays current** | New versions download quietly and apply on the next restart — on macOS, Windows, and Linux alike. |
 
 ![Dark mode, with the rendered preview on the right](assets/screenshot-dark.png)
 
@@ -84,14 +84,21 @@ how it will actually look before you send it.
 
 ## Download
 
-**[⬇︎ Download the latest release (.dmg)](https://github.com/mcnorton/thinkdown/releases/latest)**
+**[⬇︎ Grab the file for your OS from the latest release](https://github.com/mcnorton/thinkdown/releases/latest)**
 
-- Built for **macOS 11+ on Apple Silicon (M1 or newer)**. Windows and Linux are on the way.
-- Signed and notarized with an Apple Developer ID, so it opens without warnings.
-- No account, no sign-in. Download it and start.
-- Every feature is free to use today.
+| OS | File | Install |
+|---|---|---|
+| **macOS** — Apple Silicon (M1 or newer) | `Thinkdown-<version>-arm64.dmg` | Open it and drag **Thinkdown** into Applications |
+| **macOS** — Intel | `Thinkdown-<version>-x64.dmg` | Same as above |
+| **Windows** 10 / 11 (64-bit) | `Thinkdown-Setup-<version>.exe` | Run it — no administrator rights needed |
+| **Linux** (64-bit) | `Thinkdown-<version>.AppImage` or `.deb` | `chmod +x` the AppImage, or `sudo dpkg -i` the deb |
 
-To install, open the DMG and drag **Thinkdown** into your Applications folder.
+- Not sure which Mac you have? **Apple menu → About This Mac**. "Apple M…" means arm64,
+  "Intel" means x64.
+- macOS builds are signed and notarized with an Apple Developer ID, so they open without warnings.
+- Windows builds aren't code-signed yet, so **SmartScreen shows a warning** —
+  choose **More info → Run anyway** and it installs.
+- No account, no sign-in. Every feature is free to use today.
 
 ## Your first sixty seconds
 
@@ -213,9 +220,9 @@ You can take everything with you at any point via `.zip` backup or `.md` export.
 
 ## About this repository
 
-Thinkdown's source lives in a private repository. What's published here are the signed and
-notarized **release assets (DMG / zip) and the auto-update feed** — the same place the app
-checks when it looks for a new version. Per-version changes are listed under
+Thinkdown's source lives in a private repository. What's published here are the release assets
+(DMG / zip / exe / AppImage / deb) and the auto-update feed — the same place the app checks when
+it looks for a new version. Per-version changes are listed under
 [releases](https://github.com/mcnorton/thinkdown/releases).
 
 ---
