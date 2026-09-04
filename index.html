@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thinkdown — 생각을 적어 내려가면, 문서가 됩니다</title>
+<meta name="description" content="떠오르는 대로 가지에 적으면, 그게 그대로 문서가 됩니다. 옮겨 적을 필요가 없어요. 가입 없이, 내 컴퓨터에 저장됩니다. macOS · Windows · Linux.">
+<link rel="icon" href="assets/icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Thinkdown — 생각을 적어 내려가면, 문서가 됩니다">
+<meta property="og:description" content="좋은 초안 하나면 절반은 끝난 겁니다. 옮겨 적는 일 없이, 적은 그대로 문서가 됩니다.">
+<meta property="og:image" content="assets/screenshot-light.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- 한글 타이포그래피. 동적 서브셋이라 필요한 글자 범위만 받는다. CDN이 죽어도
+     아래 폰트 스택이 시스템 폰트로 받아낸다. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<!-- 앱이 쓰는 팔레트 그대로. scripts/build-site.sh가 src/renderer/styles/에서 복사한다. -->
+<link rel="stylesheet" href="styles/light.css">
+<link rel="stylesheet" href="styles/dark.css">
+<script>
+  (function () {
+    // 앱의 theme.js와 같은 방식: dark.css가 :root[data-theme="dark"]를 정의하므로
+    // OS 설정을 읽어 <html>에 stamp 한다. 사이트에는 토글이 없고 시스템만 따른다.
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var apply = function () {
+      document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+    };
+    apply(); mq.addEventListener('change', apply);
+
+    // 언어: 저장된 선택 > 브라우저 언어 > 한국어. data-lang 을 HTML에 미리 박아 두어
+    // 스크립트가 안 돌아도 한국어가 보이고, 두 언어 모두 마크업에 있어 크롤러가 읽는다.
+    var saved = null;
+    try { saved = localStorage.getItem('thinkdown.site.lang'); } catch (e) {}
+    var lang = saved || (/^ko\b/i.test(navigator.language || '') ? 'ko' : 'en');
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+  })();
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  :root {
+    --spring: cubic-bezier(.16, 1, .3, 1);
+    --shell: min(1120px, 100% - 48px);
+  }
+
+  body {
+    margin: 0;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+                 'Apple SD Gothic Neo', 'Segoe UI', system-ui, sans-serif;
+    font-size: 17px; line-height: 1.75;
+    font-feature-settings: 'ss01';
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;              /* 한글은 단어 중간에서 끊지 않는다 */
+    overflow-x: hidden;
+  }
+  code, pre, .mono, .num {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 화면 전체에 얹는 아주 옅은 그레인. 완전히 평평한 면에서 오는 '만들다 만' 느낌을
+     없앤다. fixed + pointer-events:none 이라 스크롤 비용이 없다. */
+  body::after {
+    content: ''; position: fixed; inset: 0; z-index: 60; pointer-events: none;
+    opacity: .028;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  :root[data-theme="dark"] body::after { opacity: .05; }
+
+  /* 언어 전환: 두 언어를 모두 마크업에 두고 CSS로 고른다 */
+  html[data-lang="ko"] .en, html[data-lang="en"] .ko { display: none !important; }
+
+  .shell { width: var(--shell); margin-inline: auto; }
+  /* 상단 바가 sticky(60px)라 #download·#pricing 으로 뛰면 제목이 그 밑에 가린다. */
+  section[id], header[id] { scroll-margin-top: 78px; }
+  section { padding: clamp(84px, 9vw, 132px) 0; }
+  h1, h2, h3 { margin: 0; line-height: 1.26; letter-spacing: -0.025em; text-wrap: balance; }
+  h2 { font-size: clamp(28px, 3.8vw, 44px); font-weight: 700; }
+  h3 { font-size: 18px; font-weight: 600; }
+  p { margin: 0; }
+  a { color: hsl(var(--link)); }
+  .lede { margin-top: 18px; max-width: 58ch; font-size: 19px; color: hsl(var(--muted-foreground)); }
+  .kicker {
+    font-size: 12.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    color: hsl(var(--node-heading-border));
+  }
+
+  /* 아이콘 — 이모지 대신 인라인 SVG 스프라이트. 외부 의존 없음. */
+  .i { width: 20px; height: 20px; stroke: currentColor; fill: none;
+       stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ── 스크롤 리빌 ─────────────────────────────────────────────────── */
+  .rise { opacity: 0; transform: translateY(18px); }
+  .rise.seen {
+    opacity: 1; transform: none;
+    transition: opacity .7s var(--spring), transform .7s var(--spring);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+  @media (prefers-reduced-motion: reduce) { .rise { opacity: 1; transform: none; } }
+
+  /* ── 상단 바 ─────────────────────────────────────────────────────── */
+  .nav { position: sticky; top: 0; z-index: 40;
+         background: hsl(var(--background) / .82); backdrop-filter: blur(14px) saturate(160%);
+         border-bottom: 1px solid transparent; transition: border-color .25s; }
+  .nav.stuck { border-bottom-color: hsl(var(--border)); }
+  .nav > div { display: flex; align-items: center; gap: 14px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 650; letter-spacing: -.02em; }
+  .brand img { width: 25px; height: 25px; border-radius: 7px; }
+  .grow { flex: 1; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    border: 1px solid transparent; border-radius: var(--radius);
+    background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+    font: inherit; font-weight: 620; text-decoration: none;
+    padding: 15px 28px; font-size: 16.5px;
+    box-shadow: 0 1px 2px hsl(var(--foreground) / .10), 0 8px 24px hsl(var(--foreground) / .10);
+    transition: transform .4s var(--spring), box-shadow .4s var(--spring), opacity .2s;
+  }
+  .btn:hover { transform: translateY(-2px) scale(1.015); box-shadow: 0 2px 4px hsl(var(--foreground) / .12), 0 16px 34px hsl(var(--foreground) / .16); }
+  .btn:active { transform: scale(.98); transition-duration: .08s; }
+  .btn .i { width: 18px; height: 18px; transition: transform .35s var(--spring); }
+  .btn:hover .i { transform: translateY(2px); }
+  .btn.sm { padding: 8px 16px; font-size: 14px; border-radius: calc(var(--radius) - 2px); box-shadow: none; }
+  .btn.sm:hover { transform: none; box-shadow: 0 4px 14px hsl(var(--foreground) / .12); }
+  .ghost {
+    padding: 8px 14px; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px);
+    background: transparent; color: hsl(var(--muted-foreground));
+    font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; white-space: nowrap;
+    transition: background .25s, color .25s, border-color .25s;
+  }
+  .ghost:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); border-color: hsl(var(--node-border)); }
+
+  /* ── 히어로 (split) ──────────────────────────────────────────────── */
+  .hero { position: relative; padding: clamp(38px, 5vw, 72px) 0 clamp(56px, 6vw, 84px); }
+  /* 히어로 뒤 앰비언트 — 단색 배경의 밋밋함만 덜어내는 정도로 아주 옅게. */
+  .hero::before {
+    content: ''; position: absolute; inset: -120px 0 auto; height: 620px; z-index: -1;
+    background:
+      radial-gradient(680px 340px at 78% 8%, hsl(var(--node-heading-border) / .16), transparent 70%),
+      radial-gradient(520px 300px at 12% 0%, hsl(var(--kind-list) / .09), transparent 72%);
+    pointer-events: none;
+  }
+  .hero-grid { display: grid; gap: 40px; align-items: center; grid-template-columns: 1fr; }
+  @media (min-width: 1000px) { .hero-grid { grid-template-columns: minmax(380px, .82fr) 1.18fr; gap: 52px; } }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px 6px 10px;
+    border: 1px solid hsl(var(--border)); border-radius: 999px;
+    background: hsl(var(--card));
+    font-size: 13px; font-weight: 550; color: hsl(var(--muted-foreground));
+  }
+  .eyebrow .i { width: 15px; height: 15px; color: hsl(var(--node-heading-border)); }
+  .hero h1 { margin-top: 20px; font-size: clamp(33px, 4.3vw, 52px); font-weight: 750; }
+  .hero h1 .accent { color: hsl(var(--node-heading-border)); }
+  .hero .sub { margin-top: 20px; max-width: 44ch; font-size: 17.5px; color: hsl(var(--muted-foreground)); }
+  .hero-cta { margin-top: 30px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+  .hero-note { margin-top: 13px; font-size: 13.5px; color: hsl(var(--muted-foreground)); }
+  .hero-note a { color: inherit; }
+
+  /* 신뢰 한 줄 — 지어낸 지표 대신 검증 가능한 사실만 */
+  .facts { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 8px 20px;
+           font-size: 13.5px; color: hsl(var(--muted-foreground)); }
+  .facts span { display: inline-flex; align-items: center; gap: 6px; }
+  .facts .i { width: 15px; height: 15px; color: hsl(var(--node-heading-border)); }
+
+  /* ── 데모 ────────────────────────────────────────────────────────── */
+  .tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .tab {
+    padding: 7px 15px; border: 1px solid hsl(var(--border)); border-radius: 999px;
+    background: hsl(var(--card)); color: hsl(var(--muted-foreground));
+    font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+    transition: all .3s var(--spring);
+  }
+  .tab:hover { color: hsl(var(--foreground)); }
+  .tab[aria-selected="true"] {
+    background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
+  }
+
+  /* 맵이 주인공이라 첫 줄을 통째로 쓴다 — 좁으면 셋 다 세로로 쌓인다. */
+  .demo { display: grid; gap: 12px; grid-template-columns: 1fr; }
+  @media (min-width: 620px) {
+    .demo { grid-template-columns: 1fr 1fr; }
+    .pane.map { grid-column: 1 / -1; }
+  }
+
+  .pane {
+    display: flex; flex-direction: column; min-height: 244px;
+    border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 1.7);
+    background: hsl(var(--card)); overflow: hidden;
+    box-shadow: 0 1px 2px hsl(var(--foreground) / .05), 0 18px 40px -22px hsl(var(--foreground) / .28);
+  }
+  /* 맵은 패널 안에서 세로 가운데 — 트리가 위로 쏠려 보이지 않게. */
+  .pane.map .pane-bd { padding: 20px 16px; display: flex; align-items: center; }
+  .pane.map .dmap { width: 100%; }
+  .pane-hd {
+    display: flex; align-items: center; gap: 8px; padding: 10px 15px;
+    border-bottom: 1px solid hsl(var(--border));
+    font-size: 12px; font-weight: 620; letter-spacing: .03em; color: hsl(var(--muted-foreground));
+  }
+  .pane-bd { flex: 1; padding: 16px; }
+
+  /* 앱과 같은 구조: 루트가 왼쪽에 하나, 깊이만큼 오른쪽으로 벌어지고,
+     형제는 세로로 쌓이며, 부모→자식은 베지어 곡선으로 잇는다. */
+  .dmap {
+    position: relative; display: grid; align-items: center; gap: 9px 26px;
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1fr) minmax(0, 1.34fr);
+  }
+  @media (min-width: 620px) { .dmap { gap: 11px 40px; } }
+  .dedges {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    overflow: visible; pointer-events: none; color: hsl(var(--node-border));
+  }
+  .dedges path {
+    /* linecap 을 round 로 두면 아직 안 그려진 선이 점 하나로 남는다 — butt 유지. */
+    fill: none; stroke: currentColor; stroke-width: 1.5;
+    stroke-dashoffset: var(--len); transition: stroke-dashoffset .45s ease;
+  }
+  .dedges path.on { stroke-dashoffset: 0; }
+  .dnode {
+    position: relative; z-index: 1; justify-self: start; max-width: 100%;
+    padding: 5px 11px; font-size: 12.5px; line-height: 1.45;
+    border: 1px solid hsl(var(--node-border)); border-radius: calc(var(--radius) - 3px);
+    background: hsl(var(--node)); color: hsl(var(--node-foreground));
+    opacity: 0; transform: translateX(-7px) scale(.96);
+    transition: opacity .3s var(--spring), transform .3s var(--spring), box-shadow .3s;
+  }
+  @media (min-width: 620px) { .dnode { font-size: 13px; padding: 6px 12px; } }
+  .dnode.on { opacity: 1; transform: none; }
+  .dnode.root {
+    background: hsl(var(--node-heading)); border-color: hsl(var(--node-heading-border));
+    border-left: 3px solid hsl(var(--node-heading-border)); font-weight: 660;
+  }
+  .dnode.h { background: hsl(var(--node-heading)); border-color: hsl(var(--node-heading-border));
+             border-left: 3px solid hsl(var(--node-heading-border)); font-weight: 620; }
+  .dnode.l  { border-left: 3px solid hsl(var(--kind-list)); }
+  .dnode.tb { border-left: 3px solid hsl(var(--kind-table)); }
+  .dnode.lift { box-shadow: 0 10px 26px hsl(var(--foreground) / .22);
+                outline: 2px solid hsl(var(--node-heading-border)); }
+
+  .dcode {
+    margin: 0; height: 100%; padding: 16px; overflow: hidden;
+    font-size: 12.5px; line-height: 1.72; white-space: pre-wrap;
+    color: hsl(var(--node-code-foreground)); background: hsl(var(--node-code));
+  }
+  .dcode .caret { display: inline-block; width: 7px; height: 1em; vertical-align: -2px;
+                  background: currentColor; opacity: .7; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .copy-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 11px; border: 1px solid hsl(var(--border)); border-radius: 7px;
+    background: hsl(var(--background)); font: inherit; font-size: 11.5px; font-weight: 620;
+    color: hsl(var(--muted-foreground)); transition: all .3s var(--spring);
+  }
+  .copy-btn .i { width: 13px; height: 13px; }
+  .copy-btn.hit { background: hsl(var(--node-heading-border)); border-color: hsl(var(--node-heading-border));
+                  color: hsl(var(--primary-foreground)); transform: scale(1.06); }
+
+  /* AI 패널 — 특정 서비스를 흉내내지 않는 중립 표현 */
+  .dai { display: flex; flex-direction: column; gap: 9px; font-size: 13px; }
+  .bubble {
+    padding: 11px 13px; border-radius: 13px; border: 1px solid hsl(var(--border));
+    background: hsl(var(--secondary));
+    opacity: 0; transform: translateY(8px); transition: opacity .4s var(--spring), transform .4s var(--spring);
+  }
+  .bubble.on { opacity: 1; transform: none; }
+  .bubble.me { align-self: flex-end; max-width: 94%; }
+  .bubble .snip {
+    display: block; font-size: 11px; line-height: 1.55; opacity: .78; white-space: pre-wrap;
+    max-height: 5.4em; overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
+  }
+  .dots { display: inline-flex; gap: 4px; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: hsl(var(--muted-foreground));
+            animation: bob 1.1s infinite ease-in-out; }
+  .dots i:nth-child(2) { animation-delay: .16s; }
+  .dots i:nth-child(3) { animation-delay: .32s; }
+  /* 붙여넣기 전 AI 패널이 8초쯤 빈 상자로 남는다 — 비어 있는 게 아니라 '기다리는 중'으로
+     읽히도록 입력줄 모양의 쉬는 상태를 둔다. 말풍선이 오면 사라진다. */
+  .dai .idle {
+    margin-top: auto; display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px; border-radius: 11px;
+    border: 1px dashed hsl(var(--border)); color: hsl(var(--muted-foreground));
+    font-size: 12px; transition: opacity .4s var(--spring);
+  }
+  .dai .idle .i { width: 14px; height: 14px; }
+  .dai.filled .idle { opacity: 0; }
+  @keyframes bob { 0%,70%,100% { opacity: .26; transform: translateY(0); } 35% { opacity: 1; transform: translateY(-3px); } }
+  .demo-cap { margin-top: 13px; font-size: 13.5px; color: hsl(var(--muted-foreground)); }
+
+  /* ── 대비 밴드 (채팅창 vs 트리) ──────────────────────────────────── */
+  .band {
+    background: linear-gradient(hsl(var(--kind-list) / .055), hsl(var(--kind-list) / .02)),
+                hsl(var(--secondary) / .42);
+    border-block: 1px solid hsl(var(--border) / .7);
+  }
+  :root[data-theme="dark"] .band {
+    background: linear-gradient(hsl(var(--kind-list) / .035), transparent),
+                hsl(var(--secondary) / .5);
+  }
+  .vs { display: grid; gap: 18px; margin-top: 38px; grid-template-columns: 1fr; }
+  @media (min-width: 800px) { .vs { grid-template-columns: 1fr 1fr; gap: 22px; } }
+  .vs-col { padding: 26px; border-radius: calc(var(--radius) * 1.6); border: 1px solid hsl(var(--border)); background: hsl(var(--background)); }
+  .vs-col.good { border-color: hsl(var(--node-heading-border)); box-shadow: 0 18px 44px -26px hsl(var(--node-heading-border) / .7); }
+  .vs-col h3 { display: flex; align-items: center; gap: 8px; font-size: 15.5px; }
+  .vs-col.bad h3 { color: hsl(var(--muted-foreground)); }
+  .vs-col.good h3 { color: hsl(var(--node-heading-border)); }
+  .vs-list { margin: 16px 0 0; padding: 0; list-style: none; }
+  .vs-list li { position: relative; padding-left: 22px; margin-top: 11px; font-size: 15px; color: hsl(var(--muted-foreground)); }
+  .vs-list li::before {
+    content: ''; position: absolute; left: 4px; top: .68em; width: 8px; height: 1.5px;
+    background: currentColor; opacity: .5;
+  }
+  .vs-col.good .vs-list li { color: hsl(var(--foreground)); }
+  .vs-col.good .vs-list li::before { width: 8px; height: 8px; top: .48em; left: 3px; border-radius: 50%;
+    background: hsl(var(--node-heading-border)); opacity: 1; }
+
+  /* ── zig-zag 장면 ────────────────────────────────────────────────── */
+  .scene { display: grid; gap: 30px; align-items: center; grid-template-columns: 1fr; }
+  .scene + .scene { margin-top: 76px; }
+  @media (min-width: 880px) {
+    .scene { grid-template-columns: 1fr 1.06fr; gap: 60px; }
+    .scene.flip .scene-txt { order: 2; }
+  }
+  .scene-txt h2 { font-size: clamp(22px, 2.6vw, 29px); }
+  .scene-txt .lede { font-size: 16px; }
+  .scene-art {
+    padding: 28px; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 1.7);
+    background: hsl(var(--card)); min-height: 208px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 18px 44px -30px hsl(var(--foreground) / .5);
+  }
+
+  .s1 { width: 100%; max-width: 320px; font-size: 14px; }
+  .s1 .row { display: flex; align-items: center; gap: 9px; margin-top: 9px; }
+  .s1 .row:first-child { margin-top: 0; }
+  .s1 .mark { width: 30px; font-size: 12px; font-weight: 700; color: hsl(var(--muted-foreground)); position: relative; }
+  .s1 .box { flex: 1; padding: 5px 12px; border-radius: calc(var(--radius) - 2px);
+             border: 1px solid hsl(var(--node-border)); background: hsl(var(--node)); }
+  .s1 .box.h { background: hsl(var(--node-heading)); border-color: hsl(var(--node-heading-border)); font-weight: 620; }
+  .s1 .move { transition: transform .8s var(--spring); }
+  .in .s1 .move { animation: s1move 5s infinite; }
+  @keyframes s1move { 0%,18% { transform: translateX(0); } 32%,68% { transform: translateX(26px); } 82%,100% { transform: translateX(0); } }
+  .s1 .mark .b { position: absolute; inset: 0; opacity: 0; }
+  .in .s1 .mark.swap .a { animation: s1a 5s infinite; }
+  .in .s1 .mark.swap .b { animation: s1b 5s infinite; }
+  @keyframes s1a { 0%,22% { opacity: 1; } 30%,70% { opacity: 0; } 78%,100% { opacity: 1; } }
+  @keyframes s1b { 0%,22% { opacity: 0; } 30%,70% { opacity: 1; } 78%,100% { opacity: 0; } }
+
+  .s3 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 390px; font-size: 13px; }
+  .s3 .ch { padding: 6px 11px; margin-top: 7px; border-radius: calc(var(--radius) - 2px);
+            border: 1px solid hsl(var(--node-border)); background: hsl(var(--node)); }
+  .s3 .ch:first-child { margin-top: 0; }
+  .s3 .ch.sub { margin-left: 14px; font-size: 12px; color: hsl(var(--muted-foreground)); }
+  .in .s3 .dim { animation: s3dim 6s infinite; }
+  @keyframes s3dim { 0%,20% { opacity: 1; } 34%,86% { opacity: .2; } 100% { opacity: 1; } }
+  .in .s3 .pick { animation: s3pick 6s infinite; }
+  @keyframes s3pick {
+    0%,20% { border-color: hsl(var(--node-border)); background: hsl(var(--node)); }
+    34%,86% { border-color: hsl(var(--node-heading-border)); background: hsl(var(--node-heading)); }
+    100% { border-color: hsl(var(--node-border)); background: hsl(var(--node)); } }
+  .s3 .out { padding: 12px; border-radius: calc(var(--radius) - 2px);
+             background: hsl(var(--node-code)); color: hsl(var(--node-code-foreground));
+             font-size: 11.5px; line-height: 1.7; white-space: pre-wrap; }
+  .in .s3 .out .all { animation: s3out 6s infinite; }
+  @keyframes s3out { 0%,26% { opacity: 1; } 40%,86% { opacity: .16; } 100% { opacity: 1; } }
+
+  .s2 { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; max-width: 350px; }
+  .s2 .chip { padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+              border: 1px solid hsl(var(--node-border)); border-left: 3px solid var(--c);
+              background: hsl(var(--node)); color: hsl(var(--muted-foreground)); }
+  .in .s2 .chip { animation: s2pulse 8s infinite; }
+  @keyframes s2pulse {
+    0%,100% { color: hsl(var(--muted-foreground)); background: hsl(var(--node)); transform: none; }
+    6% { color: hsl(var(--foreground)); background: hsl(var(--secondary)); transform: translateY(-3px); }
+    14% { color: hsl(var(--muted-foreground)); background: hsl(var(--node)); transform: none; } }
+
+  /* ── 프라이버시 (스테이트먼트) ───────────────────────────────────── */
+  .statement { text-align: center; }
+  .statement h2 { font-size: clamp(27px, 4vw, 44px); max-width: 20ch; margin-inline: auto; }
+  .statement .lede { margin-inline: auto; text-align: center; }
+  .pillars { display: grid; gap: 18px; margin-top: 44px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); text-align: left; }
+  .pillar { padding: 26px; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 1.4);
+            background: hsl(var(--card)); }
+  .pillar .i { width: 22px; height: 22px; color: hsl(var(--node-heading-border)); }
+  .pillar h3 { margin-top: 12px; }
+  .pillar p { margin-top: 7px; font-size: 14.5px; color: hsl(var(--muted-foreground)); }
+
+  /* ── 스크린샷 (테마별 1장만) ────────────────────────────────────── */
+  .shot { display: block; width: 100%; height: auto;
+          border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 2); }
+  .shot-dark { display: none; }
+  :root[data-theme="dark"] .shot-light { display: none; }
+  :root[data-theme="dark"] .shot-dark  { display: block; }
+
+  /* ── 근거 인용 ──────────────────────────────────────────────────── */
+
+  /* ── FAQ ────────────────────────────────────────────────────────── */
+  .faq {
+    margin-top: 34px; border: 1px solid hsl(var(--border));
+    border-radius: calc(var(--radius) * 1.4); background: hsl(var(--card)); overflow: hidden;
+  }
+  .faq details + details { border-top: 1px solid hsl(var(--border)); }
+  .faq summary {
+    display: flex; align-items: flex-start; gap: 14px; padding: 17px 20px; cursor: pointer;
+    font-size: 15.5px; font-weight: 600; line-height: 1.5; list-style: none;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: '+'; margin-left: auto; padding-left: 10px; font-size: 20px; font-weight: 400;
+    line-height: 1.2; color: hsl(var(--muted-foreground)); transition: transform .18s ease;
+  }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq summary:hover { background: hsl(var(--muted) / .55); }
+  .faq .a {
+    padding: 0 20px 18px; max-width: 74ch;
+    font-size: 14.5px; line-height: 1.78; color: hsl(var(--muted-foreground));
+  }
+  .faq .a code { font-size: .92em; }
+
+  /* ── 벤토 (그 밖에) ─────────────────────────────────────────────── */
+  /* ── 3단계 스트립 ─────────────────────────────────────────────────
+     번호는 CSS 카운터에서 나온다 — 언어와 무관하므로 .ko/.en 짝이 필요 없다. */
+  .steps { display: grid; gap: 18px; margin-top: 46px; grid-template-columns: 1fr;
+           counter-reset: step; text-align: left; }
+  @media (min-width: 820px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 26px; } }
+  .step { position: relative; padding: 30px 26px 28px;
+          border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 1.6);
+          background: hsl(var(--card)); }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 999px;
+    background: hsl(var(--node-heading)); color: hsl(var(--node-heading-border));
+    border: 1px solid hsl(var(--node-heading-border));
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;
+  }
+  .step h3 { margin-top: 16px; font-size: 19px; }
+  .step p  { margin-top: 9px; font-size: 15px; color: hsl(var(--muted-foreground)); }
+  /* 칸 사이를 잇는 점선 — 가로로 늘어설 때만, 첫 칸 앞에는 그리지 않는다 */
+  @media (min-width: 820px) {
+    .step + .step::after { content: ''; position: absolute; left: -26px; top: 47px;
+      width: 26px; border-top: 1px dashed hsl(var(--border)); }
+  }
+
+  /* ── 시나리오 카드 ────────────────────────────────────────────────
+     --c 는 카드마다 인라인으로 넣는다(.s2 .chip 과 같은 방식). */
+  .cases { display: grid; gap: 16px; margin-top: 44px; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .cases { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+  .case {
+    display: flex; flex-direction: column; padding: 26px 24px;
+    border: 1px solid hsl(var(--border));
+    border-left: 3px solid var(--c, hsl(var(--node-heading-border)));
+    border-radius: calc(var(--radius) * 1.6);
+    background: hsl(var(--card));
+    transition: transform .4s var(--spring), border-color .3s;
+  }
+  .case:hover { transform: translateY(-3px); }
+  .case .who { font-size: 12.5px; font-weight: 650; letter-spacing: .05em;
+               color: var(--c, hsl(var(--node-heading-border))); }
+  .case h3 { margin-top: 10px; font-size: 18.5px; }
+  .case p  { margin-top: 10px; font-size: 15px; color: hsl(var(--muted-foreground)); }
+
+  /* ── 언젠가 만들 것 ───────────────────────────────────────────────
+     점선 테두리 + 투명 배경이 이 페이지에서 "아직 없음"의 표기법이다(.dai .idle 과 같다). */
+  section.quiet { padding-top: 0; }
+  .quiet h2 { font-size: clamp(20px, 2.2vw, 26px); }
+  .someday { display: grid; gap: 12px; margin-top: 26px; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .someday { grid-template-columns: repeat(3, 1fr); } }
+  .someday .item {
+    padding: 18px 20px; background: transparent;
+    border: 1px dashed hsl(var(--border)); border-radius: calc(var(--radius) * 1.3);
+    font-size: 14.5px; color: hsl(var(--muted-foreground));
+  }
+  .someday .item strong { display: block; margin-bottom: 5px;
+    font-size: 15px; font-weight: 620; color: hsl(var(--foreground)); }
+
+  .bento { display: grid; gap: 14px; margin-top: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 700px)  { .bento { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .bento { grid-template-columns: repeat(6, 1fr); } }
+  .cell { padding: 24px; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 1.5);
+          background: hsl(var(--card)); transition: transform .4s var(--spring), border-color .3s; }
+  .cell:hover { transform: translateY(-3px); border-color: hsl(var(--node-border)); }
+  .cell .i { width: 21px; height: 21px; color: hsl(var(--node-heading-border)); }
+  .cell h3 { margin-top: 13px; }
+  .cell p { margin-top: 8px; font-size: 14.5px; color: hsl(var(--muted-foreground)); }
+  @media (min-width: 1000px) {
+    .cell.w3 { grid-column: span 3; } .cell.w2 { grid-column: span 2; } .cell.w4 { grid-column: span 4; }
+  }
+  .cell.lead p { font-size: 15.5px; }
+
+  /* ── 가격 ────────────────────────────────────────────────────────── */
+  .free-now {
+    display: grid; gap: 22px; align-items: center; grid-template-columns: 1fr;
+    margin-top: 32px; padding: 34px 30px; border-radius: calc(var(--radius) * 1.8);
+    border: 1px solid hsl(var(--node-heading-border)); background: hsl(var(--node-heading));
+    color: hsl(var(--node-foreground));
+    box-shadow: 0 24px 60px -34px hsl(var(--node-heading-border));
+  }
+  @media (min-width: 780px) { .free-now { grid-template-columns: 1.2fr 1fr; } }
+  .free-now .big { font-size: clamp(23px, 3vw, 31px); font-weight: 720; letter-spacing: -.025em; }
+  .free-now p { margin-top: 10px; font-size: 15px; opacity: .82; }
+  .tiers { display: grid; gap: 14px; margin-top: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .tier { padding: 22px; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) * 1.4); background: hsl(var(--card)); }
+  .tier .price { margin-top: 5px; font-size: 25px; font-weight: 730; letter-spacing: -.03em; }
+  .tier .price small { font-size: 13px; font-weight: 500; color: hsl(var(--muted-foreground)); }
+  .tier p { margin-top: 9px; font-size: 14px; color: hsl(var(--muted-foreground)); }
+  .tier.pick { border-color: hsl(var(--primary) / .5); box-shadow: 0 0 0 1px hsl(var(--primary) / .22); }
+  .tier .badge {
+    display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 650; letter-spacing: .02em; vertical-align: 2px;
+    background: hsl(var(--primary) / .12); color: hsl(var(--primary));
+  }
+
+  .callout {
+    margin-top: 22px; padding: 16px 20px; border: 1px solid hsl(var(--border));
+    border-left: 3px solid hsl(var(--kind-quote)); border-radius: var(--radius);
+    font-size: 14.5px; color: hsl(var(--muted-foreground));
+  }
+
+  /* ── 내려받기 ────────────────────────────────────────────────────── */
+  .dl { margin-top: 34px; display: grid; gap: 11px; }
+  .dl-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+            padding: 16px 20px; border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) * 1.3); background: hsl(var(--card));
+            transition: border-color .3s, transform .4s var(--spring); }
+  .dl-row:hover { border-color: hsl(var(--node-border)); transform: translateX(3px); }
+  .dl-row .os { font-weight: 620; min-width: 180px; }
+  .dl-row .hint { flex: 1 1 230px; font-size: 13.5px; color: hsl(var(--muted-foreground)); }
+  .dl-row a.file {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 15px; border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px);
+    color: hsl(var(--foreground)); font-size: 13.5px; font-weight: 620; text-decoration: none;
+    white-space: nowrap; transition: background .25s, transform .3s var(--spring);
+  }
+  .dl-row a.file:hover { background: hsl(var(--secondary)); transform: translateY(-1px); }
+  .dl-row a.file .i { width: 15px; height: 15px; }
+
+  footer { padding: 36px 0 56px; border-top: 1px solid hsl(var(--border));
+           font-size: 13.5px; color: hsl(var(--muted-foreground));
+           display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; }
+
+  @media (max-width: 390px) { .nav .btn.sm { display: none; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></symbol>
+  <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M3 3l18 18M8.5 15.5a5 5 0 0 1 7 0M5 12a10 10 0 0 1 4-2.5M19 12a10 10 0 0 0-7-2.9M12 19h.01"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 11h.01M11 11h.01M15 11h.01M7 14h10"/></symbol>
+  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-6.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8z"/></symbol>
+  <symbol id="i-tree" viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="4" rx="1"/><rect x="14" y="10" width="7" height="4" rx="1"/><rect x="14" y="17" width="7" height="4" rx="1"/><path d="M6.5 8v9.5a1.5 1.5 0 0 0 1.5 1.5h6M8 12h6"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 13h6l-1 8 8-10h-6z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 13h4"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L20 8a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M14 6l4 4"/></symbol>
+  <symbol id="i-present" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="11" rx="2"/><path d="M12 15v5M8 21l4-2 4 2"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+</defs></svg>
+
+<nav class="nav" id="nav"><div class="shell">
+  <span class="brand"><img src="assets/icon.png" width="256" height="256" alt=""> Thinkdown</span>
+  <span class="grow"></span>
+  <button class="ghost" id="lang-btn" type="button"></button>
+  <a class="btn sm" href="#download"><span class="ko">내려받기</span><span class="en">Download</span></a>
+</div></nav>
+
+<main>
+
+<!-- ══ 히어로 (split: 왼쪽 카피 · 오른쪽 라이브 데모) ══════════════════ -->
+<header class="hero">
+  <div class="shell hero-grid">
+    <div class="rise">
+      <span class="eyebrow"><svg class="i"><use href="#i-spark"/></svg>
+        <span class="ko">생각을 정리하는 가장 쉬운 방법</span>
+        <span class="en">The simplest way to sort out your thinking</span></span>
+
+      <h1>
+        <span class="ko">좋은 초안 하나면<br><span class="accent">절반은 끝난 겁니다</span></span>
+        <span class="en">A good first draft<br><span class="accent">is already half the work</span></span>
+      </h1>
+
+      <p class="sub">
+        <span class="ko"><strong>From think it down to mark it down.</strong>
+          떠오르는 대로 가지에 적어 보세요. 다 적고 나면 그게 그대로 문서가 되어 있습니다.
+          무엇부터 쓸지 정하지 않아도 괜찮아요. 순서는 나중에 잡으면 됩니다.</span>
+        <span class="en"><strong>From think it down to mark it down.</strong>
+          Jot things onto branches as they come. When you're done, they're already a finished document.
+          You don't have to know what comes first — the order can wait.</span>
+      </p>
+
+      <div class="hero-cta">
+        <a class="btn" id="dl-main" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i"><use href="#i-down"/></svg>
+          <span class="ko">내려받기</span><span class="en">Download</span>
+        </a>
+      </div>
+      <p class="hero-note" id="dl-note">macOS · Windows · Linux</p>
+
+      <!-- 지어낸 지표 대신 확인 가능한 사실만 둔다 -->
+      <div class="facts">
+        <span><svg class="i"><use href="#i-check"/></svg>
+          <span class="ko">가입 없음</span><span class="en">No sign-up</span></span>
+        <span><svg class="i"><use href="#i-check"/></svg>
+          <span class="ko">내 컴퓨터에 저장</span><span class="en">Stored on your machine</span></span>
+        <span><svg class="i"><use href="#i-check"/></svg>
+          <span class="ko">인터넷 없어도 됨</span><span class="en">Works offline</span></span>
+      </div>
+    </div>
+
+    <div class="rise" style="--i:1">
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="demo" id="demo" aria-hidden="true">
+        <div class="pane map">
+          <div class="pane-hd"><svg class="i" style="width:14px;height:14px"><use href="#i-tree"/></svg>
+            <span class="ko">맵</span><span class="en">Map</span></div>
+          <div class="pane-bd">
+            <div class="dmap" id="dmap"><svg class="dedges" id="dedges" aria-hidden="true"></svg></div>
+          </div>
+        </div>
+        <div class="pane">
+          <div class="pane-hd">
+            <svg class="i" style="width:14px;height:14px"><use href="#i-file"/></svg>
+            <span class="ko">마크다운</span><span class="en">Markdown</span>
+            <span class="grow"></span>
+            <button class="copy-btn" id="copy-btn" type="button" tabindex="-1">
+              <svg class="i"><use href="#i-copy"/></svg>
+              <span class="ko">복사</span><span class="en">Copy</span></button>
+          </div>
+          <pre class="dcode" id="dcode"></pre>
+        </div>
+        <div class="pane ai">
+          <div class="pane-hd"><svg class="i" style="width:14px;height:14px"><use href="#i-chat"/></svg> AI</div>
+          <div class="pane-bd dai">
+            <div class="bubble me" id="b1"><span class="snip" id="b1-text"></span></div>
+            <div class="bubble" id="b2"><span class="dots"><i></i><i></i><i></i></span></div>
+            <div class="idle"><svg class="i"><use href="#i-copy"/></svg>
+              <span class="ko">붙여넣기를 기다리는 중</span>
+              <span class="en">Waiting for a paste</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="demo-cap" id="demo-cap"></p>
+    </div>
+  </div>
+</header>
+
+<!-- ══ 이렇게 씁니다 — 3단계 ═════════════════════════════════════════ -->
+<section class="band">
+  <div class="shell statement">
+    <p class="kicker rise"><span class="ko">이렇게 씁니다</span><span class="en">How it goes</span></p>
+    <h2 class="rise" style="--i:1;margin-top:10px">
+      <span class="ko">세 걸음이면 됩니다</span>
+      <span class="en">Three steps, that's all</span></h2>
+    <p class="lede rise" style="--i:2">
+      <span class="ko">그리는 일과 문서로 옮기는 일을 따로 하지 않습니다. 하나를 하면 다른 하나가
+        같이 됩니다.</span>
+      <span class="en">Drawing it and writing it aren't two jobs here. Do the one and the other
+        is already done.</span></p>
+
+    <div class="steps">
+      <div class="step rise">
+        <h3><span class="ko">떠오르는 대로 쏟아냅니다</span><span class="en">Get it all out</span></h3>
+        <p><span class="ko">머릿속에 있는 걸 순서 없이 그냥 적어요. 맞는지 틀린지는 나중에 봐도 됩니다.</span>
+          <span class="en">Write whatever's in your head, in any order. Right or wrong can wait.</span></p>
+      </div>
+      <div class="step rise" style="--i:1">
+        <h3><span class="ko">가지를 끌어다 정리합니다</span><span class="en">Drag it into shape</span></h3>
+        <p><span class="ko">비슷한 것끼리 모으면 됩니다. 가지를 옮기면 제목 순서도 알아서 따라옵니다.</span>
+          <span class="en">Pull like together with like. Move a branch and the outline moves with it.</span></p>
+      </div>
+      <div class="step rise" style="--i:2">
+        <h3><span class="ko">문서는 이미 다 되어 있습니다</span><span class="en">It's already written</span></h3>
+        <p><span class="ko">오른쪽에 문서가 계속 만들어지고 있었어요. <strong>[복사]</strong> 한 번이면
+          어디든 붙여넣습니다.</span>
+          <span class="en">The document has been building on the right the whole time. One
+          <strong>[Copy]</strong> and it goes anywhere.</span></p>
+      </div>
+    </div>
+
+    <p class="callout rise" style="text-align:left">
+      <span class="ko">옮겨 적는 일이 없습니다. 그림 따로, 문서 따로 만들지 않아도 돼요.</span>
+      <span class="en">Nothing to copy out afterwards — you're not making a picture and a document
+        separately.</span></p>
+  </div>
+</section>
+
+<!-- ══ 날아가기 전에 — 빠른 기록 ═════════════════════════════════════ -->
+<section class="shell">
+  <p class="kicker rise"><span class="ko">빠른 기록</span><span class="en">Catching it</span></p>
+  <h2 class="rise" style="--i:1;margin-top:10px">
+    <span class="ko">아이디어는 금방 사라집니다</span>
+    <span class="en">Ideas don't wait around</span></h2>
+  <p class="lede rise" style="--i:2">
+    <span class="ko">좋은 생각일수록 오래 머물지 않아요. 떠오른 그 순간에 적을 수 있어야 남습니다.
+      그래서 손이 멈추지 않게 만들었습니다.</span>
+    <span class="en">The best ideas stay the shortest time. They only survive if you can write them
+      the second they arrive — so nothing here makes you stop and think about the tool.</span></p>
+
+  <div class="pillars">
+    <div class="pillar rise" style="--i:1">
+      <svg class="i"><use href="#i-bolt"/></svg>
+      <h3><span class="ko">키보드만으로 쭉쭉</span><span class="en">Just the keyboard</span></h3>
+      <p><span class="ko"><code>Tab</code>을 누르면 아래로, <code>Enter</code>를 누르면 옆으로 가지가
+        생깁니다. 마우스를 잡을 일이 없어요.</span>
+        <span class="en"><code>Tab</code> grows a branch below, <code>Enter</code> grows one alongside.
+        You never reach for the mouse.</span></p>
+    </div>
+    <div class="pillar rise" style="--i:2">
+      <svg class="i"><use href="#i-tree"/></svg>
+      <h3><span class="ko">그다음은 마우스로 편하게</span><span class="en">Then just drag</span></h3>
+      <p><span class="ko">다 적은 뒤엔 끌어다 놓기만 하면 됩니다. 다른 가지 위에 놓으면 그 아래로
+        쏙 들어가요.</span>
+        <span class="en">Once it's down, just drag. Drop a branch onto another and it tucks
+        underneath.</span></p>
+    </div>
+    <div class="pillar rise" style="--i:3">
+      <svg class="i"><use href="#i-pen"/></svg>
+      <h3><span class="ko">기호 하나면 모양이 바뀝니다</span><span class="en">One character, new shape</span></h3>
+      <p><span class="ko"><code>-</code>를 치면 목록이 되고, <code>1.</code>을 치면 번호가,
+        <code>&gt;</code>를 치면 인용이 됩니다. 주소를 붙여넣으면 링크 카드가 돼요.</span>
+        <span class="en">Type <code>-</code> for a bullet, <code>1.</code> for numbering,
+        <code>&gt;</code> for a quote. Paste a web address and it becomes a link card.</span></p>
+    </div>
+  </div>
+
+  <p class="callout rise">
+    <span class="ko">잘라내도 사라지지 않습니다. <code>⌘X</code>로 집어 든 가지는 원래 자리에 흐리게
+      남아 있다가, 놓는 순간에만 옮겨집니다. 실수로 날릴 일이 없어요.</span>
+    <span class="en">Cutting never loses anything. A branch you pick up with <code>⌘X</code> stays
+      faded in place until you drop it somewhere — so nothing disappears by accident.</span></p>
+</section>
+
+<!-- ══ 인공지능과 — 주도권 갖기 ══════════════════════════════════════ -->
+<section class="band">
+  <div class="shell">
+    <p class="kicker rise"><span class="ko">인공지능과</span><span class="en">With AI</span></p>
+    <h2 class="rise" style="--i:1;margin-top:10px">
+      <span class="ko">생각까지 맡기지는 마세요</span>
+      <span class="en">Don't hand over the thinking too</span></h2>
+    <p class="lede rise" style="--i:2">
+      <span class="ko">인공지능은 정리를 참 잘합니다. 그런데 <strong>무엇을 원하는지 말하는 일</strong>은
+        여전히 내 몫이에요. 여기가 흐릿하면, 똑똑한 인공지능일수록 엉뚱한 쪽으로 더 잘 달려갑니다.</span>
+      <span class="en">AI is very good at tidying up. But <strong>saying what you actually want</strong>
+        is still your job. Leave that blurry and a smarter model just runs further in the wrong
+        direction.</span></p>
+
+    <div class="vs">
+      <div class="vs-col bad rise" style="--i:1">
+        <h3><svg class="i"><use href="#i-chat"/></svg>
+          <span class="ko">바로 채팅창에 칠 때</span><span class="en">Straight into the chat box</span></h3>
+        <ul class="vs-list">
+          <li><span class="ko">한 덩어리라서 어디를 고쳐야 할지 안 보여요.</span>
+            <span class="en">One slab of text — you can't see what to fix.</span></li>
+          <li><span class="ko">순서를 바꾸려다 앞뒤가 뒤죽박죽이 됩니다.</span>
+            <span class="en">Reordering scrambles what came before and after.</span></li>
+          <li><span class="ko">어제 잘 됐던 말이 대화 기록 속으로 사라집니다.</span>
+            <span class="en">Yesterday's good wording is lost somewhere in the history.</span></li>
+        </ul>
+      </div>
+      <div class="vs-col good rise" style="--i:2">
+        <h3><svg class="i"><use href="#i-tree"/></svg>
+          <span class="ko">먼저 정리하고 건넬 때</span><span class="en">Sorted out first</span></h3>
+        <ul class="vs-list">
+          <li><span class="ko"><strong>고칠 자리가 눈에 보입니다.</strong></span>
+            <span class="en"><strong>You can see what to fix.</strong></span></li>
+          <li><span class="ko"><strong>덩어리째 옮겨도 안 망가집니다.</strong></span>
+            <span class="en"><strong>Move a whole block and nothing breaks.</strong></span></li>
+          <li><span class="ko"><strong>다음에도 또 꺼내 씁니다.</strong> 대화가 아니라 문서로 남으니까요.</span>
+            <span class="en"><strong>You use it again</strong> — it stays a document, not chat history.</span></li>
+          <li><span class="ko"><strong>다시 시키는 일이 줄어듭니다.</strong></span>
+            <span class="en"><strong>You end up asking again less often.</strong></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="callout rise">
+      <span class="ko">이 앱은 맵을 대신 그려주지 않습니다. 대신 그려 주는 순간, 직접 만들면서 얻는 것이
+        사라지니까요. 인공지능은 <strong>빠진 곳을 짚어 주는 자리</strong>가 어울린다고 생각합니다.</span>
+      <span class="en">This app won't draw the map for you — the moment it does, what you'd have gained
+        by building it is gone. AI belongs where it <strong>points at what's missing</strong>.</span></p>
+  </div>
+</section>
+
+<!-- ══ zig-zag 장면 ═════════════════════════════════════════════════ -->
+<section class="shell">
+  <div class="scene">
+    <div class="scene-txt rise">
+      <p class="kicker"><span class="ko">구조 편집</span><span class="en">Structural editing</span></p>
+      <h2 style="margin-top:8px"><span class="ko">생각이 바뀌면 문서도 같이 바뀝니다</span>
+        <span class="en">Change your mind, the document follows</span></h2>
+      <p class="lede"><span class="ko">가지를 옮기는 건 자리를 옮기는 게 아니라 <strong>차례를
+        고치는 것</strong>입니다. 다른 가지 위에 놓으면 그 아래로 들어가고, 제목 번호도 알아서
+        다시 매겨집니다.</span>
+        <span class="en">Moving a branch isn't moving it around on screen — it <strong>changes the
+        order</strong>. Drop it on another and it nests underneath, with the heading levels
+        renumbered for you.</span></p>
+    </div>
+    <div class="scene-art rise" style="--i:1"><div class="s1">
+      <div class="row"><span class="mark">#</span><span class="box h">
+        <span class="ko">글감 모으기</span><span class="en">Gathering material</span></span></div>
+      <div class="row move"><span class="mark swap"><span class="a">#</span><span class="b">##</span></span>
+        <span class="box h"><span class="ko">이 장면이 왜 좋았는지</span><span class="en">Why that scene stayed with me</span></span></div>
+      <div class="row"><span class="mark">#</span><span class="box">
+        <span class="ko">마무리</span><span class="en">Wrapping up</span></span></div>
+    </div></div>
+  </div>
+
+  <div class="scene flip">
+    <div class="scene-txt rise">
+      <p class="kicker"><span class="ko">부분만 꺼내기</span><span class="en">Take one part</span></p>
+      <h2 style="margin-top:8px"><span class="ko">필요한 한 조각만 꺼내 씁니다</span>
+        <span class="en">Take only the piece you need</span></h2>
+      <p class="lede"><span class="ko">전체가 아니라 <strong>지금 필요한 한 장만</strong> 미리보고
+        복사하고 내보낼 수 있어요. 가지 하나를 누르면 그 아래만 문서가 됩니다.</span>
+        <span class="en">Preview, copy or export <strong>just the chapter you need</strong>, not the
+        whole thing. Click one branch and only what's under it becomes the document.</span></p>
+    </div>
+    <div class="scene-art rise" style="--i:1"><div class="s3">
+      <div>
+        <div class="ch dim"><span class="ko">1장</span><span class="en">Ch. 1</span></div>
+        <div class="ch pick"><span class="ko">2장</span><span class="en">Ch. 2</span></div>
+        <div class="ch sub pick"><span class="ko">2-1</span><span class="en">2-1</span></div>
+        <div class="ch dim"><span class="ko">3장</span><span class="en">Ch. 3</span></div>
+      </div>
+      <div class="out"><span class="all"># <span class="ko">1장</span><span class="en">Ch. 1</span>
+</span># <span class="ko">2장</span><span class="en">Ch. 2</span>
+- <span class="ko">2-1</span><span class="en">2-1</span>
+<span class="all">
+# <span class="ko">3장</span><span class="en">Ch. 3</span></span></div>
+    </div></div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-txt rise">
+      <p class="kicker"><span class="ko">본문 9종</span><span class="en">Nine body types</span></p>
+      <h2 style="margin-top:8px"><span class="ko">표는 표로, 그림은 그림으로 들어갑니다</span>
+        <span class="en">A table stays a table, a picture stays a picture</span></h2>
+      <p class="lede"><span class="ko"><strong>표는 칸을 눌러 바로 채웁니다.</strong> 목록·번호·인용·
+        코드·그림·링크·구분선까지 아홉 가지가 각각의 가지 종류예요. 모양 맞추느라 시간 쓸 일이
+        없습니다.</span>
+        <span class="en"><strong>Fill a table in cell by cell.</strong> Bullets, numbering, quotes,
+        code, images, links and dividers — nine kinds of branch in all. No time spent on
+        formatting.</span></p>
+    </div>
+    <div class="scene-art rise" style="--i:1"><div class="s2">
+      <span class="chip" style="--c:hsl(var(--node-border))"><span class="ko">문단</span><span class="en">Paragraph</span></span>
+      <span class="chip" style="--c:hsl(var(--kind-bullet))"><span class="ko">불릿</span><span class="en">Bullet</span></span>
+      <span class="chip" style="--c:hsl(var(--kind-ordered))"><span class="ko">개요</span><span class="en">Outline</span></span>
+      <span class="chip" style="--c:hsl(var(--kind-quote))"><span class="ko">인용</span><span class="en">Quote</span></span>
+      <span class="chip" style="--c:hsl(var(--kind-code))"><span class="ko">코드</span><span class="en">Code</span></span>
+      <span class="chip" style="--c:hsl(var(--kind-table))"><span class="ko">표</span><span class="en">Table</span></span>
+      <span class="chip" style="--c:hsl(var(--kind-media))"><span class="ko">이미지</span><span class="en">Image</span></span>
+      <span class="chip" style="--c:hsl(var(--kind-hyperlink))"><span class="ko">링크</span><span class="en">Link</span></span>
+      <span class="chip" style="--c:hsl(var(--node-border))"><span class="ko">구분선</span><span class="en">Divider</span></span>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══ 실제 화면 ════════════════════════════════════════════════════ -->
+<section class="shell" style="padding-top:0">
+  <figure class="rise" style="margin:0">
+    <img class="shot shot-light" src="assets/screenshot-light.png" loading="lazy" decoding="async"
+         width="1920" height="878"
+         alt="Thinkdown 화면 — 왼쪽 문서 탐색기, 가운데 마인드맵, 오른쪽 마크다운"
+>
+    <img class="shot shot-dark" src="assets/screenshot-dark.png" loading="lazy" decoding="async"
+         width="1920" height="878"
+         alt="Thinkdown 다크 모드 — 오른쪽은 렌더링된 미리보기"
+>
+    <figcaption style="margin-top:14px;text-align:center;font-size:13.5px;color:hsl(var(--muted-foreground))">
+      <span class="ko">실제 화면입니다. 왼쪽 문서 탐색기 · 가운데 마인드맵 · 오른쪽 마크다운.</span>
+      <span class="en">The real thing: document explorer, mind map and Markdown side by side.</span>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ══ 이럴 때 씁니다 — 시나리오 ═════════════════════════════════════ -->
+<section class="band">
+  <div class="shell">
+    <p class="kicker rise"><span class="ko">이럴 때 씁니다</span><span class="en">Where it fits</span></p>
+    <h2 class="rise" style="--i:1;margin-top:10px">
+      <span class="ko">처음이 막막할 때마다</span>
+      <span class="en">Whenever the start feels heavy</span></h2>
+    <p class="lede rise" style="--i:2">
+      <span class="ko">쓰는 사람도, 쓰는 이유도 제각각입니다. 공통점은 하나예요 —
+        <strong>맨 처음 한 줄이 제일 어렵다는 것.</strong></span>
+      <span class="en">Different people, different reasons. One thing in common —
+        <strong>the very first line is the hard one.</strong></span></p>
+
+    <div class="cases">
+      <div class="case rise" style="--c:hsl(var(--kind-bullet))">
+        <span class="who"><span class="ko">인공지능과 일할 때</span><span class="en">Working with AI</span></span>
+        <h3><span class="ko">시킬 말을 미리 짜 둡니다</span><span class="en">Lay out what you'll ask</span></h3>
+        <p><span class="ko">필요할 때 꺼내 쓰면 됩니다. 잘 됐던 건 문서로 남으니까 다음에도 그대로 써요.</span>
+          <span class="en">Pull it out whenever you need it. What worked stays as a document,
+          ready for next time.</span></p>
+      </div>
+      <div class="case rise" style="--i:1;--c:hsl(var(--kind-list))">
+        <span class="who"><span class="ko">글이나 책을 쓸 때</span><span class="en">Writing something long</span></span>
+        <h3><span class="ko">장별로 모아 두고 한 장씩 꺼냅니다</span><span class="en">Keep chapters, take one</span></h3>
+        <p><span class="ko">장마다 폴더에 모아 두고 필요한 장만 꺼내 씁니다. 어디에 뭘 썼는지는
+          검색으로 바로 찾아가요.</span>
+          <span class="en">Keep chapters in folders and pull out just the one you need. Search takes you
+          straight to it.</span></p>
+      </div>
+      <div class="case rise" style="--i:2;--c:hsl(var(--kind-table))">
+        <span class="who"><span class="ko">아이디어를 모아 둘 때</span><span class="en">Collecting ideas</span></span>
+        <h3><span class="ko">초안은 지우지 말고 그냥 두세요</span><span class="en">Don't delete the rough ones</span></h3>
+        <p><span class="ko">쏟아낸 초안 안에 좋은 게 자고 있습니다. 몇 달 뒤에 열어 보면 그때는
+          안 보이던 게 보여요.</span>
+          <span class="en">There's usually something good asleep in a rough draft. Open it months later
+          and you'll see what you couldn't before.</span></p>
+      </div>
+      <div class="case rise" style="--i:3;--c:hsl(var(--kind-hyperlink))">
+        <span class="who"><span class="ko">수업이나 발표를 준비할 때</span><span class="en">Getting ready to speak</span></span>
+        <h3><span class="ko">가지 순서가 그대로 말할 순서입니다</span><span class="en">The branches are your running order</span></h3>
+        <p><span class="ko">만든 자리에서 미리보기로 바로 확인합니다. 파일로 내보냈다 다시 여는
+          절차가 없어요.</span>
+          <span class="en">Check it in preview, right where you made it. No exporting a file and
+          opening it again.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 기둥5 — 교실의 하루 (교육) ═══════════════════════════════════ -->
+<section class="shell">
+  <p class="kicker rise"><span class="ko">교실의 하루</span><span class="en">A day in class</span></p>
+  <h2 class="rise" style="--i:1;margin-top:10px">
+    <span class="ko">흰 종이 앞에서 막막했던 그 순간에</span>
+    <span class="en">For that blank-sheet moment</span></h2>
+  <p class="lede rise" style="--i:2">
+    <span class="ko">학생들은 원래 흰 종이에 그려 왔습니다. 지우고 다시 그리는 그 시간이 곧
+      생각하는 시간이었고요. 문제는 다 그린 다음이었어요. <strong>처음부터 다시 옮겨 적어야
+      했으니까요.</strong> 옮겨 적는 일만 없어져도 한 시간이 훨씬 넉넉해집니다.</span>
+    <span class="en">Students have always drawn this on paper, and the erasing and redrawing
+      <em>was</em> the thinking. The trouble came after: <strong>it all had to be copied out
+      again.</strong> Take away just the copying and one period holds far more.</span></p>
+
+  <div class="pillars">
+    <div class="pillar rise" style="--i:1">
+      <svg class="i"><use href="#i-pen"/></svg>
+      <h3><span class="ko">글쓰기 개요</span><span class="en">Planning an essay</span></h3>
+      <p><span class="ko">무엇부터 쓸지 못 정해도 시작할 수 있어요. 떠오른 문장을 가지에 얹어
+        두었다가 나중에 순서를 잡으면, <strong>그 순서가 곧 개요</strong>가 됩니다.</span>
+        <span class="en">You can start before you know what comes first. Park each sentence on a branch
+        and order them later — <strong>that ordering is the outline.</strong></span></p>
+    </div>
+    <div class="pillar rise" style="--i:2">
+      <svg class="i"><use href="#i-present"/></svg>
+      <h3><span class="ko">발표 준비</span><span class="en">Getting ready to present</span></h3>
+      <p><span class="ko">가지 순서가 그대로 말할 순서입니다. 파일로 내보냈다 다시 여는 절차가
+        없어서, <strong>만든 자리에서 바로 확인합니다.</strong></span>
+        <span class="en">The branches are the running order. There's no export-then-reopen step, so
+        <strong>you check it right where you built it.</strong></span></p>
+    </div>
+    <div class="pillar rise" style="--i:3">
+      <svg class="i"><use href="#i-layers"/></svg>
+      <h3><span class="ko">프로젝트 · 실험 계획</span><span class="en">Project and lab plans</span></h3>
+      <p><span class="ko">할 일 · 필요한 것 · 확인할 것을 가지로 나눠 두면 <strong>빠진 칸이 눈에
+        띕니다.</strong> 계획서로 옮겨 적는 일은 하지 않아도 됩니다.</span>
+        <span class="en">Split it into steps, materials and checks and <strong>the empty slot jumps
+        out.</strong> Copying it into a plan sheet is a step you skip.</span></p>
+    </div>
+  </div>
+
+  <p class="callout rise">
+    <span class="ko"><strong>빨리 하려고 쓰는 도구가 아닙니다.</strong> 만드는 그 자체가 공부라서,
+      이 앱이 없애는 건 생각하는 시간이 아니라 <strong>옮겨 적고 모양 맞추는 시간</strong>뿐입니다.</span>
+    <span class="en"><strong>This is not a tool for going faster.</strong> Building it is where the
+      learning happens, so the only thing it takes away is <strong>the copying out and the
+      formatting</strong> — never the thinking.</span></p>
+</section>
+
+<!-- ══ 기둥4 — 안전하게 보관 ════════════════════════════════════════ -->
+<section class="band">
+  <div class="shell statement">
+    <p class="kicker rise"><span class="ko">어디에 저장되나</span><span class="en">Where it lives</span></p>
+    <h2 class="rise" style="--i:1;margin-top:10px">
+      <span class="ko">소중한 아이디어는 이 컴퓨터에 남습니다</span>
+      <span class="en">Your ideas stay on your own machine</span></h2>
+    <p class="lede rise" style="--i:2">
+      <span class="ko">며칠을 들여 정리한 생각이 어딘가로 사라지지 않는다는 확신이 있어야
+        마음 놓고 적게 됩니다. 학생 과제물이든 수업 자료든, 문서는 이 컴퓨터에 있고
+        <strong>통째로 백업해 되돌릴 수 있습니다.</strong></span>
+      <span class="en">You only write freely when you trust that days of thinking won't vanish.
+        Student work or teaching material, it lives on this machine — and
+        <strong>backs up and restores in one piece.</strong></span></p>
+
+    <div class="pillars">
+      <div class="pillar rise" style="--i:1">
+        <svg class="i"><use href="#i-lock"/></svg>
+        <h3><span class="ko">계정을 만들지 않아도 됩니다</span>
+          <span class="en">No accounts, for anyone</span></h3>
+        <p><span class="ko">가입도 로그인도 없어요. 받아서 열면 바로 씁니다. 학생에게 개인정보
+          동의서를 받을 일도, 잊어버릴 비밀번호도 없습니다.</span>
+          <span class="en">No sign-up, no login. Download it and start. No consent form to collect
+          from a student, no password to forget.</span></p>
+      </div>
+      <div class="pillar rise" style="--i:2">
+        <svg class="i"><use href="#i-wifi-off"/></svg>
+        <h3><span class="ko">인터넷이 끊겨도 그대로 씁니다</span><span class="en">Works with the wire pulled</span></h3>
+        <p><span class="ko">문서가 이 컴퓨터에 있으니 인터넷 없이도 열리고 저장됩니다. 인터넷을
+          쓰는 건 새 버전 확인과 링크 그림 가져오기 두 가지뿐이고, 그림은 설정에서 끌 수 있어요.</span>
+          <span class="en">Your documents live here, so they open and save with no connection. The only
+          two things that need the internet are update checks and link thumbnails — and thumbnails
+          can be switched off.</span></p>
+      </div>
+      <div class="pillar rise" style="--i:3">
+        <svg class="i"><use href="#i-file"/></svg>
+        <h3><span class="ko">언제든 들고 나갈 수 있습니다</span><span class="en">Yours to take anywhere</span></h3>
+        <p><span class="ko">만든 것은 그냥 마크다운 파일입니다. 이 앱을 그만 쓰더라도 파일은
+          그대로 남고, 다른 프로그램에서도 열립니다.</span>
+          <span class="en">What you make is just a Markdown file. Stop using this app and the file
+          is still there — and other programs can open it.</span></p>
+      </div>
+      <div class="pillar rise" style="--i:4">
+        <svg class="i"><use href="#i-archive"/></svg>
+        <h3><span class="ko">통째로 백업하고 되돌립니다</span><span class="en">Back up and roll back</span></h3>
+        <p><span class="ko">문서와 폴더 전체를 <code>.zip</code> 하나로 내보내고, 그대로 복구합니다.
+          새 컴퓨터로 옮길 때도 같은 파일 하나면 됩니다.</span>
+          <span class="en">Export every document and folder as a single <code>.zip</code>, and restore
+          it as it was. Moving to a new computer takes that one file.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 기둥3 — 쌓이면 (후반 배치) ═══════════════════════════════════ -->
+<section class="shell">
+  <p class="kicker rise"><span class="ko">쌓이면</span><span class="en">Over time</span></p>
+  <h2 class="rise" style="--i:1;margin-top:10px">
+    <span class="ko">지난 학기의 나를 다시 만납니다</span>
+    <span class="en">You meet last term's self again</span></h2>
+  <p class="lede rise" style="--i:2">
+    <span class="ko">한 학기치가 모이면 폴더가 그대로 기록이 됩니다. 그때 무엇을 고민했고 왜
+      그렇게 정했는지가 문장으로 남아 있어요. 그래서 비슷한 일을 다시 만나도
+      <strong>빈 화면에서 시작하지 않습니다.</strong></span>
+    <span class="en">A term's worth of these turns a folder into a record. What you were weighing and
+      why you decided as you did is still there, in sentences. So the next time something similar
+      comes up, <strong>you don't start from an empty screen.</strong></span></p>
+</section>
+
+<!-- ══ 그 밖에 (벤토) ═══════════════════════════════════════════════ -->
+<section class="shell">
+  <p class="kicker rise"><span class="ko">그 밖에</span><span class="en">Also in the box</span></p>
+  <h2 class="rise" style="--i:1;margin-top:10px">
+    <span class="ko">오래 쓰기 위한 것들</span><span class="en">Built to be lived in</span></h2>
+
+  <div class="bento">
+    <div class="cell w2 lead rise">
+      <svg class="i"><use href="#i-bolt"/></svg>
+      <h3><span class="ko">마음 놓고 이것저것 해 보세요</span><span class="en">Try things without worrying</span></h3>
+      <p><span class="ko">잘못 건드렸으면 <code>⌘Z</code>로 되돌리면 됩니다. 연속으로 친 글자는
+        한 단계로 묶여서, 한 번 누를 때마다 방금 한 일 하나씩 깔끔하게 돌아갑니다.
+        찾을 때는 모든 문서를 한꺼번에 뒤져 그 가지로 바로 데려다줍니다.</span>
+        <span class="en">Changed something by mistake? <code>⌘Z</code> puts it back. A run of typing
+        collapses into one step, so each press undoes one thing you actually did. And search sweeps
+        every document at once and takes you straight to the branch.</span></p>
+    </div>
+    <div class="cell w2 rise" style="--i:1">
+      <svg class="i"><use href="#i-key"/></svg>
+      <h3><span class="ko">한글이 또박또박 들어갑니다</span><span class="en">Hangul lands intact</span></h3>
+      <p><span class="ko">빨리 쳐도 글자가 깨지지 않습니다. 어떤 편집기에서는 한글을 빨리 치면
+        자모가 낱자로 흩어지는데, 그 일이 일어나지 않도록 따로 손봐 두었어요. 잘 되면 보이지도
+        않는 부분입니다.</span>
+        <span class="en">Type fast and the letters still land whole. In some editors quick Hangul
+        input scatters the jamo apart; that is handled here so it doesn't. When it works you never
+        notice it at all.</span></p>
+    </div>
+    <div class="cell w2 rise" style="--i:2">
+      <svg class="i"><use href="#i-theme"/></svg>
+      <h3><span class="ko">눈에 편하게, 늘 최신으로</span><span class="en">Easy on the eyes, always current</span></h3>
+      <p><span class="ko">라이트·다크를 시스템 설정에 맡기거나 직접 고릅니다. 가지별 컬러테마도
+        있고요. 새 버전은 조용히 받아 두었다가 재시작할 때 적용됩니다.</span>
+        <span class="en">Light and dark follow the system or your choice, with per-branch colour themes
+        as well. New versions download quietly and apply on restart.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 가격 ═════════════════════════════════════════════════════════ -->
+<section class="shell" id="pricing">
+  <p class="kicker rise"><span class="ko">만든 이야기</span><span class="en">Why this exists</span></p>
+  <h2 class="rise" style="--i:1;margin-top:10px">
+    <span class="ko">사실은 혼자 쓰려고 만들었습니다</span>
+    <span class="en">I built this for myself</span></h2>
+
+  <div class="free-now rise" style="--i:2">
+    <div>
+      <div class="big"><span class="ko">쓰다 보니 너무 편해서 내놓았습니다</span>
+        <span class="en">It turned out too handy to keep</span></div>
+      <p><span class="ko">제 수업과 제 일에 쓰려고 만든 도구입니다. 지금은 전부 무료이고
+        막아 둔 기능도 없어요. 그냥 받아서 써 보세요.</span>
+        <span class="en">A tool made for my own lessons and my own work. It's all free today —
+        nothing is held back, nothing is capped. Just take it and try it.</span></p>
+    </div>
+    <div>
+      <a class="btn" href="#download" style="width:100%">
+        <svg class="i"><use href="#i-down"/></svg>
+        <span class="ko">지금 받기</span><span class="en">Get it now</span></a>
+    </div>
+  </div>
+
+  <p class="lede rise" style="--i:3;margin-top:34px">
+    <span class="ko">나중에 요금을 받게 되면 이 정도를 생각하고 있습니다.
+      학생과 프로는 <strong>쓸 수 있는 기능이 똑같습니다.</strong></span>
+    <span class="en">If a price ever arrives, this is roughly it.
+      <strong>Student and Pro get exactly the same features.</strong></span></p>
+
+  <div class="tiers">
+    <div class="tier pick rise" style="--i:1">
+      <h3><span class="ko">프로</span><span class="en">Pro</span><span class="badge"><span class="ko">추천</span><span class="en">Popular</span></span></h3>
+      <div class="price num">$9.99 <small><span class="ko">/ 년</span><span class="en">/ year</span></small></div>
+      <p><span class="ko">여유가 되시면 이쪽을 골라 주세요. 테마 6종과
+        <strong>컴퓨터 두 대를 안전하게 맞춰 주는 기능</strong>이 함께 열립니다.</span>
+        <span class="en">Pick this one if you can spare it. Six more themes and
+        <strong>safe sync between your machines</strong> come with it.</span></p>
+    </div>
+    <div class="tier rise" style="--i:2">
+      <h3><span class="ko">학교 · 기관</span><span class="en">Schools</span></h3>
+      <div class="price num">$199 <small><span class="ko">/ 년 · 30석</span><span class="en">/ year · 30 seats</span></small></div>
+      <p><span class="ko">좌석 코드 하나로 끝납니다. 학생 <strong>이메일도 계정도 만들지 않습니다.</strong></span>
+        <span class="en">One seat code, nothing else. <strong>No student emails, no student accounts.</strong></span></p>
+    </div>
+    <div class="tier rise" style="--i:3">
+      <h3><span class="ko">학생</span><span class="en">Student</span></h3>
+      <div class="price num">$3.99 <small><span class="ko">/ 년</span><span class="en">/ year</span></small></div>
+      <p><span class="ko">학생이거나 주머니가 가벼우면 이 가격으로 충분합니다.
+        학생증 같은 건 <strong>확인하지 않습니다.</strong></span>
+        <span class="en">Student, or money is tight? This price is plenty.
+        <strong>Nobody checks.</strong></span></p>
+    </div>
+  </div>
+
+  <p class="callout rise">
+    <span class="ko"><strong>무료는 가입 없이, 유료는 이메일 하나만.</strong> 쓰신 글은 어느 쪽이든
+      이 컴퓨터에 마크다운 파일로 남습니다. 그래서 요금과 상관없이 <strong>언제든 그냥 열립니다.</strong></span>
+    <span class="en"><strong>Free needs no account; paid needs one email.</strong> Either way what you write
+      stays here as a Markdown file — so it <strong>just opens, whatever you pay.</strong></span></p>
+</section>
+
+<!-- ══ 자주 묻는 질문 ═══════════════════════════════════════════════ -->
+<section class="shell" id="faq">
+  <p class="kicker rise"><span class="ko">자주 묻는 질문</span><span class="en">Questions</span></p>
+  <h2 class="rise" style="--i:1;margin-top:10px">
+    <span class="ko">받기 전에 궁금한 것들</span><span class="en">Before you download</span></h2>
+
+  <div class="faq rise" style="--i:2">
+    <details>
+      <summary><span class="ko">다른 마인드맵 앱과 뭐가 다른가요?</span><span class="en">How is this different from other mind-map apps?</span></summary>
+      <div class="a"><span class="ko">가지 끝에 <strong>단어가 아니라 문장</strong>이 들어갑니다. 전통 마인드맵은 연상을 촉발하는 키워드를 적기 때문에 만든 사람 머릿속에서만 풀리지만, 문장은 그 자체로 남에게 전달되는 정보 단위입니다. 그래서 하나의 문서가 <strong>맵·마크다운·미리보기 세 개의 뷰</strong>로 동시에 보이고, 그 사이에 내보내기·변환 단계가 없습니다.</span><span class="en">Branches hold <strong>sentences, not keywords</strong>. Traditional maps use keywords to trigger recall, which only works inside the author's head; a sentence is already a unit of information someone else can read. So one document appears as <strong>three views at once — map, Markdown and preview</strong> — with no export or conversion between them.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">AI가 맵을 대신 그려주나요?</span><span class="en">Will the AI draw the map for me?</span></summary>
+      <div class="a"><span class="ko">하지 않습니다. <strong>일부러 넣지 않았습니다.</strong> 개념도를 학생이 직접 그렸을 때와 완성본을 받았을 때 학습 효과가 g=0.933 대 g=0.653으로 갈렸거든요(<a href="https://link.springer.com/article/10.1186/s40594-025-00554-2">STEM 개념도 메타분석</a>). 같은 분석에서 효과는 중·고등(g≈0.76)에서 가장 크고 초등(g≈0.55)에서 작았는데, 어릴수록 도구가 불편하면 내용보다 도구에 먼저 지치기 때문입니다 — 그래서 가지를 만들고 옮기는 동작을 최대한 단순하게 두었습니다. 대신 그려 주면 직접 만들며 얻는 것이 사라집니다. AI는 <strong>빠진 곳을 짚어 주는 자리</strong>가 맞다고 봅니다.</span><span class="en">It will not. That is a feature <strong>left out on purpose</strong>. Students who built the concept map themselves showed an effect size of g=0.933; those handed a finished one, g=0.653 (<a href="https://link.springer.com/article/10.1186/s40594-025-00554-2">STEM concept-mapping meta-analysis</a>). The same analysis found the effect largest in middle and high school (g≈0.76) and smaller in primary school (g≈0.55) — younger students tire of a clumsy tool before they tire of the subject, which is why making and moving a branch is kept as plain as possible. Writing it for you removes the reason the tool exists. We think AI belongs on the side that <strong>points at the gaps</strong>.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">먼저 정리해서 주면 정말 다른가요?</span><span class="en">Does sorting it out first really change anything?</span></summary>
+      <div class="a"><span class="ko">직접 재어 본 수치는 아니지만, 참고할 만한 연구가 몇 있습니다. 같은 내용을 한 번에 주지 않고 <strong>여러 번에 나눠 주면 성능이 평균 39% 떨어졌습니다</strong> — 모델이 못해서가 아니라, 한번 어긋난 대화는 좀처럼 되돌아오지 않기 때문입니다(<a href="https://arxiv.org/abs/2505.06120">LLMs Get Lost in Multi-Turn Conversation, ICLR 2026</a>). 또 AI에 대한 확신이 높을수록 스스로 비판적으로 따져보는 일이 줄어든다는 조사(<a href="https://www.microsoft.com/en-us/research/publication/the-impact-of-generative-ai-on-critical-thinking-self-reported-reductions-in-cognitive-effort-and-confidence-effects-from-a-survey-of-knowledge-workers/">CHI 2025</a>)와, 숙련 개발자가 실제로는 19% 느려졌는데 20% 빨라졌다고 <strong>느꼈다는</strong> 실험(<a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR, 2025</a>)도 있습니다. <strong>이 앱을 쓰면 39%가 좋아진다는 뜻은 아닙니다</strong> — 정보를 쪼개 줬을 때 나빠졌다는 관측일 뿐이에요.</span><span class="en">These aren't our own measurements, but they're worth knowing. When the same information is <strong>split across turns instead of given at once, performance dropped 39% on average</strong> — not from lack of capability, but because a conversation that has drifted rarely recovers (<a href="https://arxiv.org/abs/2505.06120">LLMs Get Lost in Multi-Turn Conversation, ICLR 2026</a>). Separately, the more confidence people place in AI, the less critical thinking they report doing (<a href="https://www.microsoft.com/en-us/research/publication/the-impact-of-generative-ai-on-critical-thinking-self-reported-reductions-in-cognitive-effort-and-confidence-effects-from-a-survey-of-knowledge-workers/">CHI 2025</a>), and experienced developers in one trial worked 19% <em>slower</em> while <strong>believing</strong> they had gone 20% faster (<a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR, 2025</a>). <strong>None of this means this app makes you 39% better</strong> — it is an observation about splitting information up.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">몇 살부터 쓸 수 있나요?</span><span class="en">What age is it for?</span></summary>
+      <div class="a"><span class="ko">가지를 만들고 옮기는 동작만 알면 되니 <strong>초등 고학년이면 충분합니다.</strong> 글자를 치고, <code>Tab</code>을 누르고, 마우스로 끌어다 놓는 게 전부예요. 다만 무엇을 어떻게 나눌지 정하는 일은 그 자체가 생각하는 일이라, 처음에는 곁에서 같이 해 보시길 권합니다.</span><span class="en">If you can make a branch and drag it, you can use it — <strong>upper primary school is plenty.</strong> It is typing, pressing <code>Tab</code>, and dragging with the mouse. Deciding <em>how</em> to split things up is the thinking part, though, so it helps to sit alongside a younger student the first few times.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">마크다운을 몰라도 쓸 수 있나요?</span><span class="en">Do I need to know Markdown?</span></summary>
+      <div class="a"><span class="ko">네. 마크다운은 <strong>결과물이지 입력 방식이 아닙니다.</strong> 가지에 그냥 문장을 쓰고 <code>Tab</code>·<code>Enter</code>로 가지를 늘리면 됩니다. 기호는 <strong>칠 필요가 없지만, 쳐도 알아서 바뀝니다</strong> — <code>-</code>는 목록, <code>1.</code>은 번호, <code>&gt;</code>는 인용으로요. 표는 칸을 눌러 채웁니다. 제목만은 예외라서, <code>#</code>를 쳐도 제목이 되지 않습니다(오타 하나로 차례가 흐트러지지 않게요). 제목은 <code>Tab</code>이나 끌어다 놓기로 만듭니다.</span><span class="en">You don't. Markdown is <strong>the output, not the input method.</strong> Write plain sentences on branches and grow them with <code>Tab</code> and <code>Enter</code>. You never <em>have</em> to type a marker, but <strong>they work if you do</strong> — <code>-</code> for a bullet, <code>1.</code> for numbering, <code>&gt;</code> for a quote. Tables are filled cell by cell. Headings are the one exception: typing <code>#</code> won't make one, so a stray keystroke can't flatten your outline. Headings come from <code>Tab</code> or from dragging.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">내 문서는 어디에 저장되나요?</span><span class="en">Where are my documents stored?</span></summary>
+      <div class="a"><span class="ko">설치한 컴퓨터 안에만 저장됩니다. 계정도 서버도 없습니다. 앱이 네트워크를 쓰는 건 <strong>새 버전 확인</strong>과 <strong>붙여넣은 링크의 썸네일 가져오기</strong> 두 가지뿐이고, 썸네일은 설정에서 끌 수 있습니다.</span><span class="en">Only on the computer you installed it on. There is no account and no server. The app touches the network for two things — <strong>checking for updates</strong> and <strong>fetching a thumbnail for a link you pasted</strong> — and thumbnails can be turned off in settings.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">인터넷 없이도 되나요?</span><span class="en">Does it work offline?</span></summary>
+      <div class="a"><span class="ko">됩니다. 문서가 이 컴퓨터에 있으니 열기·편집·저장·내보내기가 전부 오프라인에서 동작합니다. 연결이 없으면 업데이트 확인과 링크 썸네일만 건너뜁니다.</span><span class="en">Yes. Documents live on your machine, so opening, editing, saving and exporting all work offline. Without a connection it simply skips update checks and link thumbnails.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">백업하거나 새 컴퓨터로 옮길 수 있나요?</span><span class="en">Can I back up or move to a new computer?</span></summary>
+      <div class="a"><span class="ko">문서와 폴더 구조 전체를 <code>.zip</code> 파일 하나로 내보내고, 그 파일로 그대로 복구합니다. 새 컴퓨터에서는 앱을 설치하고 그 <code>.zip</code>을 복구하면 됩니다. 문서 하나씩 <code>.md</code>로 내보내는 것도 됩니다.</span><span class="en">Export every document and your folder structure as a single <code>.zip</code>, then restore from that file. On a new machine, install the app and restore the <code>.zip</code>. Individual documents also export as <code>.md</code>.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">컴퓨터 두 대에서 같이 쓸 수 있나요?</span><span class="en">Can I use it on two computers?</span></summary>
+      <div class="a"><span class="ko">지금은 <code>.zip</code> 백업/복구로 옮기는 방식입니다. 앞으로는 <strong>쓰시는 클라우드 드라이브 폴더</strong>(구글 드라이브·드롭박스·아이클라우드 등)에 저장 위치를 지정해 두 대가 같은 폴더를 보게 하는 방식을 준비하고 있습니다. 저희 서버를 거치지 않는 방식이라 <strong>계획일 뿐 아직 들어 있지 않습니다.</strong></span><span class="en">Today you move things with the <code>.zip</code> backup and restore. We're preparing a way to point the storage location at <strong>your own cloud-drive folder</strong> (Google Drive, Dropbox, iCloud and so on) so both machines watch the same folder. It never passes through our servers — and it is <strong>planned, not shipped yet.</strong></span></div>
+    </details>
+    <details>
+      <summary><span class="ko">학교에서 써도 개인정보 문제가 없나요?</span><span class="en">Is it safe to use in a school?</span></summary>
+      <div class="a"><span class="ko">학생 계정을 만들지 않으므로 학생의 개인정보를 <strong>수집할 일 자체가 없습니다.</strong> 과제물도 학생 컴퓨터에 남습니다. 학교·기관 요금제는 이메일 대신 <strong>좌석 코드</strong> 방식이라, 도입할 때도 학생 이메일을 모으지 않습니다.</span><span class="en">There are no student accounts, so there is <strong>nothing to collect</strong> in the first place, and student work stays on the student's machine. The school plan uses a <strong>seat code</strong> rather than email addresses, so rolling it out doesn't gather student emails either.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">지금 무료인데 나중에 돈을 내야 하나요?</span><span class="en">It's free now — will I have to pay later?</span></summary>
+      <div class="a"><span class="ko">지금 받으시면 <strong>지금 있는 기능을 그대로 쓰실 수 있습니다.</strong> 그리고 쓰신 문서는 마크다운 파일이라, 요금을 내든 안 내든 <strong>언제든 그냥 열립니다.</strong></span><span class="en">Download it today and <strong>you keep what is here today.</strong> And since your documents are Markdown files, they <strong>just open</strong> — whether you pay or not.</span></div>
+    </details>
+    <details>
+      <summary><span class="ko">학생 요금은 정말 확인을 안 하나요?</span><span class="en">Do you really not verify the student price?</span></summary>
+      <div class="a"><span class="ko">확인하지 않습니다. 학생증을 걷고 검사하는 건 이 도구에 어울리지 않는 일이라고 생각합니다. <strong>형편에 맞는 쪽을 고르시면 됩니다.</strong></span><span class="en">We don't. Collecting and checking student IDs isn't the kind of thing this tool should do. <strong>Just pick whichever fits your situation.</strong></span></div>
+    </details>
+    <details>
+      <summary><span class="ko">Windows에서 경고 화면이 뜹니다.</span><span class="en">Windows shows me a warning.</span></summary>
+      <div class="a"><span class="ko">아직 Windows 코드서명을 하지 않아서 SmartScreen이 뜹니다. <strong>추가 정보 → 실행</strong>을 누르면 설치됩니다. macOS는 서명·공증이 되어 있어 경고 없이 열립니다.</span><span class="en">The Windows build isn't code-signed yet, so SmartScreen appears. Choose <strong>More info → Run anyway</strong> to install. The macOS build is signed and notarised, so it opens without any warning.</span></div>
+    </details>
+  </div>
+</section>
+
+<!-- ══ 언젠가 만들 것 ════════════════════════════════════════════════ -->
+<section class="shell quiet">
+  <p class="kicker rise"><span class="ko">언젠가</span><span class="en">Someday</span></p>
+  <h2 class="rise" style="--i:1;margin-top:10px">
+    <span class="ko">만들고 싶은 것들</span><span class="en">Things we'd like to make</span></h2>
+
+  <div class="someday rise" style="--i:2">
+    <div class="item"><strong><span class="ko">크게 띄워 보여주기</span><span class="en">A big presentation view</span></strong>
+      <span class="ko">만든 그대로 발표 화면으로.</span>
+      <span class="en">Show what you made, full screen.</span></div>
+    <div class="item"><strong><span class="ko">문서끼리 이어 붙이기</span><span class="en">Links between documents</span></strong>
+      <span class="ko">한 문서에서 다른 문서로 바로.</span>
+      <span class="en">Jump straight from one to another.</span></div>
+    <div class="item"><strong><span class="ko">PDF로 내보내기</span><span class="en">PDF export</span></strong>
+      <span class="ko">그대로 인쇄하거나 넘겨주기.</span>
+      <span class="en">Print it or hand it over as is.</span></div>
+  </div>
+
+  <p class="callout rise" style="--i:3">
+    <span class="ko">셋 다 <strong>아직 없는 기능</strong>이고, 언제 나온다고 약속드리진 않을게요.
+      지금 받으시는 것에는 들어 있지 않습니다.</span>
+    <span class="en">None of these <strong>exist yet</strong>, and we're not promising a date.
+      They are not in what you download today.</span></p>
+</section>
+
+<!-- ══ 내려받기 ═════════════════════════════════════════════════════ -->
+<section class="band" id="download">
+  <div class="shell">
+    <h2 class="rise"><span class="ko">내려받기</span><span class="en">Download</span></h2>
+    <p class="lede rise" style="--i:1" id="dl-version"></p>
+
+    <div class="dl" id="dl-list">
+      <div class="dl-row rise" data-os="mac-arm">
+        <span class="os">macOS — Apple Silicon</span>
+        <span class="hint"><span class="ko">응용 프로그램 폴더로 드래그. 서명·공증되어 경고 없이 열립니다.</span>
+          <span class="en">Drag into Applications. Signed and notarised, so it opens without warnings.</span></span>
+        <a class="file" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i"><use href="#i-down"/></svg>.dmg</a>
+      </div>
+      <div class="dl-row rise" style="--i:1" data-os="mac-intel">
+        <span class="os">macOS — Intel</span>
+        <span class="hint"><span class="ko">칩 확인: Apple 메뉴 → 이 Mac에 관하여.</span>
+          <span class="en">Check your chip: Apple menu → About This Mac.</span></span>
+        <a class="file" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i"><use href="#i-down"/></svg>.dmg</a>
+      </div>
+      <div class="dl-row rise" style="--i:2" data-os="win">
+        <span class="os">Windows 10 · 11 (64-bit)</span>
+        <span class="hint"><span class="ko">실행하면 설치됩니다. 관리자 권한이 필요 없습니다.</span>
+          <span class="en">Run it to install. No administrator rights needed.</span></span>
+        <a class="file" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i"><use href="#i-down"/></svg>.exe</a>
+      </div>
+      <div class="dl-row rise" style="--i:3" data-os="linux">
+        <span class="os">Linux (64-bit)</span>
+        <span class="hint"><span class="ko">AppImage는 <code>chmod +x</code> 후 실행, deb는 <code>sudo dpkg -i</code>.</span>
+          <span class="en"><code>chmod +x</code> the AppImage, or <code>sudo dpkg -i</code> the deb.</span></span>
+        <a class="file" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i"><use href="#i-down"/></svg>.AppImage</a>
+        <a class="file" data-os="linux-deb" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i"><use href="#i-down"/></svg>.deb</a>
+      </div>
+    </div>
+
+    <p class="callout rise">
+      <span class="ko"><strong>Windows에서 SmartScreen 경고가 뜹니다.</strong> 아직 코드서명 전이라
+        그렇습니다 — <strong>추가 정보 → 실행</strong>을 누르면 설치됩니다.
+        <a href="https://github.com/mcnorton/thinkdown#내려받기">자세한 안내</a>.</span>
+      <span class="en"><strong>Windows shows a SmartScreen warning</strong> — the build isn't
+        code-signed yet. Choose <strong>More info → Run anyway</strong>.
+        <a href="https://github.com/mcnorton/thinkdown#download">Details</a>.</span></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="shell">
+  <span>© 2026 McNorton &amp; Education</span>
+  <span class="grow"></span>
+  <a href="https://github.com/mcnorton/thinkdown">GitHub</a>
+  <!-- 문서 사이트(Starlight) 구축 후 이 링크만 새 도메인으로 교체한다 — MARKETING.md "런칭 무기" 참고 -->
+  <a href="https://github.com/mcnorton/thinkdown#사용법"><span class="ko">사용법</span><span class="en">Docs</span></a>
+  <a href="#faq"><span class="ko">자주 묻는 질문</span><span class="en">FAQ</span></a>
+  <a href="https://github.com/mcnorton/thinkdown/issues"><span class="ko">문제 신고</span><span class="en">Report an issue</span></a>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
