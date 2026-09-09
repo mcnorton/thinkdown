@@ -1,0 +1,60 @@
+/* Dark color palette. Overrides the light tokens when theme.js stamps
+   <html data-theme="dark">. Loaded after light.css; the [data-theme] selector's
+   higher specificity wins regardless of link order. */
+:root[data-theme="dark"] {
+  /* Native controls (form fields, scrollbars, spin buttons) follow the dark scheme. */
+  color-scheme: dark;
+  /* shadcn/ui — dark, neutral (zinc). */
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+  /* Lighter blue (blue-400) reads better on the dark background; dark text on it. */
+  --update-accent: 213 94% 68%;
+  --update-accent-foreground: 240 10% 4%;
+
+  /* ── Map / node surface layer (dark) ───────────────────────────────────────
+     Nodes lift off the near-black canvas: --node is a few % lighter than
+     --background so cards read as elevated; borders lighten to match. Code
+     stays a distinct dark block. Kind hues that were too dark on white are
+     brightened (400-level) so tiny tag labels stay legible on a dark card. */
+  --node: 240 6% 13%;
+  --node-foreground: 0 0% 98%;
+  --node-body: 240 5% 16%;
+  --node-th: 240 5% 22%;             /* header lifts above the body cells on dark */
+  --node-border: 240 5% 26%;
+  --node-heading: 213 40% 18%;
+  --node-heading-border: 213 45% 40%;
+  --node-code: 217 33% 12%;
+  --node-code-foreground: 214 32% 91%;
+
+  --kind-quote: 215 20% 65%;
+  --kind-code: 213 94% 78%;
+  --kind-list: 45 96% 64%;
+  --kind-ordered: 43 96% 56%;
+  --kind-bullet: 188 86% 53%;
+  --kind-table: 255 92% 76%;
+  --kind-media: 329 86% 70%;
+  --kind-hyperlink: 172 66% 50%;
+  --kind-divider: 215 20% 65%;
+
+  --link: 213 94% 68%;
+  --drop: 217 91% 60%;
+
+  --edge: 213 27% 84%;               /* #cbd5e1 — 어두운 캔버스에는 밝은 선 */
+}

@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thinkdown — 생각을 써 내려가면 마크다운 문서가 됩니다</title>
+<meta name="description" content="Thinkdown으로 생각을 써 내려가세요. 마크다운 문서가 작성됩니다. AI 프롬프트, 아이디어 초안, 실험 설계, 학습 정리, 계획서, 소설, 회의록을 손쉽게 만드세요.">
+<link rel="icon" href="assets/icon.png">
+
+<!-- og:image·og:url 은 반드시 절대 URL 이어야 한다 — 상대 경로를 못 읽는 크롤러가
+     있어(카카오톡·슬랙 등) 미리보기 이미지가 통째로 빠진다. -->
+<link rel="canonical" href="https://www.thinkdown.net/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.thinkdown.net/">
+<meta property="og:site_name" content="Thinkdown">
+<meta property="og:title" content="Thinkdown — 생각을 써 내려가면 마크다운 문서가 됩니다">
+<meta property="og:description" content="Thinkdown으로 생각을 써 내려가세요. 마크다운 문서가 작성됩니다. AI 프롬프트, 아이디어 초안, 실험 설계, 학습 정리, 계획서, 소설, 회의록을 손쉽게 만드세요.">
+<meta property="og:image" content="https://www.thinkdown.net/assets/screenshot-light.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- 한글 타이포그래피. 동적 서브셋이라 필요한 글자 범위만 받는다. CDN이 죽어도
+     아래 폰트 스택이 시스템 폰트로 받아낸다. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<!-- 앱이 쓰는 팔레트 그대로(shadcn/ui zinc). scripts/build-site.sh가 src/renderer/styles/에서 복사한다. -->
+<link rel="stylesheet" href="styles/light.css">
+<link rel="stylesheet" href="styles/dark.css">
+<script>
+  (function () {
+    // 앱의 theme.js와 같은 방식: dark.css가 :root[data-theme="dark"]를 정의하므로
+    // OS 설정을 읽어 <html>에 stamp 한다. 사이트에는 토글이 없고 시스템만 따른다.
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var apply = function () {
+      document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+    };
+    apply(); mq.addEventListener('change', apply);
+
+    // 언어: 저장된 선택 > 브라우저 언어 > 한국어. data-lang 을 HTML에 미리 박아 두어
+    // 스크립트가 안 돌아도 한국어가 보이고, 두 언어 모두 마크업에 있어 크롤러가 읽는다.
+    var saved = null;
+    try { saved = localStorage.getItem('thinkdown.site.lang'); } catch (e) {}
+    var lang = saved || (/^ko\b/i.test(navigator.language || '') ? 'ko' : 'en');
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+  })();
+</script>
+
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M7 14h10"/></symbol>
+  <symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-tree" viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="4" rx="1"/><rect x="14" y="10" width="7" height="4" rx="1"/><rect x="14" y="17" width="7" height="4" rx="1"/><path d="M6.5 8v9.5a1.5 1.5 0 0 0 1.5 1.5h6M8 12h6"/></symbol>
+  <symbol id="i-loop" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12H8"/></symbol>
+  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 13h4"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M12 3v10m0 0l-3.5-3.5M12 13l3.5-3.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></symbol>
+</defs></svg>
+
+<nav class="nav" id="nav"><div class="shell">
+  <a class="brand" href="./"><img src="assets/icon.png" width="256" height="256" alt=""> Thinkdown</a>
+  <a class="btn ghost navlink" href="guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a class="btn ghost navlink" href="#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <span class="grow"></span>
+  <button class="btn ghost" id="lang-btn" type="button"></button>
+  <a class="btn" href="#download"><span class="ko">내려받기</span><span class="en">Download</span></a>
+</div></nav>
+
+<main>
+
+<!-- ══ 1. 히어로 ═════════════════════════════════════════════════════ -->
+<header class="hero">
+  <div class="shell inner">
+    <span class="eyebrow rise">From think it down to mark it down.</span>
+
+    <h1 class="rise" style="--i:1">
+      <span class="ko">생각을 써 내려가세요.<br>절반은 이미 끝났습니다.</span>
+      <span class="en">Write your thinking down.<br>Half the work is already done.</span></h1>
+
+    <p class="sub rise" style="--i:2">
+      <span class="ko">폭풍처럼 써 내려간 생각이 자연스럽게 구조화되고, 가벼운 초안이
+        계획서가 됩니다. 간편하게 다듬고 연결해 보세요. 인공지능 프롬프트 문서가 되고,
+        단편 소설이 되고, 거대한 생각저장소를 만들 수 있습니다.</span>
+      <span class="en">Thoughts poured out in a rush find their own structure, and a rough draft
+        turns into a plan. Refine them, connect them. What you end up with is an AI prompt
+        document, a short story — or an archive of everything you have thought.</span></p>
+
+    <div class="cta rise" style="--i:3">
+      <a class="btn lg" id="dl-main" href="https://github.com/mcnorton/thinkdown/releases/latest">
+        <svg class="i"><use href="#i-down"/></svg>
+        <span class="ko">내려받기</span><span class="en">Download</span></a>
+      <a class="btn lg outline" href="guide.html">
+        <svg class="i"><use href="#i-book"/></svg>
+        <span class="ko">사용법 보기</span><span class="en">Read the guide</span></a>
+    </div>
+    <p class="hero-note rise" style="--i:3" id="dl-note">macOS · Windows · Linux</p>
+
+    <!-- 지어낸 지표 대신 확인할 수 있는 사실만 둔다 -->
+    <div class="facts rise" style="--i:4">
+      <span><svg class="i"><use href="#i-check"/></svg>
+        <span class="ko">가입 없음</span><span class="en">No sign-up</span></span>
+      <span><svg class="i"><use href="#i-check"/></svg>
+        <span class="ko">내 컴퓨터에 저장</span><span class="en">Stored on your machine</span></span>
+      <span><svg class="i"><use href="#i-check"/></svg>
+        <span class="ko">인터넷 없어도 됨</span><span class="en">Works offline</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ 2. 실제 화면 ══════════════════════════════════════════════════ -->
+<div class="shotwrap">
+  <figure class="shell rise">
+    <div class="shots" id="shots">
+      <img class="shot shot-light" src="assets/screenshot-light.png" width="1920" height="878"
+           decoding="async"
+           alt="Thinkdown 화면 — 왼쪽 문서 탐색기, 가운데 마인드맵, 오른쪽 마크다운">
+      <img class="shot shot-dark" src="assets/screenshot-dark.png" width="1920" height="878"
+           decoding="async"
+           alt="Thinkdown 다크 모드 — 오른쪽은 렌더링된 미리보기">
+    </div>
+    <figcaption>
+      <span class="ko">왼쪽은 문서 탐색기, 가운데는 마인드맵, 오른쪽은 마크다운입니다.
+        오른쪽 패널은 <strong>마크다운 원본</strong>과 <strong>렌더링된 미리보기</strong>
+        두 탭으로 오갑니다.</span>
+      <span class="en">The document explorer on the left, the mind map in the middle, the Markdown
+        on the right. That pane switches between <strong>raw Markdown</strong> and a
+        <strong>rendered preview</strong>.</span>
+    </figcaption>
+  </figure>
+</div>
+
+<!-- ══ 3. 왜 Thinkdown인가 ═══════════════════════════════════════════ -->
+<section class="band">
+  <div class="shell">
+    <div class="head rise">
+      <p class="kicker"><span class="ko">왜 Thinkdown인가</span><span class="en">Why Thinkdown</span></p>
+      <h2><span class="ko">같은 문서를 두 번 만들지 않습니다</span>
+        <span class="en">You stop building the same document twice</span></h2>
+    </div>
+    <div class="prose rise" style="--i:1">
+      <p><span class="ko">생각을 정리할 땐 트리가 편한데, 남에게 넘길 결과물은 마크다운입니다.
+        그래서 늘 두 번 일합니다 — 마인드맵 도구에서 구조를 잡고, 에디터를 열어 다시 옮겨
+        적습니다. 옮기는 동안 계층이 흐트러지고, 나중에 구조를 고칠 땐 맵과 문서 중 어느 쪽이
+        최신인지 알 수 없게 됩니다.</span>
+        <span class="en">Thinking works best as a tree. What you hand over is Markdown. So you do
+        the work twice — shape the structure in a mind map tool, then reopen an editor and retype
+        it. The hierarchy drifts on the way across, and later you can't tell which copy is the
+        current one.</span></p>
+      <p><span class="ko">Thinkdown은 <strong>옮겨 적는 단계를 없앱니다.</strong> 맵이 곧
+        문서입니다. 하나를 고치면 다른 하나가 함께 고쳐지므로, 어느 쪽이 최신인지 묻는 일
+        자체가 사라집니다.</span>
+        <span class="en">Thinkdown <strong>removes the retyping step.</strong> The map is the
+        document. Change one and the other changes with it, so the question of which copy is
+        current never comes up.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4. 이런 걸 만들 때 씁니다 ═════════════════════════════════════ -->
+<section>
+  <div class="shell">
+    <div class="head rise">
+      <p class="kicker"><span class="ko">이런 걸 만들 때 씁니다</span><span class="en">What people build with it</span></p>
+      <h2><span class="ko">구조가 있는 글이라면 어디든</span><span class="en">Anything with a structure</span></h2>
+    </div>
+
+    <div class="grid g2">
+      <div class="card usecase rise" style="--c:hsl(var(--kind-bullet))">
+        <h3><span class="ko">AI 프롬프트 · 스킬 · 에이전트 정의</span>
+          <span class="en">AI prompts, skills, agent definitions</span></h3>
+        <p><span class="ko">역할 · 입력 · 규칙 · 출력 형식을 가지로 나눠 짜고, 깨끗한 마크다운으로
+          붙여넣습니다. 규칙 한 덩어리를 다른 위치로 옮기는 것도 드래그 한 번입니다.</span>
+          <span class="en">Split role, input, rules, and output format into branches, then paste
+          clean Markdown. Moving a whole block of rules elsewhere is one drag.</span></p>
+      </div>
+      <div class="card usecase rise" style="--i:1;--c:hsl(var(--kind-list))">
+        <h3><span class="ko">기획서 · 제안서 뼈대</span><span class="en">Outlines for specs and proposals</span></h3>
+        <p><span class="ko">큰 덩어리부터 잡고 안을 채웁니다. 순서가 마음에 들지 않으면 챕터를
+          통째로 위아래로 옮깁니다.</span>
+          <span class="en">Block out the big pieces first, fill them in after. Reorder a chapter as
+          a whole when the flow feels wrong.</span></p>
+      </div>
+      <div class="card usecase rise" style="--i:2;--c:hsl(var(--kind-table))">
+        <h3><span class="ko">회의록 · 강의 노트</span><span class="en">Meeting and lecture notes</span></h3>
+        <p><span class="ko">말이 튀는 대로 가지에 붙여 두고, 끝나면 트리만 정리해 그대로
+          공유합니다.</span>
+          <span class="en">Hang points off branches as they come, tidy the tree at the end, share
+          it as is.</span></p>
+      </div>
+      <div class="card usecase rise" style="--i:3;--c:hsl(var(--kind-hyperlink))">
+        <h3><span class="ko">README · 기술 문서 목차</span><span class="en">READMEs and doc tables of contents</span></h3>
+        <p><span class="ko">표 · 코드블록 · 링크 · 이미지를 노드로 넣고, 문서 전체 또는 특정
+          챕터만 내보냅니다.</span>
+          <span class="en">Tables, code blocks, links, and images live in nodes — export the whole
+          document or a single chapter.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5. 처음 60초 ══════════════════════════════════════════════════ -->
+<section class="band">
+  <div class="shell">
+    <div class="head rise">
+      <p class="kicker"><span class="ko">처음 60초</span><span class="en">Your first sixty seconds</span></p>
+      <h2><span class="ko">다섯 번만 눌러 보면 알게 됩니다</span>
+        <span class="en">Five keystrokes and you have it</span></h2>
+    </div>
+
+    <div class="steps rise" style="--i:1">
+      <div class="step"><span class="n num">1</span>
+        <p><span class="ko">가운데 <strong>문서 제목</strong>을 클릭해 이름을 적습니다.</span>
+          <span class="en">Click the <strong>document title</strong> in the centre and name it.</span></p></div>
+      <div class="step"><span class="n num">2</span>
+        <p><span class="ko"><kbd>Tab</kbd> — 자식 제목이 생깁니다. <kbd>Enter</kbd> — 같은 층에
+          형제가 생깁니다.</span>
+          <span class="en"><kbd>Tab</kbd> gives you a child heading. <kbd>Enter</kbd> gives you a
+          sibling on the same level.</span></p></div>
+      <div class="step"><span class="n num">3</span>
+        <p><span class="ko">제목에서 <kbd>Shift</kbd>+<kbd>Enter</kbd> — 그 제목에 딸린 본문 노드가
+          생깁니다. <kbd>Alt</kbd>+<kbd>1</kbd>~<kbd>8</kbd> 로 종류를 바꿉니다.</span>
+          <span class="en">On a heading, <kbd>Shift</kbd>+<kbd>Enter</kbd> attaches a body node.
+          <kbd>Alt</kbd>+<kbd>1</kbd>–<kbd>8</kbd> changes its type.</span></p></div>
+      <div class="step"><span class="n num">4</span>
+        <p><span class="ko">왼쪽 맵에서 <strong>제목을 클릭</strong>하면 오른쪽 마크다운이 그
+          챕터로 좁혀집니다.</span>
+          <span class="en"><strong>Click a heading</strong> in the map and the Markdown on the right
+          narrows to that chapter.</span></p></div>
+      <div class="step"><span class="n num">5</span>
+        <p><span class="ko">오른쪽 위 <strong>[복사]</strong> — 붙여넣을 준비가 끝났습니다.</span>
+          <span class="en">Hit <strong>[Copy]</strong> at the top right — ready to paste.</span></p></div>
+    </div>
+
+    <div class="after-steps rise" style="--i:2">
+      <p><span class="ko">나머지 규칙은 사용법에 정리해 두었습니다. 순서대로 읽지 않아도 되고,
+        필요할 때 찾아보면 됩니다.</span>
+        <span class="en">Everything else is written up in the guide. It isn't meant to be read in
+        order — look things up as you need them.</span></p>
+      <a class="btn outline" href="guide.html">
+        <span class="ko">사용법 전체 보기</span><span class="en">Read the full guide</span>
+        <svg class="i"><use href="#i-right"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. 무엇이 좋은가 ══════════════════════════════════════════════ -->
+<section class="band">
+  <div class="shell">
+    <div class="head rise">
+      <p class="kicker"><span class="ko">무엇이 좋은가</span><span class="en">What makes it good</span></p>
+      <h2><span class="ko">오래 쓰기 위해 갖춘 것들</span><span class="en">Built to be lived in</span></h2>
+    </div>
+
+    <div class="grid g3 feat">
+      <div class="card rise"><svg class="i"><use href="#i-key"/></svg>
+        <h3><span class="ko">키보드로 빠르게 입력</span><span class="en">Fast keyboard entry</span></h3>
+        <p><span class="ko"><code>Tab</code> 으로 자식, <code>Enter</code> 로 형제. 마우스를 잡지
+          않고 트리를 끝까지 펼칩니다.</span>
+          <span class="en"><code>Tab</code> for a child, <code>Enter</code> for a sibling. Grow the
+          whole tree without reaching for the mouse.</span></p></div>
+
+      <div class="card rise" style="--i:1"><svg class="i"><use href="#i-blocks"/></svg>
+        <h3><span class="ko">본문 9종</span><span class="en">Nine body types</span></h3>
+        <p><span class="ko">문단 · 불릿 · 개요 · 인용 · 코드 · 표 · 이미지 · 링크 · 구분선. 표는
+          격자에서 셀을 직접 편집하고, 이미지·링크는 썸네일과 제목이 붙은 카드로 보입니다.</span>
+          <span class="en">Paragraph, bullet, outline, quote, code, table, image, link, divider.
+          Tables are edited cell by cell in a real grid; images and links appear as cards with a
+          thumbnail and title.</span></p></div>
+
+      <div class="card rise" style="--i:2"><svg class="i"><use href="#i-tree"/></svg>
+        <h3><span class="ko">드래그로 구조 변경</span><span class="en">Restructure by dragging</span></h3>
+        <p><span class="ko">노드 위에 놓으면 그 아래로 이동하고 제목 깊이가 자동으로 맞춰집니다.
+          사이에 놓으면 순서만 바뀝니다. 좌표를 옮기는 것이 아니라 목차를 고치는 일입니다.</span>
+          <span class="en">Drop on a node to move under it and the heading depth adjusts itself;
+          drop between nodes to reorder. You're editing the outline, not moving
+          coordinates.</span></p></div>
+
+      <div class="card rise" style="--i:3"><svg class="i"><use href="#i-loop"/></svg>
+        <h3><span class="ko">마인드맵 = 마크다운</span><span class="en">Mind map = Markdown</span></h3>
+        <p><span class="ko">문서는 마크다운 그대로 저장됩니다. 내보냈다 다시 가져와도 트리가
+          그대로 복원됩니다.</span>
+          <span class="en">Documents are stored as Markdown. Export it, import it back, and the
+          tree comes back intact.</span></p></div>
+
+      <div class="card rise" style="--i:4"><svg class="i"><use href="#i-folder"/></svg>
+        <h3><span class="ko">폴더분류 · 검색</span><span class="en">Folders · search</span></h3>
+        <p><span class="ko">문서를 폴더로 묶고 드래그로 옮깁니다. 검색은 현재 문서와 전체 문서를
+          함께 찾아 그 노드로 데려갑니다.</span>
+          <span class="en">Group documents into folders and drag them around. Search spans the
+          current document and every other one, then takes you to the node.</span></p></div>
+
+      <div class="card rise" style="--i:5"><svg class="i"><use href="#i-undo"/></svg>
+        <h3><span class="ko">되돌리기 · 다시실행</span><span class="en">Undo and redo</span></h3>
+        <p><span class="ko"><code>⌘Z</code> 와 <code>⇧⌘Z</code>. 연속으로 친 글자는 한 단계로
+          묶입니다.</span>
+          <span class="en"><code>⌘Z</code> and <code>⇧⌘Z</code>. A run of typing collapses into a
+          single step.</span></p></div>
+
+      <div class="card rise" style="--i:6"><svg class="i"><use href="#i-theme"/></svg>
+        <h3><span class="ko">라이트 · 다크</span><span class="en">Light and dark</span></h3>
+        <p><span class="ko">시스템 설정을 따라가거나 직접 고릅니다. 브랜치별 컬러테마도 켤 수
+          있습니다.</span>
+          <span class="en">Follow the system or pick one. An optional colour theme tints each
+          branch.</span></p></div>
+
+      <div class="card rise" style="--i:7"><svg class="i"><use href="#i-archive"/></svg>
+        <h3><span class="ko">데이터 백업 · 복구</span><span class="en">Backup · restore</span></h3>
+        <p><span class="ko"><code>.md</code> 가져오기와 내보내기, 전체 문서를 <code>.zip</code>
+          으로 백업하고 복구합니다.</span>
+          <span class="en">Import and export <code>.md</code>, back up everything to a
+          <code>.zip</code> and restore it.</span></p></div>
+
+      <div class="card rise" style="--i:8"><svg class="i"><use href="#i-sync"/></svg>
+        <h3><span class="ko">자동 업데이트</span><span class="en">Automatic updates</span></h3>
+        <p><span class="ko">새 버전이 나오면 조용히 받아 두고 재시작할 때 적용됩니다.
+          macOS · Windows · Linux 모두 됩니다.</span>
+          <span class="en">New versions download quietly and apply on the next restart — on macOS,
+          Windows, and Linux alike.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8. 내 데이터는 내 기기에 ══════════════════════════════════════ -->
+<section>
+  <div class="shell">
+    <div class="head rise" style="margin-bottom:26px">
+      <p class="kicker"><span class="ko">내 데이터는 내 기기에</span><span class="en">Your data stays on your machine</span></p>
+      <h2><span class="ko">계정도, 서버도, 수집도 없습니다</span>
+        <span class="en">No account, no server, nothing collected</span></h2>
+    </div>
+    <div class="prose rise" style="--i:1">
+      <p><span class="ko">문서는 전부 이 컴퓨터 안에 저장되고 밖으로 나가지 않습니다. 앱이
+        네트워크를 쓰는 경우는 두 가지뿐입니다 — <strong>새 버전이 있는지 확인할 때</strong>,
+        그리고 <strong>링크 노드의 썸네일을 가져올 때</strong>입니다. 썸네일은 그 링크의
+        사이트에만 접속하며 설정에서 끌 수 있습니다.</span>
+        <span class="en">Every document lives on this computer and none of it leaves. The app
+        touches the network for two things only — <strong>checking whether a new version
+        exists</strong> and <strong>fetching the thumbnail for a link node</strong>. Thumbnails
+        reach only that link's own site, and can be turned off in settings.</span></p>
+      <p><span class="ko">언제든 <code>.zip</code> 백업이나 <code>.md</code> 내보내기로 통째로
+        꺼내 갈 수 있습니다.</span>
+        <span class="en">You can take all of it out at any time — a <code>.zip</code> backup, or
+        <code>.md</code> exports.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9. 요금제 ═════════════════════════════════════════════════════ -->
+<section class="band" id="pricing">
+  <div class="shell">
+    <div class="head rise">
+      <p class="kicker"><span class="ko">요금제</span><span class="en">Pricing</span></p>
+      <h2><span class="ko">지금은 전부 무료입니다</span><span class="en">Everything is free today</span></h2>
+    </div>
+
+    <div class="grid g3 tiers">
+      <!-- 기본 -->
+      <div class="card tier rise">
+        <div class="tier-hd"><h3><span class="ko">기본</span><span class="en">Free</span></h3></div>
+        <div class="price"><span class="ko">무료</span><span class="en">Free</span></div>
+        <p class="sum"><span class="ko">문서를 만들고 정리하고 내보내는 데 필요한 기능이 모두
+          열려 있습니다.</span>
+          <span class="en">Everything you need to write, organise and export is open.</span></p>
+        <ul>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko">문서 · 폴더 · 검색 · 가져오기와 내보내기 · <code>.zip</code> 백업</span>
+              <span class="en">Documents, folders, search, import and export, <code>.zip</code> backup</span></span></li>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko">슬라이드쇼 5페이지까지</span><span class="en">Slideshow, up to five pages</span>
+              <span class="badge"><span class="ko">준비 중</span><span class="en">Coming soon</span></span></span></li>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko">계정도 로그인도 없습니다</span><span class="en">No account, no sign-in</span></span></li>
+        </ul>
+      </div>
+
+      <!-- 프로 -->
+      <div class="card tier pick rise" style="--i:1">
+        <div class="tier-hd"><h3><span class="ko">프로</span><span class="en">Pro</span></h3>
+          <span class="badge solid"><span class="ko">추천</span><span class="en">Popular</span></span></div>
+        <div class="price">$3.99 <small><span class="ko">/ 월</span><span class="en">/ month</span></small></div>
+        <p class="sum"><span class="ko">기본의 모든 기능에 다음이 더해집니다.</span>
+          <span class="en">Everything in Free, plus the following.</span></p>
+        <ul>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko">슬라이드쇼 페이지 제한 없음</span><span class="en">Slideshow with no page limit</span>
+              <span class="badge"><span class="ko">준비 중</span><span class="en">Coming soon</span></span></span></li>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko"><strong>외부 저장소</strong> — 문서를 폴더 안의 마크다운 파일로
+              보관합니다. 클라우드 드라이브로 기기 사이를 잇고, <strong>AI 도구가 그 파일을 직접
+              읽게</strong> 할 수 있습니다.</span>
+              <span class="en"><strong>External storage</strong> — Keep documents as Markdown files
+              in a folder of your choosing. Sync between machines through your own cloud drive, and
+              let <strong>AI tools read those files directly.</strong></span>
+              <span class="badge"><span class="ko">준비 중</span><span class="en">Coming soon</span></span></span></li>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko">앞으로 추가되는 부가 기능</span><span class="en">New add-on features as they arrive</span></span></li>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko">App Store와 Microsoft Store에서 구독합니다</span>
+              <span class="en">Subscribe through the App Store or Microsoft Store</span></span></li>
+        </ul>
+      </div>
+
+      <!-- 학교 -->
+      <div class="card tier rise" style="--i:2">
+        <div class="tier-hd"><h3><span class="ko">학교</span><span class="en">Schools</span></h3></div>
+        <div class="price"><span class="ko">무료</span><span class="en">Free</span></div>
+        <p class="sum"><span class="ko">K-12 학교의 교사에게는 프로와 같은 기능을 무료로
+          드립니다.</span>
+          <span class="en">Teachers at K-12 schools get everything in Pro, at no cost.</span></p>
+        <ul>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko">프로의 모든 기능</span><span class="en">Everything in Pro</span></span></li>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko"><strong>1년 단위 티켓</strong>을 발급하고, 해마다 재발급합니다</span>
+              <span class="en">A <strong>one-year ticket</strong>, reissued each year</span></span></li>
+          <li><svg class="i"><use href="#i-check"/></svg>
+            <span><span class="ko">학생 계정도 이메일도 만들지 않습니다</span>
+              <span class="en">No student accounts, no student emails</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert rise" style="--i:3;margin-top:24px">
+      <svg class="i"><use href="#i-info"/></svg>
+      <p><span class="ko">지금은 결제 수단이 없고 <strong>모든 기능을 무료로 쓸 수 있습니다.</strong>
+        <strong>준비 중</strong>으로 표시한 기능은 아직 만들지 않았습니다.</span>
+        <span class="en">There is no way to pay yet — <strong>everything is free right now.</strong>
+        Anything marked <strong>Coming soon</strong> has not been built.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10. 자주 묻는 질문 ════════════════════════════════════════════ -->
+<section id="faq">
+  <div class="shell">
+    <div class="head rise">
+      <p class="kicker"><span class="ko">자주 묻는 질문</span><span class="en">Questions</span></p>
+      <h2><span class="ko">받기 전에 확인할 것들</span><span class="en">Before you download</span></h2>
+    </div>
+
+    <div class="faq rise" style="--i:1">
+      <details>
+        <summary><span><span class="ko">다른 마인드맵 앱과 무엇이 다른가요?</span><span class="en">How is this different from other mind-map apps?</span></span>
+          <svg class="i"><use href="#i-chevron"/></svg></summary>
+        <div class="a"><span class="ko">가지 끝에 <strong>단어가 아니라 문장</strong>이 들어갑니다. 전통적인 마인드맵은 연상을 촉발하는 키워드를 적기 때문에 만든 사람의 머릿속에서만 자세한 생각이 남아 있습니다. Thinkdown은 가지 끝에 본문을 그대로 풀어쓸 수 있기 때문에, 생각의 흐름에 따라 정리된 가지들이 결국 하나의 문서가 됩니다. 작성된 문서는 <strong>맵 · 마크다운 · 미리보기</strong> 세 가지 모습으로 동시에 존재하고, 필요한 가지를 선택해서 내보내거나 복사할 수 있습니다.</span><span class="en">Branches hold <strong>sentences, not keywords</strong>. A traditional mind map records keywords meant to trigger recall, so the detailed thinking stays inside the author's own head. In Thinkdown a branch holds the body text itself, so branches arranged along your train of thought end up being the document. What you write exists as <strong>three views at once — map, Markdown and preview</strong>, and you can select any branch to copy or export just that part.</span></div>
+      </details>
+      <details>
+        <summary><span><span class="ko">마크다운을 몰라도 쓸 수 있나요?</span><span class="en">Do I need to know Markdown?</span></span>
+          <svg class="i"><use href="#i-chevron"/></svg></summary>
+        <div class="a"><span class="ko">쓸 수 있습니다. 마크다운은 <strong>결과물이지 입력 방식이 아닙니다.</strong> 가지에 문장을 적고 <code>Tab</code> 과 <code>Enter</code> 로 가지를 늘리면 됩니다. 기호를 칠 필요는 없지만 쳐도 알아서 바뀝니다 — <code>-</code> 는 불릿, <code>1.</code> 은 개요, <code>&gt;</code> 는 인용이 됩니다. 표는 격자에서 칸을 직접 채웁니다. 제목만은 예외로, 문단에서 <code>#</code> 를 쳐도 제목이 되지 않습니다 — 오타 하나로 문서의 계층이 흐트러지지 않게 하기 위해서이고, 제목은 <code>Tab</code> 이나 드래그로 만듭니다.</span><span class="en">You don't. Markdown is <strong>the output, not the input method.</strong> Write sentences on branches and grow them with <code>Tab</code> and <code>Enter</code>. You never have to type a marker, though they work if you do — <code>-</code> for a bullet, <code>1.</code> for an outline, <code>&gt;</code> for a quote. Tables are filled cell by cell. Headings are the one exception: typing <code>#</code> in a paragraph won't make one, so a stray keystroke can't flatten your outline. Headings come from <code>Tab</code> or from dragging.</span></div>
+      </details>
+      <details>
+        <summary><span><span class="ko">AI가 맵을 대신 그려주나요?</span><span class="en">Will the AI draw the map for me?</span></span>
+          <svg class="i"><use href="#i-chevron"/></svg></summary>
+        <div class="a"><span class="ko">정반대입니다. <strong>생각의 주도권을 인공지능에게 넘겨주지 마세요. 이 프로젝트의 핵심가치입니다.</strong> 개념도를 완성된 채로 받았을 때의 학습 효과는 g=0.653이었고, 학생이 직접 그렸을 때는 g=0.933이었습니다(<a href="https://link.springer.com/article/10.1186/s40594-025-00554-2">STEM 개념도 메타분석</a>). 생각을 AI가 대신 그려 주면 직접 만들면서 얻게 되는 많은 것들이 사라집니다. AI의 역할은 이미 만들어진 구조에서 <strong>빠진 곳을 짚어 주는</strong> 정도가 가장 알맞다고 봅니다.</span><span class="en">Quite the opposite. <strong>Don't hand the thinking over to AI — that is what this project is about.</strong> Students handed a finished concept map showed a learning effect of g=0.653; students who drew it themselves, g=0.933 (<a href="https://link.springer.com/article/10.1186/s40594-025-00554-2">STEM concept-mapping meta-analysis</a>). Having AI draw your thinking for you removes much of what building it would have taught. We think AI fits best where it <strong>points at what is missing</strong> in a structure you have already made.</span></div>
+      </details>
+      <details>
+        <summary><span><span class="ko">내 문서는 어디에 저장되나요?</span><span class="en">Where are my documents stored?</span></span>
+          <svg class="i"><use href="#i-chevron"/></svg></summary>
+        <div class="a"><span class="ko">설치한 컴퓨터 안에만 저장됩니다. 계정도 서버도 없습니다. 앱이 네트워크를 쓰는 경우는 <strong>새 버전 확인</strong>과 <strong>붙여넣은 링크의 썸네일 가져오기</strong> 두 가지뿐이고, 썸네일은 설정에서 끌 수 있습니다. 연결이 없어도 열기 · 편집 · 저장 · 내보내기가 모두 그대로 동작합니다. <strong>준비 중</strong> — 프로에서는 사용자가 폴더를 직접 골라 문서를 관리할 수 있습니다. 앱 바깥의 파일은 마크다운 문서이므로, AI가 자연스럽게 읽고 쓰며 도움을 줄 수 있습니다.</span><span class="en">Only on the computer you installed it on. There is no account and no server. The app uses the network for two things — <strong>checking for updates</strong> and <strong>fetching a thumbnail for a link you pasted</strong> — and thumbnails can be turned off in settings. Opening, editing, saving and exporting all work with no connection at all. <strong>Coming soon</strong> — Pro will let you choose the folder your documents live in. Files outside the app are plain Markdown, so AI tools can read and write them directly.</span></div>
+      </details>
+      <details>
+        <summary><span><span class="ko">백업하거나 새 컴퓨터로 옮길 수 있나요?</span><span class="en">Can I back up or move to a new computer?</span></span>
+          <svg class="i"><use href="#i-chevron"/></svg></summary>
+        <div class="a"><span class="ko">문서와 폴더 구조 전체를 <code>.zip</code> 파일 하나로 내보내 저장할 수 있습니다. 새 컴퓨터에서는 앱을 설치하고 그 파일을 그대로 불러들여 복구하면 됩니다. 문서를 하나씩 <code>.md</code> 로 내보내는 것도 됩니다.</span><span class="en">Export every document and your folder structure as a single <code>.zip</code>, then restore from that file. On a new machine, install the app and restore the <code>.zip</code>. Individual documents also export as <code>.md</code>.</span></div>
+      </details>
+      <details>
+        <summary><span><span class="ko">Windows에서 경고 화면이 뜹니다.</span><span class="en">Windows shows me a warning.</span></span>
+          <svg class="i"><use href="#i-chevron"/></svg></summary>
+        <div class="a"><span class="ko">아직 베타 버전이어서 코드서명 전이라 SmartScreen 경고가 뜹니다. 정식 버전에서는 경고 없이 설치됩니다. 지금은 스마트스크린의 <strong>추가 정보 → 실행</strong>을 누르면 설치됩니다. "실행" 선택지가 아예 없다면 그 PC는 <strong>스마트 앱 컨트롤</strong>이 켜져 있는 상태입니다 — Windows 11을 새로 설치한 PC에서만 기본으로 켜지며, <strong>설정 → 개인 정보 및 보안 → Windows 보안 → 앱 및 브라우저 컨트롤</strong>에서 확인할 수 있습니다. macOS 빌드는 Apple Developer ID로 서명·공증되어 있어 경고 없이 열립니다.</span><span class="en">This is still a beta and the Windows build isn't code-signed yet, so SmartScreen appears; the release build will install without the warning. For now, choose <strong>More info → Run anyway</strong> in SmartScreen and it installs. If there is no "Run anyway" at all, that PC has <strong>Smart App Control</strong> turned on — it is only on by default on clean installs of Windows 11, and you can check it under <strong>Settings → Privacy &amp; security → Windows Security → App &amp; browser control</strong>. The macOS build is signed and notarised with an Apple Developer ID, so it opens without any warning.</span></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11. 내려받기 ══════════════════════════════════════════════════ -->
+<section class="band" id="download">
+  <div class="shell">
+    <div class="head rise" style="margin-bottom:0">
+      <h2><span class="ko">내려받기</span><span class="en">Download</span></h2>
+      <p class="lede" id="dl-version"></p>
+    </div>
+
+    <div class="dl rise" style="--i:1" id="dl-list">
+      <div class="dl-row" data-os="mac-arm">
+        <span class="os">macOS — Apple Silicon (M1<span class="ko"> 이상</span><span class="en"> or newer</span>)</span>
+        <span class="hint"><span class="ko">열어서 <strong>Thinkdown</strong>을 응용 프로그램 폴더로
+          드래그합니다. 서명·공증되어 경고 없이 열립니다.</span>
+          <span class="en">Open it and drag <strong>Thinkdown</strong> into Applications. Signed and
+          notarised, so it opens without warnings.</span></span>
+        <a class="file" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg>.dmg</a>
+      </div>
+      <div class="dl-row" data-os="mac-intel">
+        <span class="os">macOS — Intel</span>
+        <span class="hint"><span class="ko">내 Mac의 칩은 <strong>Apple 메뉴 → 이 Mac에 관하여</strong>에서
+          볼 수 있습니다.</span>
+          <span class="en">Not sure which Mac you have? <strong>Apple menu → About This Mac.</strong></span></span>
+        <a class="file" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg>.dmg</a>
+      </div>
+      <div class="dl-row" data-os="win">
+        <span class="os"><span class="ko">Windows 10 · 11 (64비트)</span><span class="en">Windows 10 · 11 (64-bit)</span></span>
+        <span class="hint"><span class="ko">실행하면 설치됩니다. 관리자 권한이 필요 없습니다.</span>
+          <span class="en">Run it to install — no administrator rights needed.</span></span>
+        <a class="file" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg>.exe</a>
+      </div>
+      <div class="dl-row" data-os="linux">
+        <span class="os"><span class="ko">Linux (64비트)</span><span class="en">Linux (64-bit)</span></span>
+        <span class="hint"><span class="ko">AppImage는 <code>chmod +x</code> 후 실행하고, deb는
+          <code>sudo dpkg -i</code> 로 설치합니다.</span>
+          <span class="en"><code>chmod +x</code> the AppImage, or <code>sudo dpkg -i</code> the deb.</span></span>
+        <a class="file" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg>.AppImage</a>
+        <a class="file" data-os="linux-deb" href="https://github.com/mcnorton/thinkdown/releases/latest">
+          <svg class="i" style="width:15px;height:15px"><use href="#i-down"/></svg>.deb</a>
+      </div>
+    </div>
+
+    <div class="alert rise" style="--i:2;margin-top:20px">
+      <svg class="i"><use href="#i-info"/></svg>
+      <p><span class="ko"><strong>Windows에서 SmartScreen 경고가 뜹니다.</strong> 아직 베타 버전이고
+        코드서명 전이라 그렇습니다. 정식 버전이 공개되면 경고는 사라집니다 — 지금은 스마트스크린의
+        <strong>추가 정보 → 실행</strong>을 누르면 설치됩니다. 자세한 안내는
+        <a href="#faq">자주 묻는 질문</a>에 있습니다.</span>
+        <span class="en"><strong>Windows shows a SmartScreen warning</strong> — this is still a beta
+        and the build isn't code-signed yet; the warning goes away with the release build. For now,
+        choose <strong>More info → Run anyway</strong> in SmartScreen to install. There is more
+        detail in the <a href="#faq">questions</a> above.</span></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="shell">
+  <span>© 2026 McNorton &amp; Education</span>
+  <span class="grow"></span>
+  <a href="https://github.com/mcnorton/thinkdown">GitHub</a>
+  <a href="guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a href="#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <a href="#faq"><span class="ko">자주 묻는 질문</span><span class="en">FAQ</span></a>
+  <a href="https://github.com/mcnorton/thinkdown/issues"><span class="ko">문제 신고</span><span class="en">Report an issue</span></a>
+</div></footer>
+
+<script src="app.js"></script>
+</body>
+</html>

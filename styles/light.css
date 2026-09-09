@@ -1,0 +1,74 @@
+/* Light color palette (default). Base design tokens consumed via hsl(var(--x)).
+   Split out from styles.css so alternate visual themes can be added as sibling
+   files (e.g. a :root[data-theme="seoul"] { … } palette) without touching layout.
+   --radius / --font-scale live here as base defaults (always in effect). */
+:root {
+  /* Tells the UA to render native controls (form fields, scrollbars, spin
+     buttons) in the light scheme; dark.css flips this to `dark`. Without it,
+     native chrome stays light even under the dark palette. */
+  color-scheme: light;
+  /* shadcn/ui — light, neutral (zinc). HSL channels. */
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 10% 3.9%;
+  --radius: 0.5rem;
+  /* Update notification accent — deliberately vivid (blue-600) so the update pill
+     and bell badge stand out against the neutral zinc palette. Overridden per theme. */
+  --update-accent: 221 83% 53%;
+  --update-accent-foreground: 0 0% 100%;
+  /* map + preview font scale (settings > 외형 > 크기). 1 = current tuned sizes. */
+  --font-scale: 1;
+
+  /* ── Map / node surface layer ──────────────────────────────────────────────
+     The mind-map nodes/widgets are their own surface set (separate from the
+     shadcn card tokens, because in dark mode --card ≈ --background and a node
+     using it would vanish into the canvas). Light values here reproduce the
+     previous hardcoded look exactly; dark.css lifts them for elevation.
+     CONVENTION: never hardcode a colour in styles.css — always hsl(var(--x)) —
+     and define every new token in *both* palettes so new themes cover nodes. */
+  --node: 0 0% 100%;                 /* .node-box base bg (#fff) */
+  --node-foreground: 240 10% 3.9%;   /* node text (matches --foreground) */
+  --node-body: 240 5% 98%;           /* 문단 node bg (#fafafa) */
+  --node-th: 240 5% 96%;             /* table header row — slightly off the body (#f4f4f5) */
+  --node-border: 240 6% 84%;         /* node / cell / field borders (#d4d4d8) */
+  --node-heading: 214 100% 97%;      /* heading node bg (#eff6ff) */
+  --node-heading-border: 213 94% 78%;/* heading border + field focus (#93c5fd) */
+  --node-code: 217 33% 17%;          /* code node — dark block in both themes (#1e293b) */
+  --node-code-foreground: 214 32% 91%; /* code text (#e2e8f0) */
+
+  /* per-kind accent hues (accent bar + tag text share one token per kind) */
+  --kind-quote: 215 14% 47%;         /* #64748b */
+  --kind-code: 213 94% 78%;          /* #93c5fd */
+  --kind-list: 45 96% 64%;           /* #fcd34d — shared 개요/불릿 bar (list family) */
+  --kind-ordered: 26 91% 37%;        /* #b45309 (개요 tag) */
+  --kind-bullet: 192 91% 36%;        /* #0891b2 */
+  --kind-table: 262 83% 58%;         /* #7c3aed */
+  --kind-media: 330 81% 51%;         /* #db2777 */
+  --kind-hyperlink: 175 84% 32%;     /* #0d9488 */
+  --kind-divider: 215 14% 47%;       /* #64748b — 중립: 구분선은 내용이 아니라 구획이다 */
+
+  /* accents: link text / heading-number, and drag-drop blue */
+  --link: 224 76% 48%;               /* #1d4ed8 */
+  --drop: 217 91% 53%;               /* #2563eb */
+
+  /* Mind-map connector line (컬러테마 OFF). The heading "#" mark reuses this exact
+     token so a mark always reads as the line that feeds its node — see
+     .heading-mark in styles.css and drawEdge() in canvas/canvas.js. */
+  --edge: 215 20% 65%;               /* #94a3b8 */
+}

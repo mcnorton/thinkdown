@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사용법 — Thinkdown</title>
+<meta name="description" content="Thinkdown 사용법. 노드의 세 가지 상태, 트리 넓히기, 본문 종류, 표·이미지·링크, 드래그로 구조 바꾸기, 제목 규칙, 단축키.">
+<link rel="icon" href="assets/icon.png">
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="https://www.thinkdown.net/guide.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.thinkdown.net/guide.html">
+<meta property="og:site_name" content="Thinkdown">
+<meta property="og:title" content="사용법 — Thinkdown">
+<meta property="og:description" content="노드의 세 가지 상태, 트리 넓히기, 본문 종류, 표·이미지·링크, 드래그로 구조 바꾸기, 제목 규칙, 단축키.">
+<meta property="og:image" content="https://www.thinkdown.net/assets/screenshot-light.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<link rel="stylesheet" href="styles/light.css">
+<link rel="stylesheet" href="styles/dark.css">
+<script>
+  (function () {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var apply = function () {
+      document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+    };
+    apply(); mq.addEventListener('change', apply);
+
+    var saved = null;
+    try { saved = localStorage.getItem('thinkdown.site.lang'); } catch (e) {}
+    var lang = saved || (/^ko\b/i.test(navigator.language || '') ? 'ko' : 'en');
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+  })();
+</script>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5m0 0l6-6m-6 6l6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+</defs></svg>
+
+<nav class="nav" id="nav"><div class="shell">
+  <a class="brand" href="./"><img src="assets/icon.png" width="256" height="256" alt=""> Thinkdown</a>
+  <a class="btn ghost navlink" href="guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a class="btn ghost navlink" href="./#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <span class="grow"></span>
+  <button class="btn ghost" id="lang-btn" type="button"></button>
+  <a class="btn" href="./#download"><span class="ko">내려받기</span><span class="en">Download</span></a>
+</div></nav>
+
+<main class="doc"><div class="shell">
+
+  <div class="doc-hd">
+    <a class="back" href="./"><svg class="i"><use href="#i-left"/></svg>
+      <span class="ko">첫 화면</span><span class="en">Home</span></a>
+    <h1><span class="ko">사용법</span><span class="en">How to use it</span></h1>
+    <p class="lede"><span class="ko">처음 쓸 때 알아 두면 좋은 것들입니다. 순서대로 읽지 않아도
+      되고, 필요할 때 찾아보면 됩니다.</span>
+      <span class="en">Worth knowing early. Read it in order or come back when you need it.</span></p>
+  </div>
+
+  <div class="doc-grid">
+
+    <!-- ══ 목차 ══════════════════════════════════════════════════════ -->
+    <nav class="toc">
+      <details open>
+        <summary><span class="ko">차례</span><span class="en">Contents</span></summary>
+        <p class="cap"><span class="ko">차례</span><span class="en">Contents</span></p>
+        <ol>
+          <li><a href="#states"><span class="ko">노드의 세 가지 상태</span><span class="en">Three states</span></a></li>
+          <li><a href="#tree"><span class="ko">트리 넓히기</span><span class="en">Growing the tree</span></a></li>
+          <li><a href="#kinds"><span class="ko">본문 종류 바꾸기</span><span class="en">Body types</span></a></li>
+          <li><a href="#lists"><span class="ko">목록 안에서</span><span class="en">Inside a list</span></a></li>
+          <li><a href="#widgets"><span class="ko">표 · 이미지 · 링크</span><span class="en">Tables, images, links</span></a></li>
+          <li><a href="#restructure"><span class="ko">구조 바꾸기 (마우스)</span><span class="en">Restructuring</span></a></li>
+          <li><a href="#headings"><span class="ko">제목에 관한 세 가지 규칙</span><span class="en">Rules about headings</span></a></li>
+          <li><a href="#panes"><span class="ko">문서와 화면</span><span class="en">Documents and panes</span></a></li>
+        </ol>
+      </details>
+    </nav>
+
+    <!-- ══ 본문 ══════════════════════════════════════════════════════ -->
+    <div class="doc-body">
+
+      <!-- 1 ────────────────────────────────────────────────────────── -->
+      <section id="states">
+        <h2><span class="ko">노드에는 세 가지 상태가 있습니다</span>
+          <span class="en">A node has three states</span></h2>
+        <p><span class="ko">한 번 클릭하면 <strong>선택</strong>, 더블클릭하면 <strong>편집</strong>
+          입니다. 그리고 아무것도 건드리지 않은 상태가 읽기 전용입니다. 같은 <kbd>Enter</kbd> 라도
+          선택 중일 땐 새 노드를 만들고, 편집 중일 땐 입력을 마칩니다. 편집을 마치려면
+          <kbd>Enter</kbd> 또는 <kbd>Esc</kbd> 를 누르면 됩니다.</span>
+          <span class="en">One click <strong>selects</strong> it, a double click
+          <strong>edits</strong> it, and otherwise it's read-only. That's why the same
+          <kbd>Enter</kbd> does two things: while selected it creates a new node, while editing it
+          finishes your input. <kbd>Enter</kbd> or <kbd>Esc</kbd> ends editing.</span></p>
+        <p><span class="ko"><strong>선택은 <kbd>Esc</kbd> 로만 풀립니다.</strong> 입력을 마쳐도,
+          캔버스 빈 곳을 눌러도 방금 쓰던 노드는 선택된 채로 남습니다 — 다른 노드를 고르면 그쪽으로
+          옮겨갈 뿐입니다. 그래서 키보드로 이어서 작업할 때 "지금 어디에 있는지"를 잃어버리지
+          않습니다.</span>
+          <span class="en"><strong>Only <kbd>Esc</kbd> clears the selection.</strong> Finishing your
+          input doesn't, and neither does clicking empty canvas — the node you just wrote stays
+          selected until you pick another one. Keyboard work never loses track of where you
+          are.</span></p>
+        <p><span class="ko"><strong>선택한 노드는 화면 밖으로 나가지 않습니다.</strong> 새 노드를
+          만들거나 링크 썸네일이 늦게 도착해 맵이 밀려나면, 그 노드가 <strong>화면 가운데로</strong>
+          돌아옵니다. 반대로 직접 스크롤해서 옆으로 치워 둔 노드는 그대로 둡니다 — 화면을 되돌려
+          놓지 않습니다.</span>
+          <span class="en"><strong>The selected node never leaves the screen.</strong> If adding a
+          node or a late-arriving link thumbnail pushes the map around, that node comes back to the
+          <strong>centre</strong> of the frame. A node you scrolled away from yourself is left alone
+          — the view is not yanked back.</span></p>
+      </section>
+
+      <!-- 2 ────────────────────────────────────────────────────────── -->
+      <section id="tree">
+        <h2><span class="ko">트리 넓히기</span><span class="en">Growing the tree</span></h2>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">키</span><span class="en">Key</span></th>
+            <th><span class="ko">하는 일</span><span class="en">Does</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><kbd>Tab</kbd></td>
+              <td><span class="ko">지금 노드의 <strong>자식 제목</strong>을 만듭니다. 문서 제목에서 누르면 첫 챕터가 생깁니다.</span>
+                <span class="en">Creates a <strong>child heading</strong>. On the document title, that's your first chapter.</span></td></tr>
+            <tr><td><kbd>Enter</kbd> <span class="ko">(선택 상태)</span><span class="en">(selected)</span></td>
+              <td><span class="ko">같은 층에 <strong>형제 노드</strong>를 만듭니다. 제목이면 제목이, 본문이면 같은 종류의 본문이 생깁니다.</span>
+                <span class="en">Creates a <strong>sibling</strong> — a heading next to a heading, a body node of the same type next to a body node.</span></td></tr>
+            <tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td>
+              <td><span class="ko">제목에서 누르면 그 제목에 딸린 <strong>본문 노드</strong>를 붙입니다. 깊이에 상관없이 언제든 됩니다.</span>
+                <span class="en">On a heading, attaches a <strong>body node</strong> to that heading, at any depth.</span></td></tr>
+            <tr><td><kbd>Esc</kbd></td>
+              <td><span class="ko">편집을 마치고 선택 상태로 돌아갑니다.</span>
+                <span class="en">Ends editing and returns to the selected state.</span></td></tr>
+          </tbody>
+        </table></div>
+        <div class="alert"><svg class="i"><use href="#i-info"/></svg>
+          <p><span class="ko">내용이 비어 있는 새 노드에서는 형제가 만들어지지 않습니다(노드가 살짝
+            흔들립니다). 빈 노드만 잔뜩 생기는 일을 막기 위한 장치입니다.</span>
+            <span class="en">A brand-new empty node won't spawn siblings (it shakes instead). It
+            keeps you from filling the map with blanks.</span></p></div>
+      </section>
+
+      <!-- 3 ────────────────────────────────────────────────────────── -->
+      <section id="kinds">
+        <h2><span class="ko">본문 종류 바꾸기 — <kbd>Alt</kbd>+<kbd>1</kbd> ~ <kbd>Alt</kbd>+<kbd>8</kbd></span>
+          <span class="en">Body types — <kbd>Alt</kbd>+<kbd>1</kbd> to <kbd>Alt</kbd>+<kbd>8</kbd></span></h2>
+        <p><span class="ko">본문 노드에 포커스가 있을 때 누릅니다.</span>
+          <span class="en">Press these while a body node has focus.</span></p>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">키</span><span class="en">Key</span></th>
+            <th><span class="ko">종류</span><span class="en">Type</span></th>
+            <th><span class="ko">마크다운</span><span class="en">Markdown</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><kbd>Alt</kbd>+<kbd>1</kbd></td><td><span class="ko">문단</span><span class="en">Paragraph</span></td><td><span class="ko">그냥 단락</span><span class="en">plain text</span></td></tr>
+            <tr><td><kbd>Alt</kbd>+<kbd>2</kbd></td><td><span class="ko">불릿</span><span class="en">Bullet</span></td><td><code>* <span class="ko">항목</span><span class="en">item</span></code></td></tr>
+            <tr><td><kbd>Alt</kbd>+<kbd>3</kbd></td><td><span class="ko">개요</span><span class="en">Outline</span></td><td><code>1. <span class="ko">항목</span><span class="en">item</span></code></td></tr>
+            <tr><td><kbd>Alt</kbd>+<kbd>4</kbd></td><td><span class="ko">인용</span><span class="en">Quote</span></td><td><code>&gt; <span class="ko">인용</span><span class="en">quote</span></code></td></tr>
+            <tr><td><kbd>Alt</kbd>+<kbd>5</kbd></td><td><span class="ko">코드</span><span class="en">Code</span></td><td><span class="ko">펜스로 감싼 코드 블록</span><span class="en">a fenced code block</span></td></tr>
+            <tr><td><kbd>Alt</kbd>+<kbd>6</kbd></td><td><span class="ko">표</span><span class="en">Table</span></td><td><span class="ko">GFM 표 (격자에서 편집)</span><span class="en">a GFM table, edited in a grid</span></td></tr>
+            <tr><td><kbd>Alt</kbd>+<kbd>7</kbd></td><td><span class="ko">이미지</span><span class="en">Image</span></td><td><code>![alt](url)</code></td></tr>
+            <tr><td><kbd>Alt</kbd>+<kbd>8</kbd></td><td><span class="ko">링크</span><span class="en">Link</span></td><td><code>[<span class="ko">텍스트</span><span class="en">text</span>](url)</code></td></tr>
+          </tbody>
+        </table></div>
+        <p><span class="ko">노드 왼쪽 위의 <strong>종류 태그를 클릭</strong>하거나 <strong>우클릭 →
+          종류 변경</strong>으로도 고를 수 있습니다. 다만 내용이 들어 있는 노드는 글(문단·불릿·개요·
+          인용·코드)끼리만 바꿀 수 있습니다 — 표·이미지·링크로 바꾸면 내용이 사라지기 때문에, 그
+          전환은 <kbd>Alt</kbd> 단축키로만 열어 두었습니다.</span>
+          <span class="en">You can also <strong>click the type tag</strong> at the node's top-left,
+          or <strong>right-click → change type</strong>. Note that a node with content only switches
+          among the text types (paragraph, bullet, outline, quote, code) — turning it into a table,
+          image, or link would throw the text away, so those conversions are reserved for the
+          <kbd>Alt</kbd> shortcuts.</span></p>
+        <p><span class="ko"><strong>타이핑만으로 바뀌기도 합니다.</strong> 문단에서 <code>1. </code>
+          을 치면 개요로, <code>* </code> 또는 <code>- </code> 를 치면 불릿으로,
+          <code>https://…</code> 뒤에 공백을 치면 링크로 바뀝니다.</span>
+          <span class="en"><strong>Typing switches types too.</strong> In a paragraph,
+          <code>1. </code> turns it into an outline, <code>* </code> or <code>- </code> into a
+          bullet list, and a <code>https://…</code> followed by a space into a link.</span></p>
+      </section>
+
+      <!-- 4 ────────────────────────────────────────────────────────── -->
+      <section id="lists">
+        <h2><span class="ko">목록 안에서 (불릿 · 개요 · 인용)</span>
+          <span class="en">Inside a list (bullet, outline, quote)</span></h2>
+        <p><span class="ko">목록은 노드 하나에 여러 줄로 씁니다. 마커와 번호는 알아서 붙습니다.</span>
+          <span class="en">A list lives in one node, several lines deep. Markers and numbers take
+          care of themselves.</span></p>
+        <ul>
+          <li><span class="ko"><kbd>Enter</kbd> — 같은 깊이로 다음 항목이 생깁니다.</span>
+            <span class="en"><kbd>Enter</kbd> — next item at the same depth.</span></li>
+          <li><span class="ko"><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> — 항목을 한 단계
+            들여쓰거나 내어씁니다(번호도 다시 매겨집니다).</span>
+            <span class="en"><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> — indent or outdent
+            the item (numbering recalculates).</span></li>
+          <li><span class="ko">항목 맨 앞에서 <kbd>Backspace</kbd> — <strong>앞 항목과
+            합쳐집니다.</strong> 실수로 <kbd>Enter</kbd> 를 눌러 생긴 항목을 되돌릴 때 씁니다.
+            항목이 하나뿐이고 비어 있으면 마커가 사라지고 그냥 문단이 됩니다.</span>
+            <span class="en"><kbd>Backspace</kbd> at the start of an item — <strong>merges it into
+            the one above.</strong> That's how you undo an <kbd>Enter</kbd> you didn't mean. If it's
+            the only item and it's empty, the marker drops and it becomes a plain
+            paragraph.</span></li>
+        </ul>
+      </section>
+
+      <!-- 5 ────────────────────────────────────────────────────────── -->
+      <section id="widgets">
+        <h2><span class="ko">표 · 이미지 · 링크</span><span class="en">Tables, images and links</span></h2>
+        <p><span class="ko"><strong>표</strong>는 더블클릭해서 편집합니다. <kbd>Tab</kbd> 으로 옆 칸,
+          <kbd>Enter</kbd> 로 아랫줄로 갑니다(마지막 줄이면 행이 하나 늘어납니다). 편집 중에만 보이는
+          거터의 <strong>＋</strong> 로 행·열을 더하고 <strong>🗑</strong> 로 지웁니다.</span>
+          <span class="en"><strong>Tables</strong> open on a double click. <kbd>Tab</kbd> moves to
+          the next cell, <kbd>Enter</kbd> to the row below (adding a row at the end). The gutter's
+          <strong>＋</strong> adds a row or column, <strong>🗑</strong> removes one — both appear
+          only while editing.</span></p>
+        <p><span class="ko"><strong>이미지 · 링크</strong>는 <strong>보이는 줄이 곧 입력란</strong>
+          입니다. 평소엔 읽기 전용이라 글자처럼 보이다가, <strong>고치고 싶은 줄을 더블클릭</strong>
+          하면 그 자리에서 편집됩니다. <kbd>Tab</kbd> 으로 다음 칸, <kbd>Enter</kbd> 로
+          마칩니다.</span>
+          <span class="en"><strong>Images and links</strong> are edited on the line you see. Each
+          line is read-only until you <strong>double-click the one you want to change</strong>, and
+          it becomes editable right there. <kbd>Tab</kbd> moves to the next field, <kbd>Enter</kbd>
+          finishes.</span></p>
+        <ul>
+          <li><span class="ko"><strong>새 링크에는 주소만 넣으면 됩니다.</strong> 표시 텍스트 줄은
+            값이 정해지기 전까지 아예 보이지 않습니다 — 주소를 넣은 뒤 이름을 따로 지어 줄 필요가
+            없습니다. <code>example.com</code> 처럼 <code>https://</code> 를 빼고 써도 확정할 때
+            알아서 붙습니다.</span>
+            <span class="en"><strong>A new link only needs the address.</strong> The label line
+            isn't shown at all until it has a value — not even while you're editing, so there's no
+            second field asking to be filled in. Type <code>example.com</code> without the
+            <code>https://</code> and it is added for you on confirm.</span></li>
+          <li><span class="ko">주소를 확정하면 <code>가져오는 중…</code> 이 잠깐 뜨고, 그 페이지의
+            <strong>제목과 대표 이미지가 한 번에</strong> 채워집니다. 제목을 못 가져오면
+            <code>example.com</code> 같은 도메인이 들어갑니다.</span>
+            <span class="en">Confirm the address and the node briefly shows
+            <code>가져오는 중…</code> before the page's <strong>title and cover image land
+            together</strong>. If the title can't be fetched, the label falls back to the domain
+            (<code>example.com</code>).</span></li>
+          <li><span class="ko"><strong>채워진 뒤에</strong> 표시 텍스트 줄이 나타납니다. 마음에 들지
+            않으면 더블클릭해서 고치면 됩니다. 직접 쓴 표시 텍스트는 주소를 바꿔도 그대로 남습니다.
+            주소 줄 오른쪽의 <strong>↗</strong> 를 누르면 확인 후 브라우저로 열립니다.</span>
+            <span class="en"><strong>Once filled</strong>, the label line appears; double-click to
+            reword it — and a label you wrote survives a change of address. The <strong>↗</strong>
+            at the end of the address line opens it in your browser after a confirmation.</span></li>
+          <li><span class="ko">가져오려면 해당 사이트에 접속해야 하므로, 원치 않으면 <strong>설정 →
+            일반 → 페이지 썸네일</strong>에서 끌 수 있습니다.</span>
+            <span class="en">Fetching means contacting that site, so you can turn it off under
+            <strong>Settings → General → Page thumbnails</strong>.</span></li>
+          <li><span class="ko"><strong>이미지도 쓰는 방법은 완전히 같습니다.</strong> 위에 적은 링크
+            이야기가 그대로 적용됩니다 — 주소만 넣으면 되고, 표시 텍스트는 자동으로 채워진 뒤에
+            나타나며, 더블클릭해서 고칩니다. <strong>유튜브 주소</strong>를 넣으면 영상 포스터와
+            <strong>▶</strong> 가 뜨고 표시 텍스트가 영상 제목이 됩니다. ▶ 또는 ↗ 를 누르면
+            <strong>창이 열려</strong> 거기서 재생됩니다 — 맵 위에서 영상이 돌아가지
+            않습니다.</span>
+            <span class="en"><strong>Images behave identically</strong> — everything said above
+            about links applies as written: the address is all you enter, the label appears once it
+            has been filled in for you, and you double-click it to reword it. Paste a
+            <strong>YouTube URL</strong> and you get the video's poster with a <strong>▶</strong> on
+            it, labelled with the video's title. Press ▶ or ↗ and it <strong>opens in a
+            window</strong> to play there — nothing plays inside the map itself.</span></li>
+          <li><span class="ko">다만 그림은 <strong>잘리지 않습니다.</strong> 링크 썸네일은 카드 모양에
+            맞춰 자르지만 이미지 노드에서는 그림이 곧 내용이라 비율을 그대로 지킵니다. 같은 이유로
+            <strong>불러오지 못하면 알려 줍니다</strong>(링크 썸네일은 조용히 숨깁니다).</span>
+            <span class="en">The picture itself is <strong>never cropped</strong>, though. A link's
+            thumbnail is trimmed to the card's shape, but in an image node the picture is the
+            content, so its proportions are kept. For the same reason a picture that fails to load
+            <strong>says so</strong>, where a link thumbnail just disappears.</span></li>
+        </ul>
+      </section>
+
+      <!-- 6 ────────────────────────────────────────────────────────── -->
+      <section id="restructure">
+        <h2><span class="ko">구조 바꾸기 (마우스)</span><span class="en">Restructuring with the mouse</span></h2>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">동작</span><span class="en">Gesture</span></th>
+            <th><span class="ko">결과</span><span class="en">Result</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="ko">노드를 다른 노드 <strong>위에</strong> 놓기</span><span class="en">Drop a node <strong>onto</strong> another</span></td>
+              <td><span class="ko">그 노드의 <strong>아래로 이동</strong>합니다. 제목이면 깊이(<code>#</code>→<code>##</code>)가 알아서 맞춰집니다.</span>
+                <span class="en">It moves <strong>under</strong> that node. Headings re-level themselves (<code>#</code> → <code>##</code>).</span></td></tr>
+            <tr><td><span class="ko">노드를 <strong>노드 사이에</strong> 놓기</span><span class="en">Drop a node <strong>between</strong> two nodes</span></td>
+              <td><span class="ko">형제 <strong>순서</strong>만 바뀝니다(계층은 그대로).</span>
+                <span class="en">Only the sibling <strong>order</strong> changes; the hierarchy stays.</span></td></tr>
+            <tr><td><span class="ko">선택한 제목 위·아래의 <strong>↑ ↓</strong></span><span class="en"><strong>↑ ↓</strong> around a selected heading</span></td>
+              <td><span class="ko">같은 부모 안에서 앞뒤 제목과 자리를 바꿉니다(사이에 있는 문단 형제는 건너뜁니다). 딸린 하위 노드는 함께 움직입니다.</span>
+                <span class="en">Swaps the heading with the one before or after it under the same parent (paragraph siblings in between are skipped). Everything nested under it comes along.</span></td></tr>
+            <tr><td><span class="ko"><strong>우클릭 → 삭제</strong></span><span class="en"><strong>Right-click → delete</strong></span></td>
+              <td><span class="ko">노드를 지웁니다. 하위 노드가 있으면 몇 개가 함께 지워지는지 먼저 물어봅니다.</span>
+                <span class="en">Removes the node. If it has children, it tells you how many go with it first.</span></td></tr>
+          </tbody>
+        </table></div>
+        <div class="alert"><svg class="i"><use href="#i-info"/></svg>
+          <p><span class="ko"><strong>내용을 다 지워도 노드는 사라지지 않습니다.</strong> 지우는
+            방법은 우클릭 [삭제] 하나뿐이라, <kbd>Backspace</kbd> 를 몇 번 더 눌렀다고 가지가 통째로
+            날아갈 일이 없습니다.</span>
+            <span class="en"><strong>Clearing a node's text never deletes it.</strong> Right-click
+            delete is the only way out, so no amount of <kbd>Backspace</kbd> will wipe out a branch
+            by accident.</span></p></div>
+      </section>
+
+      <!-- 7 ────────────────────────────────────────────────────────── -->
+      <section id="headings">
+        <h2><span class="ko">제목에 관한 세 가지 규칙</span><span class="en">Three rules about headings</span></h2>
+        <ul>
+          <li><span class="ko"><strong>문단에서 친 <code>#</code> 는 그냥 글자입니다.</strong>
+            해시태그처럼 남고 제목으로 승격되지 않습니다(문단 하나 때문에 계층이 튀는 것을
+            막습니다).</span>
+            <span class="en"><strong>A <code>#</code> typed in a paragraph is just a
+            character</strong> — it stays a tag and never promotes, so one paragraph can't jump the
+            hierarchy.</span></li>
+          <li><span class="ko"><strong>제목 앞의 <code>#</code> 마크는 표시 전용입니다.</strong> 글자
+            크기와 색이 제목과 구분되어 있고, 편집 대상이 아니라서 실수로 지워지지 않습니다.
+            단계(<code>#</code> 의 개수)는 <kbd>Tab</kbd> 으로 하위 제목을 만들거나 가지를 드래그해
+            옮길 때만 바뀝니다 — 오타 하나로 트리가 평평해지는 사고가 없습니다.</span>
+            <span class="en"><strong>The <code>#</code> mark in front of a heading is display
+            only.</strong> It is set apart from the title in size and colour, and it isn't editable,
+            so it can't be deleted by accident. The level (how many <code>#</code>) changes only
+            when you add a child with <kbd>Tab</kbd> or drag a branch somewhere else — one stray
+            keystroke can never flatten the tree.</span></li>
+          <li><span class="ko"><strong>비어 있는 제목은</strong> <kbd>Backspace</kbd> 한 번으로
+            문단이 됩니다(하위 노드가 없을 때).</span>
+            <span class="en"><strong>An empty heading</strong> turns into a paragraph with one
+            <kbd>Backspace</kbd> (as long as it has no children).</span></li>
+        </ul>
+      </section>
+
+      <!-- 8 ────────────────────────────────────────────────────────── -->
+      <section id="panes">
+        <h2><span class="ko">문서와 화면</span><span class="en">Documents and panes</span></h2>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">키</span><span class="en">Key</span></th>
+            <th><span class="ko">하는 일</span><span class="en">Does</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><kbd>⌘N</kbd></td><td><span class="ko">새 문서 (비어 있는 문서가 있으면 그것을 재사용합니다)</span><span class="en">New document (an existing empty one is reused)</span></td></tr>
+            <tr><td><kbd>⌘B</kbd></td><td><span class="ko">왼쪽 탐색기 접기 / 펴기</span><span class="en">Show / hide the explorer on the left</span></td></tr>
+            <tr><td><kbd>⌘⌥B</kbd></td><td><span class="ko">오른쪽 마크다운 패널 접기 / 펴기</span><span class="en">Show / hide the Markdown pane on the right</span></td></tr>
+            <tr><td><kbd>⌘,</kbd></td><td><span class="ko">설정 — 테마 · 글자 크기 · 백업 · 업데이트</span><span class="en">Settings — theme, font size, backup, updates</span></td></tr>
+            <tr><td><kbd>⌘Z</kbd> / <kbd>⇧⌘Z</kbd></td><td><span class="ko">되돌리기 / 다시실행</span><span class="en">Undo / redo</span></td></tr>
+            <tr><td><kbd>Ctrl</kbd> + <span class="ko">휠 · 트랙패드 핀치</span><span class="en">wheel, or pinch</span></td>
+              <td><span class="ko">맵 확대 / 축소 (빈 공간을 끌면 이동)</span><span class="en">Zoom the map (drag empty space to pan)</span></td></tr>
+          </tbody>
+        </table></div>
+        <div class="alert"><svg class="i"><use href="#i-info"/></svg>
+          <p><span class="ko">Windows · Linux에서는 <code>⌘</code> 대신 <code>Ctrl</code> 을
+            씁니다.</span>
+            <span class="en">On Windows and Linux, use <code>Ctrl</code> instead of
+            <code>⌘</code>.</span></p></div>
+        <div class="alert"><svg class="i"><use href="#i-info"/></svg>
+          <p><span class="ko">노드 안에서 글자를 고치는 중이라면 <code>⌘Z</code> 는 <strong>그
+            입력칸의 글자 단위 되돌리기</strong>로 동작합니다. 맵 전체를 되돌리려면 입력을
+            마치고(<kbd>Esc</kbd>) 누르세요.</span>
+            <span class="en">While you're editing a node's text, <code>⌘Z</code> is <strong>the text
+            field's own character-level undo</strong>. Finish editing (<kbd>Esc</kbd>) to undo
+            changes to the map itself.</span></p></div>
+      </section>
+
+      <div class="after-steps" style="margin-top:52px">
+        <a class="btn outline" href="./">
+          <svg class="i"><use href="#i-left"/></svg>
+          <span class="ko">첫 화면으로</span><span class="en">Back to the home page</span></a>
+        <a class="btn" href="./#download">
+          <svg class="i"><use href="#i-down"/></svg>
+          <span class="ko">내려받기</span><span class="en">Download</span></a>
+      </div>
+
+    </div>
+  </div>
+</div></main>
+
+<footer><div class="shell">
+  <span>© 2026 McNorton &amp; Education</span>
+  <span class="grow"></span>
+  <a href="https://github.com/mcnorton/thinkdown">GitHub</a>
+  <a href="guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a href="./#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <a href="./#faq"><span class="ko">자주 묻는 질문</span><span class="en">FAQ</span></a>
+  <a href="https://github.com/mcnorton/thinkdown/issues"><span class="ko">문제 신고</span><span class="en">Report an issue</span></a>
+</div></footer>
+
+<script src="app.js"></script>
+</body>
+</html>

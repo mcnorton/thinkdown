@@ -1,0 +1,427 @@
+  /* ══════════════════════════════════════════════════════════════════════
+     Thinkdown 랜딩 — shadcn/ui 규격
+     색은 하나도 새로 정의하지 않는다. 전부 앱의 팔레트(styles/light.css,
+     dark.css)에서 온 hsl(var(--x)) 토큰이다. 사이트에 색을 복제해 두면 앱과
+     반드시 갈라진다.
+     그림자·확대·바운스를 쓰지 않는다 — 경계는 1px 테두리로, 상태 변화는
+     배경과 불투명도로만 표현한다.
+     ══════════════════════════════════════════════════════════════════════ */
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root { --shell: min(1120px, calc(100% - 44px)); }
+
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+                 'Apple SD Gothic Neo', 'Segoe UI', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.7;
+    font-feature-settings: 'ss01';
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;              /* 한글은 단어 중간에서 끊지 않는다 */
+  }
+  code, pre, kbd, .num {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 언어 전환: 두 언어를 모두 마크업에 두고 CSS로 고른다 */
+  html[data-lang="ko"] .en, html[data-lang="en"] .ko { display: none !important; }
+
+  .shell { width: var(--shell); margin-inline: auto; }
+  section { padding: clamp(68px, 8vw, 108px) 0; }
+  /* 상단 바가 sticky(57px)라 앵커로 뛰면 제목이 그 밑에 가린다. */
+  section[id] { scroll-margin-top: 76px; }
+  /* 절 사이 경계 — 배경을 바꾸는 대신 선 하나로 나눈다(shadcn은 면을 거의 칠하지 않는다) */
+  .band { background: hsl(var(--muted) / .45); border-block: 1px solid hsl(var(--border)); }
+
+  h1, h2, h3 { margin: 0; line-height: 1.25; letter-spacing: -0.025em; text-wrap: balance; }
+  h1 { font-size: clamp(33px, 5vw, 54px); font-weight: 700; letter-spacing: -0.035em; }
+  h2 { font-size: clamp(25px, 3.3vw, 37px); font-weight: 700; }
+  h3 { font-size: 16.5px; font-weight: 620; }
+  p { margin: 0; }
+  a { color: hsl(var(--link)); text-underline-offset: 3px; }
+
+  .kicker {
+    font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+  .lede {
+    margin-top: 16px; max-width: 62ch; font-size: 17.5px;
+    color: hsl(var(--muted-foreground));
+  }
+  .head { margin-bottom: 44px; }
+  .head h2 { margin-top: 10px; }
+
+  code:not(pre code) {
+    font-size: .88em; padding: .14em .38em; border-radius: 4px;
+    background: hsl(var(--muted)); border: 1px solid hsl(var(--border));
+  }
+  kbd {
+    display: inline-block; font-size: .8em; line-height: 1.5; padding: .1em .42em;
+    border: 1px solid hsl(var(--border)); border-bottom-width: 2px; border-radius: 5px;
+    background: hsl(var(--background)); color: hsl(var(--foreground));
+    white-space: nowrap;
+  }
+
+  /* 아이콘 — 이모지 대신 인라인 SVG 스프라이트. 외부 의존 없음. */
+  .i { width: 18px; height: 18px; stroke: currentColor; fill: none; flex: none;
+       stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ── 스크롤 리빌 — 페이드 + 8px. 확대도 바운스도 없다. ─────────────── */
+  .rise { opacity: 0; transform: translateY(8px); }
+  .rise.seen {
+    opacity: 1; transform: none;
+    transition: opacity .5s ease, transform .5s ease;
+    transition-delay: calc(var(--i, 0) * 55ms);
+  }
+  @media (prefers-reduced-motion: reduce) { .rise, .rise.seen { opacity: 1; transform: none; transition: none; } }
+
+  /* ══ 컴포넌트 ═══════════════════════════════════════════════════════ */
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 40px; padding: 0 18px;
+    border: 1px solid transparent; border-radius: calc(var(--radius) - 2px);
+    background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+    font: inherit; font-size: 14.5px; font-weight: 550; text-decoration: none;
+    cursor: pointer; white-space: nowrap;
+    transition: opacity .15s ease, background-color .15s ease, border-color .15s ease;
+  }
+  .btn:hover { opacity: .9; }
+  .btn:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+  .btn.lg { height: 46px; padding: 0 24px; font-size: 15.5px; }
+  .btn.outline {
+    background: transparent; color: hsl(var(--foreground));
+    border-color: hsl(var(--border));
+  }
+  .btn.outline:hover { background: hsl(var(--muted)); opacity: 1; }
+  .btn.ghost {
+    background: transparent; color: hsl(var(--muted-foreground));
+    border-color: transparent; font-weight: 500;
+  }
+  .btn.ghost:hover { background: hsl(var(--muted)); color: hsl(var(--foreground)); opacity: 1; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; letter-spacing: .03em; line-height: 1.6;
+    padding: 1px 8px; border-radius: 999px;
+    border: 1px solid hsl(var(--border)); background: hsl(var(--background));
+    color: hsl(var(--muted-foreground)); white-space: nowrap;
+  }
+  .badge.solid {
+    background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
+  }
+
+  .card {
+    border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    background: hsl(var(--card)); padding: 22px 22px 24px;
+  }
+  .card h3 { margin-bottom: 7px; }
+  .card p { font-size: 14.8px; color: hsl(var(--muted-foreground)); }
+
+  .alert {
+    display: flex; gap: 12px; align-items: flex-start;
+    border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    background: hsl(var(--muted) / .55);
+    padding: 15px 17px; font-size: 14.8px; color: hsl(var(--muted-foreground));
+  }
+  .alert .i { margin-top: 3px; color: hsl(var(--foreground)); opacity: .55; }
+  .alert strong { color: hsl(var(--foreground)); }
+
+  /* 열 수를 auto-fit 에 맡기지 않는다 — 카드 4장이 3+1로, 9장이 4+4+1로 떨어져
+     마지막 줄에 카드 한 장만 남는다. 개수에 맞는 열 수를 직접 정한다. */
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: 1fr; }
+  .g3 { grid-template-columns: 1fr; }
+  @media (min-width: 620px) { .g3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 760px) { .g2 { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 940px) { .g3 { grid-template-columns: repeat(3, 1fr); } }
+
+  /* ── 상단 바 ─────────────────────────────────────────────────────── */
+  .nav {
+    position: sticky; top: 0; z-index: 40;
+    background: hsl(var(--background) / .85); backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent; transition: border-color .2s ease;
+  }
+  .nav.stuck { border-bottom-color: hsl(var(--border)); }
+  .nav > div { display: flex; align-items: center; gap: 6px; height: 57px; }
+  .brand {
+    display: flex; align-items: center; gap: 9px; margin-right: 12px;
+    font-weight: 640; letter-spacing: -.02em; color: inherit; text-decoration: none;
+  }
+  .brand img { width: 24px; height: 24px; border-radius: 6px; }
+  .grow { flex: 1; }
+  .nav .btn.ghost { height: 34px; padding: 0 12px; font-size: 14px; }
+  .nav .btn:not(.ghost) { height: 34px; padding: 0 14px; font-size: 14px; }
+  @media (max-width: 640px) { .nav .navlink { display: none; } }
+
+  /* ── 히어로 ──────────────────────────────────────────────────────── */
+  .hero { padding: clamp(56px, 7vw, 92px) 0 clamp(40px, 5vw, 60px); text-align: center; }
+  .hero .inner { max-width: 800px; margin-inline: auto; }
+  .hero .eyebrow {
+    display: inline-flex; align-items: center; gap: 7px; margin-bottom: 22px;
+    padding: 4px 13px; border: 1px solid hsl(var(--border)); border-radius: 999px;
+    background: hsl(var(--muted) / .5);
+    font-size: 12.5px; font-weight: 550; letter-spacing: .01em;
+    color: hsl(var(--muted-foreground));
+  }
+  .hero p.sub {
+    margin: 20px auto 0; max-width: 64ch; font-size: 17.5px;
+    color: hsl(var(--muted-foreground));
+  }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 30px; }
+  .hero-note { margin-top: 13px; font-size: 13.5px; color: hsl(var(--muted-foreground)); }
+  .facts {
+    display: flex; flex-wrap: wrap; gap: 8px 26px; justify-content: center;
+    margin-top: 30px; font-size: 14px; color: hsl(var(--muted-foreground));
+  }
+  .facts span { display: inline-flex; align-items: center; gap: 7px; }
+  .facts .i { width: 15px; height: 15px; stroke-width: 2.2; }
+
+  /* 좁은 화면에서 CTA를 세로로 쌓고 줄바꿈을 허용한다. 주 버튼의 라벨은 릴리스에서
+     읽어 채우므로("macOS (Apple Silicon)용 v0.15.74 내려받기") 기본값 nowrap 이면
+     버튼 하나가 페이지 전체 폭을 밀어내 가로 스크롤이 생긴다. */
+  @media (max-width: 560px) {
+    .cta { flex-direction: column; align-items: stretch; }
+    .cta .btn {
+      width: 100%; height: auto; min-height: 46px;
+      padding: 11px 18px; line-height: 1.45; white-space: normal;
+    }
+  }
+
+  /* ── 실제 화면 — 라이트·다크를 3초마다 겹쳐 넘긴다 ────────────────── */
+  /* 두 장을 같은 자리에 겹쳐 두고 불투명도만 바꾼다. 이미지의 실제 비율을 상자에
+     박아 두어야(aspect-ratio) 넘어갈 때 레이아웃이 흔들리지 않는다. */
+  .shotwrap { padding-bottom: clamp(52px, 6vw, 76px); }
+  .shots {
+    position: relative; margin-inline: auto; max-width: 100%;
+    aspect-ratio: 1920 / 878;
+    border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) + 4px);
+    overflow: hidden; background: hsl(var(--muted));
+  }
+  .shot {
+    position: absolute; inset: 0; display: block;
+    width: 100%; height: 100%; object-fit: cover;
+    transition: opacity .7s ease;
+  }
+  /* 스크립트가 없어도 한 장은 보인다 — 테마에 맞는 쪽. */
+  .shot-dark { opacity: 0; }
+  :root[data-theme="dark"] .shot-light { opacity: 0; }
+  :root[data-theme="dark"] .shot-dark { opacity: 1; }
+  /* 스크립트가 켜지면 .auto 가 붙고, 그때부터 .on 이 결정한다. */
+  .shots.auto .shot { opacity: 0; }
+  .shots.auto .shot.on { opacity: 1; }
+
+  /* figure 의 기본 여백은 **세로만** 없앤다. margin:0 으로 뭉개면 .shell 의
+     margin-inline: auto 가 죽어 이미지가 왼쪽에 붙는다. */
+  .shotwrap figure { margin-block: 0; }
+  figcaption {
+    margin-top: 16px; text-align: center; font-size: 14px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* ── 왜 Thinkdown인가 ────────────────────────────────────────────── */
+  .prose { max-width: 68ch; font-size: 17px; color: hsl(var(--muted-foreground)); }
+  .prose p + p { margin-top: 18px; }
+  .prose strong { color: hsl(var(--foreground)); font-weight: 620; }
+
+  /* ── 이런 걸 만들 때 씁니다 — 종류별 색 띠 ────────────────────────── */
+  .usecase { position: relative; padding-left: 24px; }
+  .usecase::before {
+    content: ''; position: absolute; left: 0; top: 22px; bottom: 24px; width: 3px;
+    border-radius: 3px; background: var(--c, hsl(var(--border)));
+  }
+
+  /* ── 처음 60초 ───────────────────────────────────────────────────── */
+  .steps { max-width: 760px; display: grid; gap: 2px; }
+  .step {
+    display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: baseline;
+    padding: 15px 0; border-bottom: 1px solid hsl(var(--border));
+  }
+  .steps .step:first-child { border-top: 1px solid hsl(var(--border)); }
+  .step .n {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 999px;
+    border: 1px solid hsl(var(--border)); background: hsl(var(--background));
+    font-size: 12.5px; font-weight: 600; color: hsl(var(--muted-foreground));
+    transform: translateY(3px);
+  }
+  .step p { font-size: 15.5px; }
+  .after-steps {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 16px;
+    margin-top: 30px; max-width: 760px;
+  }
+  .after-steps p { font-size: 15px; color: hsl(var(--muted-foreground)); flex: 1 1 320px; }
+
+  /* ── 무엇이 좋은가 ───────────────────────────────────────────────── */
+  .feat .i { width: 19px; height: 19px; color: hsl(var(--muted-foreground)); margin-bottom: 12px; }
+
+  /* ── 요금제 ──────────────────────────────────────────────────────── */
+  .tiers { align-items: stretch; }
+  .tier { display: flex; flex-direction: column; padding: 26px 24px 28px; }
+  .tier.pick { border-color: hsl(var(--foreground) / .45); }
+  .tier-hd { display: flex; align-items: center; gap: 9px; }
+  .tier-hd h3 { font-size: 17px; }
+  .price {
+    margin-top: 14px; font-size: 30px; font-weight: 700; letter-spacing: -.03em; line-height: 1.2;
+    font-variant-numeric: tabular-nums;   /* 서체는 본문 그대로 — 모노스페이스는 $3.99가 벌어진다 */
+  }
+  .price small { font-size: 14px; font-weight: 500; color: hsl(var(--muted-foreground)); letter-spacing: 0; }
+  .tier > p.sum { margin-top: 10px; font-size: 14.5px; color: hsl(var(--muted-foreground)); }
+  .tier ul {
+    list-style: none; margin: 22px 0 0; padding: 20px 0 0;
+    border-top: 1px solid hsl(var(--border));
+    display: grid; gap: 13px; align-content: start; flex: 1;
+  }
+  .tier li { display: grid; grid-template-columns: 17px 1fr; gap: 10px; font-size: 14.5px; color: hsl(var(--muted-foreground)); }
+  .tier li .i { width: 15px; height: 15px; margin-top: 5px; stroke-width: 2.4; color: hsl(var(--foreground)); opacity: .5; }
+  .tier li strong { color: hsl(var(--foreground)); font-weight: 600; }
+  .tier li .badge { margin-left: 6px; vertical-align: 1px; }
+
+  /* ── FAQ ─────────────────────────────────────────────────────────── */
+  .faq { max-width: 860px; border-top: 1px solid hsl(var(--border)); }
+  .faq details { border-bottom: 1px solid hsl(var(--border)); }
+  .faq summary {
+    display: flex; align-items: center; gap: 14px; justify-content: space-between;
+    padding: 19px 2px; cursor: pointer; list-style: none;
+    font-size: 16px; font-weight: 560;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary:hover { color: hsl(var(--muted-foreground)); }
+  .faq summary .i { transition: transform .2s ease; color: hsl(var(--muted-foreground)); }
+  .faq details[open] summary .i { transform: rotate(180deg); }
+  .faq .a {
+    padding: 0 2px 22px; max-width: 74ch;
+    font-size: 15.3px; color: hsl(var(--muted-foreground));
+  }
+  .faq .a strong { color: hsl(var(--foreground)); font-weight: 600; }
+
+  /* ── 내려받기 ────────────────────────────────────────────────────── */
+  .dl { margin-top: 30px; border: 1px solid hsl(var(--border)); border-radius: var(--radius); overflow: hidden; }
+  .dl-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+    padding: 17px 20px; background: hsl(var(--card));
+  }
+  .dl-row + .dl-row { border-top: 1px solid hsl(var(--border)); }
+  .dl-row .os { font-size: 15px; font-weight: 580; min-width: 210px; }
+  .dl-row .hint { flex: 1 1 300px; font-size: 13.8px; color: hsl(var(--muted-foreground)); }
+  .dl-row .file {
+    display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px;
+    border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) - 2px);
+    background: hsl(var(--background)); color: hsl(var(--foreground));
+    font-size: 13.5px; font-weight: 560; text-decoration: none;
+    transition: background-color .15s ease;
+  }
+  .dl-row .file:hover { background: hsl(var(--muted)); }
+
+  /* ── 푸터 ────────────────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid hsl(var(--border));
+    padding: 30px 0; font-size: 13.8px; color: hsl(var(--muted-foreground));
+  }
+  footer > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+  footer a { color: inherit; text-decoration: none; }
+  footer a:hover { color: hsl(var(--foreground)); text-decoration: underline; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   사용법 페이지(guide.html) — 왼쪽 목차 + 오른쪽 본문
+   랜딩과 같은 토큰·컴포넌트를 쓴다. 여기 있는 것은 문서 레이아웃뿐이다.
+   ══════════════════════════════════════════════════════════════════════ */
+
+.doc { padding: clamp(38px, 5vw, 56px) 0 clamp(64px, 8vw, 96px); }
+.doc-hd { max-width: 68ch; margin-bottom: clamp(34px, 4vw, 48px); }
+.doc-hd h1 { font-size: clamp(30px, 4.2vw, 42px); }
+.doc-hd .lede { margin-top: 14px; }
+.back {
+  display: inline-flex; align-items: center; gap: 7px; margin-bottom: 20px;
+  font-size: 14px; font-weight: 550; color: hsl(var(--muted-foreground)); text-decoration: none;
+}
+.back:hover { color: hsl(var(--foreground)); }
+.back .i { width: 15px; height: 15px; }
+
+.doc-grid { display: grid; grid-template-columns: 216px 1fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+@media (max-width: 900px) { .doc-grid { grid-template-columns: 1fr; gap: 28px; } }
+
+/* 목차 — 넓은 화면에서는 따라 붙고, 좁은 화면에서는 접히는 목록이 된다 */
+.toc { position: sticky; top: 77px; }
+/* 넓은 화면에서는 <details>를 펼친 목록으로만 쓴다 — 여는 손잡이(summary)를 감추고
+   .cap 이 제목을 맡는다. 좁은 화면에서는 정반대(아래 미디어 쿼리). */
+.toc summary { display: none; }
+.toc .cap {
+  font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+  color: hsl(var(--muted-foreground)); padding: 0 10px 10px;
+}
+.toc ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid hsl(var(--border)); }
+.toc a {
+  display: block; padding: 7px 12px; margin-left: -1px;
+  border-left: 1px solid transparent;
+  font-size: 14px; color: hsl(var(--muted-foreground)); text-decoration: none;
+}
+.toc a:hover { color: hsl(var(--foreground)); }
+.toc a.here { color: hsl(var(--foreground)); font-weight: 560; border-left-color: hsl(var(--foreground)); }
+@media (max-width: 900px) {
+  .toc { position: static; }
+  .toc .cap { display: none; }
+  .toc details { border: 1px solid hsl(var(--border)); border-radius: var(--radius); }
+  .toc summary {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 15px; cursor: pointer; list-style: none;
+    font-size: 14.5px; font-weight: 560;
+  }
+  .toc summary::after {
+    content: ''; width: 7px; height: 7px; margin-right: 3px;
+    border-right: 1.5px solid hsl(var(--muted-foreground));
+    border-bottom: 1.5px solid hsl(var(--muted-foreground));
+    transform: rotate(45deg) translate(-2px, -2px); transition: transform .2s ease;
+  }
+  .toc details[open] summary::after { transform: rotate(225deg) translate(-1px, -1px); }
+  .toc summary::-webkit-details-marker { display: none; }
+  .toc ol { border-left: 0; padding: 0 8px 10px; }
+}
+
+/* 본문 */
+.doc-body { min-width: 0; max-width: 74ch; }
+.doc-body section { padding: 0; }
+.doc-body section + section { margin-top: clamp(44px, 5vw, 64px); }
+.doc-body h2 {
+  font-size: clamp(21px, 2.4vw, 26px); scroll-margin-top: 77px;
+  padding-bottom: 12px; border-bottom: 1px solid hsl(var(--border));
+}
+.doc-body h2 + * { margin-top: 20px; }
+.doc-body p { font-size: 15.8px; color: hsl(var(--muted-foreground)); }
+.doc-body p + p, .doc-body p + .alert, .doc-body .alert + p,
+.doc-body p + .tablewrap, .doc-body .tablewrap + p,
+.doc-body p + ul, .doc-body ul + p, .doc-body .alert + .alert,
+.doc-body .tablewrap + .alert, .doc-body ul + .alert { margin-top: 18px; }
+.doc-body strong { color: hsl(var(--foreground)); font-weight: 620; }
+.doc-body ul { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.doc-body ul li {
+  position: relative; padding-left: 18px;
+  font-size: 15.8px; color: hsl(var(--muted-foreground));
+}
+.doc-body ul li::before {
+  content: ''; position: absolute; left: 2px; top: 11px;
+  width: 5px; height: 5px; border-radius: 999px; background: hsl(var(--border));
+}
+.doc-body ul ul { margin-top: 12px; }
+
+/* 표 — 좁은 화면에서 페이지가 아니라 표가 스크롤된다 */
+.tablewrap { overflow-x: auto; border: 1px solid hsl(var(--border)); border-radius: var(--radius); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 11px 15px; vertical-align: top; }
+thead th {
+  font-size: 12.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  color: hsl(var(--muted-foreground)); background: hsl(var(--muted) / .5);
+  border-bottom: 1px solid hsl(var(--border)); white-space: nowrap;
+}
+tbody tr + tr td { border-top: 1px solid hsl(var(--border)); }
+tbody td { color: hsl(var(--muted-foreground)); }
+tbody td:first-child { color: hsl(var(--foreground)); white-space: nowrap; }
+tbody td strong { color: hsl(var(--foreground)); }
