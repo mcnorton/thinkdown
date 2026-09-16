@@ -96,10 +96,11 @@ how it will actually look before you send it.
 - Not sure which Mac you have? **Apple menu → About This Mac**. "Apple M…" means arm64,
   "Intel" means x64.
 - macOS builds are signed and notarized with an Apple Developer ID, so they open without warnings.
-- Windows builds aren't code-signed yet, so **SmartScreen shows a warning** —
-  choose **More info → Run anyway** and it installs.
-  - **If there is no "Run anyway" at all**, that PC has **Smart App Control** turned on. It blocks
-    unsigned apps with no per-app exception. Check under **Settings → Privacy & security →
+- Windows builds are **code-signed**, so the install screen shows the publisher name
+  (**McNorton&Education**). Signing is new, though, so **SmartScreen may still warn** until the
+  certificate builds reputation — choose **More info → Run anyway** and it installs.
+  - **If there is no "Run anyway" at all**, that PC has **Smart App Control** turned on. It can block
+    even signed apps that have no reputation, with no per-app exception. Check under **Settings → Privacy & security →
     Windows Security → App & browser control**; it is only on by default on **clean installs** of
     Windows 11 (not on upgraded PCs or Windows 10).
   - Execution is also blocked if **Reputation-based protection → Check apps and files** is set to
@@ -126,6 +127,14 @@ One click **selects** it, a double click **edits** it, and otherwise it's read-o
 That's why the same `Enter` does two things: while selected it creates a new node, while
 editing it finishes your input. `Enter` or `Esc` ends editing.
 
+**Only `Esc` clears the selection.** Finishing your input doesn't, and neither does clicking
+empty canvas — the node you just wrote stays selected until you pick another one. Keyboard
+work never loses track of where you are.
+
+**The selected node never leaves the screen.** If adding a node or a late-arriving link
+thumbnail pushes the map around, that node comes back to the **centre** of the frame. A node
+you scrolled away from yourself is left alone — the view is not yanked back.
+
 ## Growing the tree
 
 | Key | Does |
@@ -138,7 +147,7 @@ editing it finishes your input. `Enter` or `Esc` ends editing.
 > A brand-new empty node won't spawn siblings (it shakes instead). It keeps you from
 > filling the map with blanks.
 
-## Body types — `Alt+1` to `Alt+8`
+## Body types — `Alt+1` to `Alt+9`
 
 Press these while a body node has focus.
 
@@ -152,6 +161,7 @@ Press these while a body node has focus.
 | `Alt+6` | Table | a GFM table, edited in a grid |
 | `Alt+7` | Image | `![alt](url)` |
 | `Alt+8` | Link | `[text](url)` |
+| `Alt+9` | Divider | `---`, a horizontal rule (no content, and no connector line) |
 
 You can also **click the type tag** at the node's top-left, or **right-click → change type**.
 Note that a node with content only switches among the text types (paragraph, bullet, outline,
@@ -171,14 +181,33 @@ A list lives in one node, several lines deep. Markers and numbers take care of t
   an `Enter` you didn't mean. If it's the only item and it's empty, the marker drops and it
   becomes a plain paragraph.
 
-## Tables and images
+## Tables, images and links
 
 - **Tables** open on a double click. `Tab` moves to the next cell, `Enter` to the row below
   (adding a row at the end). The gutter's **＋** adds a row or column, **🗑** removes one —
   both appear only while editing.
-- **Images and links** also open on a double click, URL first. Press `Enter` and a second
-  field appears for the description (alt text, or the link's label). Paste a YouTube URL and
-  the player embeds itself.
+- **Images and links** are edited on the line you see. Each line is read-only until you
+  **double-click the one you want to change**, and it becomes editable right there. `Tab` moves
+  to the next field, `Enter` finishes.
+  - **A new link only needs the address.** The label line isn't shown at all until it has a
+    value — not even while you're editing, so there's no second field asking to be filled in.
+    Type `example.com` without the `https://` and it is added for you on confirm.
+  - Confirm the address and the node briefly shows `가져오는 중…` before the page's **title and
+    cover image land together**. If the title can't be fetched, the label falls back to the
+    domain (`example.com`).
+  - **Once filled**, the label line appears; double-click to reword it — and a label you wrote
+    survives a change of address.
+    The **↗** at the end of the address line opens it in your browser after a confirmation.
+  - Fetching means contacting that site, so you can turn it off under
+    **Settings → General → Link node thumbnails**.
+  - **Images behave identically** — everything said above about links applies as written: the
+    address is all you enter, the label appears once it has been filled in for you, and you
+    double-click it to reword it. Paste a **YouTube URL** and you get the video's poster with a
+    **▶** on it, labelled with the video's title. Press ▶ or ↗ and it **opens in a window** to
+    play there — nothing plays inside the map itself.
+  - The picture itself is **never cropped**, though. A link's thumbnail is trimmed to the card's
+    shape, but in an image node the picture *is* the content, so its proportions are kept. For the
+    same reason a picture that fails to load **says so**, where a link thumbnail just disappears.
 
 ## Restructuring with the mouse
 
@@ -196,8 +225,10 @@ A list lives in one node, several lines deep. Markers and numbers take care of t
 
 - **A `#` typed in a paragraph is just a character** — it stays a tag and never promotes,
   so one paragraph can't jump the hierarchy.
-- **A heading with children is locked.** Delete the `#` and it comes right back, which keeps
-  the subtree underneath from flattening.
+- **The `#` mark in front of a heading is display only.** It is set apart from the title in size
+  and colour, and it isn't editable, so it can't be deleted by accident. The level (how many `#`)
+  changes only when you add a child with `Tab` or drag a branch somewhere else — one stray
+  keystroke can never flatten the tree.
 - **An empty heading** turns into a paragraph with one `Backspace` (as long as it has no children).
 
 ## Documents and panes
@@ -207,7 +238,7 @@ A list lives in one node, several lines deep. Markers and numbers take care of t
 | `⌘N` | New document (an existing empty one is reused) |
 | `⌘B` | Show / hide the explorer on the left |
 | `⌘⌥B` | Show / hide the Markdown pane on the right |
-| `⌘,` | Settings — theme, font size, backup, updates |
+| `⌘,` | Settings — theme, font, text size, editing width, connectors, backup, updates |
 | `⌘Z` / `⇧⌘Z` | Undo / redo |
 | `Ctrl` + wheel, or pinch | Zoom the map (drag empty space to pan) |
 
@@ -221,15 +252,22 @@ A list lives in one node, several lines deep. Markers and numbers take care of t
 ## Your data stays on your machine
 
 No account, no server, no telemetry. Documents live on this computer and never leave it.
-The only time the app touches the network is to check whether a newer version exists.
+The app reaches the network for exactly two things — checking whether a newer version exists,
+and fetching a link node's thumbnail (only from that link's own site, and you can switch it off).
 You can take everything with you at any point via `.zip` backup or `.md` export.
 
-## About this repository
+## Development
 
-Thinkdown's source lives in a private repository. What's published here are the release assets
-(DMG / zip / exe / AppImage / deb) and the auto-update feed — the same place the app checks when
-it looks for a new version. Per-version changes are listed under
-[releases](https://github.com/mcnorton/thinkdown/releases).
+It's a **vanilla JS ES module** single-page app with no build step, packaged for the desktop
+with Electron. No bundler, no framework, no virtual DOM — every mutation goes through
+`core/model.js` and a single observer redraws the view. Architecture, module, and data-model
+documents live under `docs/` in the repository (written in Korean).
+
+```bash
+npm start      # run the Electron desktop app (dev)
+npm test       # pure-logic tests (node --test test/*.test.mjs)
+npm run dist   # build the desktop app → dist/<version>/
+```
 
 ---
 
