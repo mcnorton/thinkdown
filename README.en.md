@@ -135,6 +135,11 @@ work never loses track of where you are.
 thumbnail pushes the map around, that node comes back to the **centre** of the frame. A node
 you scrolled away from yourself is left alone — the view is not yanked back.
 
+**The app leaves the zoom level alone.** Switch on **[Auto Zoom]** above the canvas and, when the
+node you pick won't fit on screen together with its heading, the map shrinks a little to show
+both — only when you cross into another chapter, and it returns to full size as soon as you
+double-click to edit. It starts switched off.
+
 ## Growing the tree
 
 | Key | Does |
@@ -146,6 +151,20 @@ you scrolled away from yourself is left alone — the view is not yanked back.
 
 > A brand-new empty node won't spawn siblings (it shakes instead). It keeps you from
 > filling the map with blanks.
+
+## Moving around with the keyboard
+
+Once a node is selected, the arrow keys walk you around the map.
+
+| Key | Does |
+|---|---|
+| `←` | Goes to the **parent**. From a top-level chapter, that's the document title. |
+| `→` | Goes to the **first child**. A heading with folded paragraphs unfolds on the way in. |
+| `↑` `↓` | Goes to the node **directly above or below** at the same level — across chapters, too. |
+| `Shift`+arrow | Leaves the selection where it is and pages **the view** that way. |
+
+> The arrows move between nodes only while a node is **selected**. While you're editing, they
+> move the cursor inside the text as usual.
 
 ## Body types — `Alt+1` to `Alt+9`
 
@@ -241,6 +260,10 @@ A list lives in one node, several lines deep. Markers and numbers take care of t
 | `⌘,` | Settings — theme, font, text size, editing width, connectors, backup, updates |
 | `⌘Z` / `⇧⌘Z` | Undo / redo |
 | `Ctrl` + wheel, or pinch | Zoom the map (drag empty space to pan) |
+
+The **[Explorer]** and **[MD]** buttons in the bar on the left do the same — press once to open,
+again to close. The Markdown pane on the right opens **only when you open it**; editing a
+paragraph no longer pops it open, so close it whenever you want the canvas to yourself.
 
 > On Windows and Linux, use `Ctrl` instead of `⌘`.
 
