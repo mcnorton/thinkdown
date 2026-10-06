@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사용법 — Thinkdown</title>
+<meta name="description" content="Thinkdown 사용법. Enter · Tab · 화살표로 빠르게 적기, 첫 글자로 바꾸기, 꼭 알아 둘 마크다운, 복사해서 AI 에게, 구조 다듬기, 보기 좋게, 발표하기.">
+<link rel="icon" href="assets/icon.png">
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="https://www.thinkdown.net/guide.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.thinkdown.net/guide.html">
+<meta property="og:site_name" content="Thinkdown">
+<meta property="og:title" content="사용법 — Thinkdown">
+<meta property="og:description" content="Enter · Tab · 화살표로 빠르게 적기, 첫 글자로 바꾸기, 꼭 알아 둘 마크다운, 복사해서 AI 에게, 구조 다듬기, 보기 좋게, 발표하기.">
+<meta property="og:image" content="https://www.thinkdown.net/assets/screenshot-1-markdown.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<link rel="stylesheet" href="styles/default.css">
+<script>
+  (function () {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var apply = function () {
+      document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+    };
+    apply(); mq.addEventListener('change', apply);
+
+    var saved = null;
+    try { saved = localStorage.getItem('thinkdown.site.lang'); } catch (e) {}
+    var lang = saved || (/^ko\b/i.test(navigator.language || '') ? 'ko' : 'en');
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+  })();
+</script>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5m0 0l6-6m-6 6l6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+</defs></svg>
+
+<nav class="nav" id="nav"><div class="shell">
+  <a class="brand" href="./"><img src="assets/icon.png" width="256" height="256" alt=""> Thinkdown</a>
+  <a class="btn ghost navlink" href="guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a class="btn ghost navlink" href="./#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <span class="grow"></span>
+  <button class="btn ghost" id="lang-btn" type="button"></button>
+  <a class="btn" href="./#download"><span class="ko">내려받기</span><span class="en">Download</span></a>
+</div></nav>
+
+<main class="doc"><div class="shell">
+
+  <div class="doc-hd">
+    <a class="back" href="./"><svg class="i"><use href="#i-left"/></svg>
+      <span class="ko">첫 화면</span><span class="en">Home</span></a>
+    <h1><span class="ko">사용법</span><span class="en">How to use it</span></h1>
+    <p class="lede"><span class="ko">생각을 가지처럼 늘어놓으면, 그 지도가 그대로 마크다운 문서가 됩니다.
+      꼭 필요한 것만 모았습니다. 순서대로 읽지 않아도 됩니다.</span>
+      <span class="en">Lay out your thoughts as branches, and the map becomes a Markdown document as it is.
+      Only the essentials are here. Read in any order.</span></p>
+  </div>
+
+  <div class="doc-grid">
+
+    <!-- ══ 목차 ══════════════════════════════════════════════════════ -->
+    <nav class="toc">
+      <details open>
+        <summary><span class="ko">차례</span><span class="en">Contents</span></summary>
+        <p class="cap"><span class="ko">차례</span><span class="en">Contents</span></p>
+        <ol>
+          <li><a href="#write"><span class="ko">빠르게 적기</span><span class="en">Writing fast</span></a></li>
+          <li><a href="#first"><span class="ko">첫 글자로 바꾸기</span><span class="en">The first character</span></a></li>
+          <li><a href="#markdown"><span class="ko">꼭 알아 둘 마크다운</span><span class="en">Markdown you should know</span></a></li>
+          <li><a href="#links"><span class="ko">링크와 그림</span><span class="en">Links and images</span></a></li>
+          <li><a href="#ai"><span class="ko">복사해서 AI 에게</span><span class="en">Copy it to an AI</span></a></li>
+          <li><a href="#structure"><span class="ko">구조 다듬기</span><span class="en">Shaping the structure</span></a></li>
+          <li><a href="#look"><span class="ko">보기 좋게</span><span class="en">Making it look good</span></a></li>
+          <li><a href="#slideshow"><span class="ko">발표하기</span><span class="en">Presenting</span></a></li>
+          <li><a href="#safe"><span class="ko">문서 지키기</span><span class="en">Keeping documents safe</span></a></li>
+        </ol>
+      </details>
+    </nav>
+
+    <!-- ══ 본문 ══════════════════════════════════════════════════════ -->
+    <div class="doc-body">
+
+      <div class="alert" style="margin-bottom:40px"><svg class="i"><use href="#i-info"/></svg>
+        <p><span class="ko">앱 안에도 같은 내용이 있습니다. 탐색기의 <strong>Thinkdown Guide</strong> 폴더에
+          빠른 안내와 사용설명서를 넣어두었습니다. 설명서도 Thinkdown 문서라 읽으면서 바로 연습할 수 있습니다.
+          Windows · Linux 에서는 <kbd>⌘</kbd> 를 <kbd>Ctrl</kbd> 로, <kbd>⌥</kbd> 를 <kbd>Alt</kbd> 로 읽으세요.</span>
+          <span class="en">The same guide lives inside the app too: the <strong>Thinkdown Guide</strong> folder in
+          the Explorer holds a Quick Guide and a Manual. They are Thinkdown documents, so you can practise as you
+          read. On Windows and Linux, read <kbd>⌘</kbd> as <kbd>Ctrl</kbd> and <kbd>⌥</kbd> as <kbd>Alt</kbd>.</span></p></div>
+
+      <!-- 1 ────────────────────────────────────────────────────────── -->
+      <section id="write">
+        <h2><span class="ko">빠르게 적기 — Enter · Tab · 화살표</span>
+          <span class="en">Writing fast — Enter, Tab and the arrows</span></h2>
+        <p><span class="ko">생각을 적는 데 필요한 키는 이것뿐입니다. 노드를 한 번 눌러 고른 뒤 눌러 보세요.</span>
+          <span class="en">These are the only keys you need to get your thoughts down. Click a node once to select it, then try them.</span></p>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">키</span><span class="en">Key</span></th>
+            <th><span class="ko">하는 일</span><span class="en">Does</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><kbd>Enter</kbd></td>
+              <td><span class="ko">같은 단계에 하나 더</span><span class="en">One more at the same level</span></td></tr>
+            <tr><td><kbd>Tab</kbd></td>
+              <td><span class="ko">한 단계 아래에 하나 더</span><span class="en">One more, one level down</span></td></tr>
+            <tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td>
+              <td><span class="ko">제목 아래에 문단 붙이기</span><span class="en">A paragraph under a heading</span></td></tr>
+            <tr><td><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd></td>
+              <td><span class="ko">부모 · 자식 · 위 · 아래 노드로 옮겨 다니기</span><span class="en">Move to the parent, child, node above or below</span></td></tr>
+            <tr><td><span class="ko">더블클릭</span><span class="en">Double-click</span></td>
+              <td><span class="ko">그 노드의 글 고치기</span><span class="en">Edit that node's text</span></td></tr>
+            <tr><td><kbd>Esc</kbd></td>
+              <td><span class="ko">고치기를 마치기</span><span class="en">Finish editing</span></td></tr>
+          </tbody>
+        </table></div>
+        <p><span class="ko">제목을 고른 채 <kbd>Tab</kbd> 으로 하위 제목을 만들고, 글을 쓰고 <kbd>Esc</kbd>, 다시
+          <kbd>Enter</kbd> 로 다음 제목. 손을 키보드에서 떼지 않고 생각을 쏟아 낼 수 있습니다. 순서나 단계가
+          틀려도 괜찮습니다. 나중에 끌어서 옮기면 됩니다.</span>
+          <span class="en">Select a heading, press <kbd>Tab</kbd> for a child heading, type, press <kbd>Esc</kbd>,
+          then <kbd>Enter</kbd> for the next one. Your hands never leave the keyboard. Don't worry about order or
+          levels — you can drag things into place later.</span></p>
+        <ul>
+          <li><span class="ko"><kbd>⌘Z</kbd> / <kbd>⇧⌘Z</kbd> — 되돌리기 / 다시실행</span>
+            <span class="en"><kbd>⌘Z</kbd> / <kbd>⇧⌘Z</kbd> — undo / redo</span></li>
+          <li><span class="ko"><kbd>⌘D</kbd> — 고른 노드를 아래 노드까지 통째로 복제</span>
+            <span class="en"><kbd>⌘D</kbd> — duplicate the selected node with everything under it</span></li>
+          <li><span class="ko"><kbd>⌥1</kbd> ~ <kbd>⌥9</kbd> — 본문 종류 바꾸기 (문단 · 불릿 · 개요 · 인용 · 코드 · 표 · 이미지 · 링크 · 구분선)</span>
+            <span class="en"><kbd>⌥1</kbd> to <kbd>⌥9</kbd> — change the body type (paragraph, bullet, outline, quote, code, table, image, link, divider)</span></li>
+          <li><span class="ko"><kbd>⌘N</kbd> — 새 문서 · <kbd>F5</kbd> — 슬라이드쇼</span>
+            <span class="en"><kbd>⌘N</kbd> — new document · <kbd>F5</kbd> — slideshow</span></li>
+          <li><span class="ko">우클릭 → <strong>[삭제]</strong> — 노드 지우기 (글을 다 지워도 노드는 남습니다)</span>
+            <span class="en">Right-click → <strong>[Delete]</strong> — delete a node (clearing its text never removes it)</span></li>
+        </ul>
+      </section>
+
+      <!-- 2 ────────────────────────────────────────────────────────── -->
+      <section id="first">
+        <h2><span class="ko">첫 글자로 바꾸기</span><span class="en">Changing type with the first character</span></h2>
+        <p><span class="ko">종류를 고르지 않아도, 문단의 첫 글자로 바로 바뀝니다.</span>
+          <span class="en">No need to pick a type. The first character of a paragraph does it.</span></p>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">문단 맨 앞에</span><span class="en">At the start</span></th>
+            <th><span class="ko">바뀌는 것</span><span class="en">Becomes</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><code>*</code> <span class="ko">또는</span><span class="en">or</span> <code>-</code> <span class="ko">+ 띄어쓰기</span><span class="en">+ space</span></td>
+              <td><span class="ko">불릿 목록</span><span class="en">Bullet list</span></td></tr>
+            <tr><td><code>1.</code> <span class="ko">+ 띄어쓰기</span><span class="en">+ space</span></td>
+              <td><span class="ko">번호 목록 (개요)</span><span class="en">Numbered list (outline)</span></td></tr>
+            <tr><td><code>&gt;</code> <span class="ko">+ 띄어쓰기</span><span class="en">+ space</span></td>
+              <td><span class="ko">인용</span><span class="en">Quote</span></td></tr>
+            <tr><td><code>#</code> <span class="ko">(빈 문단에서)</span><span class="en">(in an empty paragraph)</span></td>
+              <td><span class="ko">제목</span><span class="en">Heading</span></td></tr>
+            <tr><td><code>```</code></td>
+              <td><span class="ko">코드</span><span class="en">Code</span></td></tr>
+            <tr><td><span class="ko">주소 + 띄어쓰기</span><span class="en">An address + space</span></td>
+              <td><span class="ko">링크 노드</span><span class="en">Link node</span></td></tr>
+          </tbody>
+        </table></div>
+        <ul>
+          <li><span class="ko">문단 중간에 주소를 치고 띄어쓰기를 누르면 그 주소가 <strong>링크 알약</strong>이 됩니다.</span>
+            <span class="en">Type an address in the middle of a paragraph and press Space, and it becomes a <strong>link pill</strong>.</span></li>
+          <li><span class="ko">줄에 <code>---</code> 만 쓰면 편집을 마칠 때 그 자리가 구분선으로 나뉩니다.</span>
+            <span class="en">A line of just <code>---</code> becomes a divider when you finish editing.</span></li>
+          <li><span class="ko">불릿을 쓰다가 <kbd>⌘Enter</kbd> 를 누르면 체크박스가 생깁니다. 다시 누르면 체크됩니다.</span>
+            <span class="en"><kbd>⌘Enter</kbd> in a bullet list adds a checkbox. Press it again to tick it.</span></li>
+          <li><span class="ko">목록 안에서: <kbd>Enter</kbd> 다음 항목 · <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> 들여쓰기 / 내어쓰기 · 빈 항목에서 <kbd>Enter</kbd> 목록 끝내기</span>
+            <span class="en">Inside a list: <kbd>Enter</kbd> next item · <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> indent / outdent · <kbd>Enter</kbd> on an empty item ends the list</span></li>
+        </ul>
+      </section>
+
+      <!-- 3 ────────────────────────────────────────────────────────── -->
+      <section id="markdown">
+        <h2><span class="ko">꼭 알아 둘 마크다운</span><span class="en">Markdown you should know</span></h2>
+        <p><span class="ko">지도의 제목은 마크다운의 제목이 되고, 본문 노드는 그 아래의 문단 · 목록 · 표가 됩니다.
+          오른쪽 마크다운 패널(<kbd>⌘⌥B</kbd>)을 열어 두면 둘이 함께 바뀌는 것을 볼 수 있습니다.</span>
+          <span class="en">Headings on the map become Markdown headings, and body nodes become the paragraphs, lists
+          and tables under them. Open the Markdown panel on the right (<kbd>⌘⌥B</kbd>) to watch both change together.</span></p>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">쓰는 법</span><span class="en">You write</span></th>
+            <th><span class="ko">보이는 것</span><span class="en">You get</span></th>
+            <th><span class="ko">지도에서는</span><span class="en">On the map</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><code># <span class="ko">제목</span><span class="en">Heading</span></code></td><td><span class="ko">제목</span><span class="en">Heading</span></td><td><span class="ko">제목 노드 (# 개수가 단계)</span><span class="en">Heading node (the number of # is the level)</span></td></tr>
+            <tr><td><code>**<span class="ko">굵게</span><span class="en">bold</span>**</code></td><td><span class="ko">굵은 글씨</span><span class="en">Bold text</span></td><td><span class="ko">문단 안에 그대로</span><span class="en">Inside a paragraph</span></td></tr>
+            <tr><td><code>*<span class="ko">기울임</span><span class="en">italic</span>*</code></td><td><span class="ko">기울인 글씨</span><span class="en">Italic text</span></td><td><span class="ko">문단 안에 그대로</span><span class="en">Inside a paragraph</span></td></tr>
+            <tr><td><code>* <span class="ko">항목</span><span class="en">item</span></code></td><td><span class="ko">불릿 목록</span><span class="en">Bullet list</span></td><td><span class="ko">불릿 노드</span><span class="en">Bullet node</span></td></tr>
+            <tr><td><code>1. <span class="ko">항목</span><span class="en">item</span></code></td><td><span class="ko">번호 목록</span><span class="en">Numbered list</span></td><td><span class="ko">개요 노드</span><span class="en">Outline node</span></td></tr>
+            <tr><td><code>&gt; <span class="ko">인용</span><span class="en">quote</span></code></td><td><span class="ko">인용</span><span class="en">Quote</span></td><td><span class="ko">인용 노드</span><span class="en">Quote node</span></td></tr>
+            <tr><td><code>[<span class="ko">이름</span><span class="en">name</span>](<span class="ko">주소</span><span class="en">address</span>)</code></td><td><span class="ko">링크</span><span class="en">Link</span></td><td><span class="ko">링크 노드 또는 알약</span><span class="en">Link node or pill</span></td></tr>
+            <tr><td><code>![<span class="ko">설명</span><span class="en">description</span>](<span class="ko">주소</span><span class="en">address</span>)</code></td><td><span class="ko">그림</span><span class="en">Image</span></td><td><span class="ko">이미지 노드</span><span class="en">Image node</span></td></tr>
+            <tr><td><code>- [ ] <span class="ko">할 일</span><span class="en">to do</span></code></td><td><span class="ko">체크박스</span><span class="en">Checkbox</span></td><td><span class="ko">불릿 노드</span><span class="en">Bullet node</span></td></tr>
+            <tr><td><code>---</code></td><td><span class="ko">가로선</span><span class="en">Horizontal rule</span></td><td><span class="ko">구분선 노드</span><span class="en">Divider node</span></td></tr>
+          </tbody>
+        </table></div>
+        <p><span class="ko">코드 블록은 <code>```</code> 로 위아래를 감싸고, 표는 칸을 <code>|</code> 로 나눕니다. 지도에서는
+          코드 노드 · 표 노드가 됩니다.</span>
+          <span class="en">A code block is wrapped in <code>```</code> above and below, and a table separates cells with
+          <code>|</code>. On the map they become a code node and a table node.</span></p>
+      </section>
+
+      <!-- 4 ────────────────────────────────────────────────────────── -->
+      <section id="links">
+        <h2><span class="ko">링크와 그림</span><span class="en">Links and images</span></h2>
+        <p><span class="ko"><strong>링크 노드</strong>에는 주소만 넣으면 됩니다. 페이지 제목과 대표 그림이 저절로
+          채워지고, 이름은 더블클릭해서 고칠 수 있습니다.</span>
+          <span class="en">A <strong>link node</strong> only needs an address. The page title and preview image fill in
+          by themselves; double-click the name to change it.</span></p>
+        <p><span class="ko">문단 안의 링크는 이름만 든 <strong>알약</strong>으로 보입니다.</span>
+          <span class="en">A link inside a paragraph shows as a <strong>pill</strong> with just its name.</span></p>
+        <ul>
+          <li><span class="ko"><strong>고치기</strong> — 알약을 클릭하거나 화살표로 들어가면 원문이 펼쳐집니다.</span>
+            <span class="en"><strong>Edit</strong> — click the pill or move into it with the arrow keys, and its source opens up.</span></li>
+          <li><span class="ko"><strong>꺼내기</strong> — 알약 끝의 ⬇ 를 누르면 문단 아래의 링크 노드가 됩니다.</span>
+            <span class="en"><strong>Pull out</strong> — click the ⬇ at the end of the pill to turn it into a link node below the paragraph.</span></li>
+          <li><span class="ko"><strong>넣기</strong> — 링크 노드를 문단 위로 끌어다 놓으면 알약이 됩니다.</span>
+            <span class="en"><strong>Tuck in</strong> — drag a link node onto a paragraph and it becomes a pill.</span></li>
+        </ul>
+        <p><span class="ko"><strong>이미지 노드</strong>(<kbd>⌥7</kbd>)에 그림 주소를 넣으면 그림이 보입니다. 유튜브 주소를
+          넣으면 영상 표지가 뜨고, ▶ 를 누르면 창이 열려 재생됩니다.</span>
+          <span class="en">Put an image address in an <strong>image node</strong> (<kbd>⌥7</kbd>) to show the picture.
+          A YouTube address shows the video poster; click ▶ to play it in a window.</span></p>
+      </section>
+
+      <!-- 5 ────────────────────────────────────────────────────────── -->
+      <section id="ai">
+        <h2><span class="ko">복사해서 AI 에게</span><span class="en">Copy it to an AI</span></h2>
+        <p><span class="ko">오른쪽 마크다운 패널의 <strong>[복사]</strong> 를 누르면 지금 보이는 범위가 마크다운으로
+          복사됩니다. ChatGPT · Claude · Gemini 같은 AI 의 입력칸에 그대로 붙여넣으세요. 제목과 목록이 살아 있어
+          AI 가 구조를 그대로 이해합니다.</span>
+          <span class="en"><strong>[Copy]</strong> in the Markdown panel on the right copies what is shown as Markdown.
+          Paste it straight into ChatGPT, Claude, Gemini or any other AI. Headings and lists survive, so the AI sees
+          your structure as it is.</span></p>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">이렇게 고르고 복사하면</span><span class="en">Select this, then Copy</span></th>
+            <th><span class="ko">복사되는 범위</span><span class="en">You get</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="ko">문서 제목</span><span class="en">The document title</span></td>
+              <td><span class="ko">문서 전체</span><span class="en">The whole document</span></td></tr>
+            <tr><td><span class="ko">제목 하나</span><span class="en">A heading</span></td>
+              <td><span class="ko">그 장만</span><span class="en">Just that chapter</span></td></tr>
+            <tr><td><kbd>Shift</kbd>+<span class="ko">클릭으로 제목 여러 개</span><span class="en">click several headings</span></td>
+              <td><span class="ko">고른 장만 모아서</span><span class="en">Just those chapters, together</span></td></tr>
+          </tbody>
+        </table></div>
+        <p><span class="ko">기본값 <strong>[헤딩정렬]</strong> 은 가장 얕은 제목이 <code>#</code> 가 되도록 맞춰 줍니다.
+          장 하나만 복사해도 깔끔한 문서가 됩니다.</span>
+          <span class="en">The default, <strong>[Align Headings]</strong>, makes the shallowest heading a <code>#</code>.
+          Even a single chapter comes out as a tidy document.</span></p>
+        <p><span class="ko"><strong>붙여넣기</strong> — AI 의 답이나 다른 곳의 마크다운을 복사해 와서, 노드를 고른 채
+          <kbd>⌘V</kbd> 를 누르면 지도에 가지로 붙습니다. 파일로는 <strong>[내보내기]</strong> 로 <code>.md</code> 를
+          저장하고, <strong>[가져오기]</strong> 로 <code>.md</code> 를 문서로 들여옵니다.</span>
+          <span class="en"><strong>Pasting</strong> — copy an AI's answer or any other Markdown, select a node and press
+          <kbd>⌘V</kbd>, and it lands on the map as branches. For files, <strong>[Export]</strong> saves an
+          <code>.md</code> and <strong>[Import]</strong> brings <code>.md</code> files in as documents.</span></p>
+      </section>
+
+      <!-- 6 ────────────────────────────────────────────────────────── -->
+      <section id="structure">
+        <h2><span class="ko">구조 다듬기</span><span class="en">Shaping the structure</span></h2>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">동작</span><span class="en">Action</span></th>
+            <th><span class="ko">결과</span><span class="en">Result</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="ko">노드를 다른 노드 위에 놓기</span><span class="en">Drop a node on another node</span></td>
+              <td><span class="ko">그 아래로 들어갑니다. 제목 단계는 알아서 맞춰집니다.</span><span class="en">It moves underneath. Heading levels adjust by themselves.</span></td></tr>
+            <tr><td><span class="ko">노드 사이에 놓기</span><span class="en">Drop between nodes</span></td>
+              <td><span class="ko">순서만 바뀝니다.</span><span class="en">Only the order changes.</span></td></tr>
+            <tr><td><span class="ko">고른 제목 위 · 아래의 ↑ ↓</span><span class="en">↑ ↓ above and below a selected heading</span></td>
+              <td><span class="ko">앞뒤 제목과 자리를 바꿉니다.</span><span class="en">Swaps it with the heading before or after.</span></td></tr>
+            <tr><td><kbd>⌘X</kbd> → <span class="ko">옮길 곳의 제목에서</span><span class="en">on the destination heading</span> <kbd>⌘V</kbd></td>
+              <td><span class="ko">화면 위쪽 바구니에 담았다가 멀리 옮깁니다.</span><span class="en">Moves it far away through the basket at the top of the screen.</span></td></tr>
+          </tbody>
+        </table></div>
+        <ul>
+          <li><span class="ko"><strong>문단 접기</strong> — 제목에 마우스를 올리면 오른쪽에 <code>&lt;</code> 가 뜹니다. 그 제목의 문단들을 접고 펼칩니다.</span>
+            <span class="en"><strong>Fold paragraphs</strong> — hover over a heading and a <code>&lt;</code> appears on the right. It folds and unfolds that heading's paragraphs.</span></li>
+          <li><span class="ko"><strong>포커스</strong> — 캔버스 위의 [포커스] 를 켜면 고른 장만 보입니다.</span>
+            <span class="en"><strong>Focus</strong> — turn on [Focus] above the canvas to show only the selected chapter.</span></li>
+          <li><span class="ko"><strong>확대 · 축소</strong> — <kbd>Ctrl</kbd> + 휠 또는 트랙패드 핀치. 빈 곳을 끌면 화면이 움직입니다.</span>
+            <span class="en"><strong>Zoom</strong> — <kbd>Ctrl</kbd> + wheel or a trackpad pinch. Drag an empty spot to pan.</span></li>
+        </ul>
+      </section>
+
+      <!-- 7 ────────────────────────────────────────────────────────── -->
+      <section id="look">
+        <h2><span class="ko">보기 좋게</span><span class="en">Making it look good</span></h2>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">항목</span><span class="en">Setting</span></th>
+            <th><span class="ko">하는 일</span><span class="en">Does</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="ko">색상 테마</span><span class="en">Color Theme</span></td>
+              <td><span class="ko">[설정] &gt; [외형] 에서 기본 · 서울풍경 · 한국궁궐 중에 고릅니다.</span><span class="en">Pick Default, Seoul City or Seoul Palace in [Settings] &gt; [Appearance].</span></td></tr>
+            <tr><td><span class="ko">다크 모드</span><span class="en">Dark mode</span></td>
+              <td><span class="ko">왼쪽 세로 막대의 달 버튼, 또는 [설정] &gt; [일반] &gt; [화면 모드].</span><span class="en">The moon button on the left bar, or [Settings] &gt; [General] &gt; [Theme].</span></td></tr>
+            <tr><td><span class="ko">[색상]</span><span class="en">[Palette]</span></td>
+              <td><span class="ko">캔버스 위에서 켜면 장마다 다른 색으로 가지를 칠합니다.</span><span class="en">Turn it on above the canvas to color each chapter's branches differently.</span></td></tr>
+            <tr><td><span class="ko">[제목번호]</span><span class="en">[Head. No.]</span></td>
+              <td><span class="ko">제목 앞에 1. · 1.1. 같은 번호를 붙이고, 장을 옮기면 알아서 다시 매깁니다.</span><span class="en">Numbers headings 1., 1.1. and so on, and renumbers when you move chapters.</span></td></tr>
+            <tr><td><span class="ko">노드 모양</span><span class="en">Node style</span></td>
+              <td><span class="ko">[설정] &gt; [외형] 의 연결선(곡선 · 직선 · 꺾인선 · 둥근 꺾인선), 배치 형태(트리형 · 나비날개형), 더 큰 텍스트, 본문 편집영역 너비, 글꼴 선택.</span>
+                <span class="en">In [Settings] &gt; [Appearance]: Connectors (Curved, Straight, Elbow, Rounded Elbow), Layout (Tree, Butterfly), Larger Text, Editing Width and Font.</span></td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <!-- 8 ────────────────────────────────────────────────────────── -->
+      <section id="slideshow">
+        <h2><span class="ko">발표하기 (F5)</span><span class="en">Presenting (F5)</span></h2>
+        <p><span class="ko">슬라이드를 따로 만들지 않습니다. <kbd>F5</kbd> 를 누르면 지금 문서가 그대로 슬라이드쇼가 됩니다.</span>
+          <span class="en">You don't build slides separately. Press <kbd>F5</kbd> and the current document becomes a slideshow.</span></p>
+        <div class="tablewrap"><table>
+          <thead><tr>
+            <th><span class="ko">문서에서</span><span class="en">In the document</span></th>
+            <th><span class="ko">슬라이드로</span><span class="en">In the show</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="ko">맨 앞의 <code>Title :</code> · <code>Subtitle :</code> 문단</span><span class="en">A <code>Title :</code> · <code>Subtitle :</code> paragraph at the top</span></td>
+              <td><span class="ko">제목 슬라이드</span><span class="en">Title slide</span></td></tr>
+            <tr><td><span class="ko">첫 제목 앞의 문단</span><span class="en">Paragraphs before the first heading</span></td>
+              <td><span class="ko">서문</span><span class="en">Preface</span></td></tr>
+            <tr><td><code>#</code> <span class="ko">제목들</span><span class="en">headings</span></td>
+              <td><span class="ko">목차</span><span class="en">Table of contents</span></td></tr>
+            <tr><td><code>#</code> <span class="ko">제목 하나</span><span class="en">heading</span></td>
+              <td><span class="ko">장 표지</span><span class="en">Chapter cover</span></td></tr>
+            <tr><td><code>##</code> <span class="ko">제목 하나</span><span class="en">heading</span></td>
+              <td><span class="ko">내용 슬라이드</span><span class="en">Content slide</span></td></tr>
+          </tbody>
+        </table></div>
+        <p><span class="ko">쇼 안에서는 <kbd>→</kbd> · <kbd>Space</kbd> 다음, <kbd>←</kbd> 이전, <kbd>↑</kbd> <kbd>↓</kbd> 제목 사이,
+          <kbd>F</kbd> 전체화면, <kbd>Esc</kbd> 끝내기입니다. 본문의 이미지와 링크는 카드가 됩니다.</span>
+          <span class="en">During the show: <kbd>→</kbd> · <kbd>Space</kbd> next, <kbd>←</kbd> previous, <kbd>↑</kbd>
+          <kbd>↓</kbd> between headings, <kbd>F</kbd> full screen, <kbd>Esc</kbd> to end. Images and links in the body
+          become cards.</span></p>
+      </section>
+
+      <!-- 9 ────────────────────────────────────────────────────────── -->
+      <section id="safe">
+        <h2><span class="ko">문서 지키기</span><span class="en">Keeping your documents safe</span></h2>
+        <ul>
+          <li><span class="ko"><strong>자동 저장</strong> — 쓰는 동안 저절로 저장됩니다. 문서는 이 컴퓨터 안에만 있고 서버로 보내지지 않습니다.</span>
+            <span class="en"><strong>Saving</strong> — everything is saved as you write. Documents stay on this computer and are never sent to a server.</span></li>
+          <li><span class="ko"><strong>휴지통</strong> — 지운 문서와 폴더는 휴지통으로 가고, [되돌리기] 로 꺼낼 수 있습니다.</span>
+            <span class="en"><strong>Trash</strong> — deleted documents and folders go to the Trash; [Restore] brings them back.</span></li>
+          <li><span class="ko"><strong>백업</strong> — [설정] &gt; [일반] &gt; [전체 백업] 으로 모든 문서를 <code>.zip</code> 하나로 받아 두고, 새 컴퓨터에서는 [복원] 으로 되살립니다.</span>
+            <span class="en"><strong>Backup</strong> — [Settings] &gt; [General] &gt; [Back Up All] saves every document into one <code>.zip</code>; on a new computer, [Restore] brings them back.</span></li>
+        </ul>
+      </section>
+
+      <div class="after-steps" style="margin-top:52px">
+        <a class="btn outline" href="./">
+          <svg class="i"><use href="#i-left"/></svg>
+          <span class="ko">첫 화면으로</span><span class="en">Back to the home page</span></a>
+        <a class="btn" href="./#download">
+          <svg class="i"><use href="#i-down"/></svg>
+          <span class="ko">내려받기</span><span class="en">Download</span></a>
+      </div>
+
+    </div>
+  </div>
+</div></main>
+
+<footer><div class="shell">
+  <span>© 2026 McNorton &amp; Education</span>
+  <span class="grow"></span>
+  <a href="https://github.com/mcnorton/thinkdown">GitHub</a>
+  <a href="guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a href="./#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <a href="./#faq"><span class="ko">자주 묻는 질문</span><span class="en">FAQ</span></a>
+  <a href="https://github.com/mcnorton/thinkdown/issues"><span class="ko">문제 신고</span><span class="en">Report an issue</span></a>
+</div></footer>
+
+<script src="app.js"></script>
+</body>
+</html>
