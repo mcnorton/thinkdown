@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI에게 생각을 맡길 것인가, 지휘할 것인가 — Thinkdown</title>
+<meta name="description" content="AI와의 대화가 길어질수록 결과가 흐려지는 이유, 그리고 생각을 먼저 구조로 세워 프롬프트의 주도권을 되찾는 방법.">
+<link rel="icon" href="assets/icon.png">
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="https://www.thinkdown.net/think.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.thinkdown.net/think.html">
+<meta property="og:site_name" content="Thinkdown">
+<meta property="og:title" content="AI에게 생각을 맡길 것인가, 지휘할 것인가">
+<meta property="og:description" content="AI와의 대화가 길어질수록 결과가 흐려지는 이유, 그리고 생각을 먼저 구조로 세워 프롬프트의 주도권을 되찾는 방법.">
+<meta property="og:image" content="https://www.thinkdown.net/assets/thinkdown.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Thinkdown — 마인드맵으로 적은 생각이 오른쪽에서 마크다운 문서가 되는 화면">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.thinkdown.net/assets/thinkdown.png">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<link rel="stylesheet" href="styles/default.css">
+<script>
+  (function () {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var apply = function () {
+      document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+    };
+    apply(); mq.addEventListener('change', apply);
+
+    var saved = null;
+    try { saved = localStorage.getItem('thinkdown.site.lang'); } catch (e) {}
+    var lang = saved || (/^ko\b/i.test(navigator.language || '') ? 'ko' : 'en');
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+  })();
+</script>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5m0 0l6-6m-6 6l6 6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zm0 0v16M8 7h7"/></symbol>
+</defs></svg>
+
+<nav class="nav" id="nav"><div class="shell">
+  <a class="brand" href="./"><img src="assets/icon.png" width="256" height="256" alt=""> Thinkdown</a>
+  <a class="btn ghost navlink think" href="think.html" aria-current="page">Think</a>
+  <a class="btn ghost navlink" href="guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a class="btn ghost navlink" href="./#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <span class="grow"></span>
+  <button class="btn ghost" id="lang-btn" type="button"></button>
+  <a class="btn" href="./#download"><span class="ko">내려받기</span><span class="en">Download</span></a>
+</div></nav>
+
+<main class="doc"><div class="shell">
+
+  <!-- 한국어 ════════════════════════════════════════════════════════ -->
+  <article class="essay ko" lang="ko">
+    <header class="essay-hd">
+      <p class="kicker">Think</p>
+      <h1>AI에게 생각을 맡길 것인가, 지휘할 것인가</h1>
+      <p class="essay-sub">Thinkdown으로 되찾은 프롬프트의 주도권</p>
+    </header>
+
+    <p>인공지능을 일상과 업무에 들이면서 가장 흔히 빠지는 함정은 ‘대화의 늪’이다. 그럴듯한 아이디어를 채팅창에 몇 줄 적어 보내면, 모델은 제법 매끄러운 문장을 돌려준다. 그러나 그럴싸함은 오래가지 않는다. 맥락이 조금만 깊어져도, 복잡한 코드를 짜거나 연구 가설을 벼려야 하는 순간이 오면, 대략적인 감각에 기댄 ‘바이브(Vibe)’ 방식은 여지없이 밑천을 드러낸다.</p>
+
+    <p>“앞서 말한 조건은 유지해 줘.” “그 모듈 말고 이 규칙을 따라 줘.” 잔소리를 서너 번 보태다 보면 인공지능은 앞의 맥락을 잊거나 엉뚱한 환각을 끼워 넣는다. 고치고 또 고치다 “차라리 처음부터 내가 쓰는 게 빨랐겠다”며 창을 닫아 본 경험은 누구에게나 있을 것이다.</p>
+
+    <p>처음에는 내 설명이 서툴러서라고 여겼다. 그런데 같은 일이 몇 번이고 되풀이되자 다른 의심이 들었다. 생각이 떠오르는 순서대로 조각조각 건네는 방식 자체가 문제가 아닐까. 여러 연구들이 그 의심을 숫자로 보여 주었다. 같은 과제를 한 번에 온전히 건넸을 때와 여러 턴에 나눠 건넸을 때를 견주자, 나눠 건넨 쪽의 성능이 평균 39% 떨어졌다<sup><a href="#ko-n1" id="ko-r1">1</a></sup>. 모델이 되물어 빈칸을 채우게 해도 잃은 것을 다 되찾지는 못했다<sup><a href="#ko-n2" id="ko-r2">2</a></sup>. 돌이켜 보면 내가 겪은 피로의 정체가 그것이었다. 대화는 어긋난 것을 고치는 수단일 뿐, 처음부터 제대로 건넨 지시를 대신하지 못한다.</p>
+
+    <p>문제는 인공지능의 지능이 아니다. 우리가 건넨 생각의 해상도가 너무 낮았던 것이다. 인공지능은 모호한 감상이 아니라 명확한 사양서(Specification)를 받아 들었을 때 비로소 제 실력을 낸다.</p>
+
+    <p>역할, 제약 조건, 아키텍처 규칙, 출력 형식을 정연한 마크다운(Markdown) 계층으로 건네면 모델이 엉뚱한 길로 샐 여지는 크게 줄어든다. 누구나 아는 이 사실이 좀처럼 실천되지 않는 데에는 이유가 있다. 머릿속에서 제멋대로 튀는 생각을 처음부터 정돈된 마크다운으로 써 내려가는 일 자체가 만만치 않은 인지 비용을 요구하기 때문이다.</p>
+
+    <p>이 병목을 풀어 보려고 여러 마인드맵과 메모 앱을 전전했지만 마땅한 것이 없었다. <strong>그래서 Thinkdown을 만들었다.</strong> 가장 먼저 없애고 싶었던 것은 ‘생각의 번역 과정’이다.</p>
+
+    <p>흔히는 마인드맵 도구에서 키워드로 얼개를 짠 뒤, 에디터를 열어 그것을 다시 문장으로 옮겨 적는다. 같은 생각을 두 번 쓰는 셈이다. Thinkdown은 가지 끝에 단어가 아니라 온전한 문단과 표, 코드 블록을 바로 담는다. 탭(Tab)과 엔터(Enter)로 생각의 갈래를 뻗어 나가면, 그 모양이 화면 오른쪽에서 실시간으로 마크다운 문서가 된다.</p>
+
+    <p>이 단순한 연결이 일 전반에 주는 지렛대 효과는 생각보다 크다.</p>
+
+    <ul>
+      <li><strong>일상의 기획</strong> — 막막한 여행 계획이나 제안서의 뼈대를 잡을 때, 큰 덩어리부터 던져 두고 세부 사항을 가지로 덧붙인다. 완성된 트리에서 필요한 챕터만 복사해 AI에게 건넨다. 빠진 곳을 짚어 달라고 하거나, 내가 세운 뼈대대로 문장을 다듬게 한다. 뼈대를 내가 쥐고 있으니 돌아온 답을 검수하기도 쉽다.</li>
+      <li><strong>학술 연구</strong> — 방대한 가설과 변수 사이의 관계, 선행 연구의 논점을 계층 구조로 펼쳐 둔다. 논리적 누락이 없는지 스스로 먼저 검토한 뒤에 모델에 분석을 맡긴다.</li>
+      <li><strong>바이브 코딩</strong> — 직관에 기대 빠르게 시도하는 개발이라도, 프로젝트의 척추가 되는 데이터 흐름과 API 규칙만큼은 먼저 구조로 세워 두어야 코드가 누더기가 되지 않는다. 필요한 챕터만 골라 문맥(Context)으로 넣어 주면, AI가 내가 설계한 울타리 밖으로 벗어날 여지가 줄어든다.</li>
+    </ul>
+
+    <p>결국 핵심은 ‘생각의 주도권’이다. 인공지능에게 백지를 던져 주고 “알아서 해 달라”고 부탁하는 순간, 우리는 기계가 뱉어 내는 파편화된 답을 검수하느라 끌려다니는 처지가 된다. 고약한 것은 끌려다니는 동안에도 일이 잘 풀리고 있다고 믿게 된다는 점이다. 화면에서는 쉬지 않고 무언가가 만들어지니 진척이 있는 것처럼 보인다. 숙련 개발자들을 지켜본 한 실험에서, AI 도구를 쓴 쪽은 실제로 19% 더 느렸는데도 스스로는 20% 빨라졌다고 답했다<sup><a href="#ko-n3" id="ko-r3">3</a></sup>. 주도권은 그렇게, 잃은 줄도 모르게 넘어간다.</p>
+
+    <p>반대로 머릿속의 논리적 뼈대를 먼저 단단히 세우고, 이를 AI가 읽기 좋은 형식으로 바꿔 건네면 관계는 뒤집힌다. 설계자는 끝까지 나다. 인공지능은 그 설계를 구현하고 빈 곳을 짚어 주는 유능한 조력자가 된다.</p>
+
+    <p class="essay-close">인공지능에게서 더 많은 것을 끌어내고 싶다면, 더 화려한 프롬프트 기술을 찾기 전에 자기 생각을 다듬는 작업대부터 살펴볼 일이다. 생각을 정리하는 자연스러운 호흡이 그대로 가장 정밀한 지시서가 되는 경험을 한 번 해 보면, 막연한 대화로 되돌아가기는 어렵다.</p>
+
+    <ol class="notes">
+      <li id="ko-n1"><a href="https://arxiv.org/abs/2505.06120">LLMs Get Lost In Multi-Turn Conversation</a> (ICLR 2026) <a class="up" href="#ko-r1" aria-label="본문으로">↩</a></li>
+      <li id="ko-n2"><a href="https://arxiv.org/html/2502.13069v2">Ambig-SWE: Interactive Agents to Overcome Underspecificity in Software Engineering</a> <a class="up" href="#ko-r2" aria-label="본문으로">↩</a></li>
+      <li id="ko-n3"><a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">Measuring the Impact of Early-2025 AI on Experienced Developer Productivity</a> (METR, 2025) <a class="up" href="#ko-r3" aria-label="본문으로">↩</a></li>
+    </ol>
+  </article>
+
+  <!-- English ═══════════════════════════════════════════════════════ -->
+  <article class="essay en" lang="en">
+    <header class="essay-hd">
+      <p class="kicker">Think</p>
+      <h1>Hand your thinking to AI, or direct it?</h1>
+      <p class="essay-sub">Taking back control of the prompt with Thinkdown</p>
+    </header>
+
+    <p>The most common trap of bringing AI into daily work is the swamp of conversation. Type a few lines of a promising idea into the chat and the model hands back fairly polished prose. The polish does not last. As soon as the context deepens a little — the moment you need complex code or a sharper research hypothesis — the “vibe” approach that leans on rough intuition shows its limits.</p>
+
+    <p>“Keep the conditions I gave you earlier.” “Not that module — follow this rule.” Three or four rounds of nagging later, the AI forgets the earlier context or slips in a hallucination. Most of us have closed the window at some point, fixing and refixing, thinking “it would have been faster to write it myself.”</p>
+
+    <p>At first I blamed my own explanations. But the same thing kept happening, and a different suspicion set in: maybe the problem was the way I handed things over — in pieces, in the order they occurred to me. Several studies have put numbers on that suspicion. When the same task was given all at once versus split across several turns, the split version performed 39% worse on average<sup><a href="#en-n1" id="en-r1">1</a></sup>. Letting the model ask clarifying questions did not win back everything that was lost<sup><a href="#en-n2" id="en-r2">2</a></sup>. Looking back, that was what had been wearing me out. Conversation is a way to repair what went wrong; it cannot stand in for an instruction given properly from the start.</p>
+
+    <p>The problem is not the AI’s intelligence. The thinking we handed it was simply too low-resolution. AI does its best work when it receives a clear specification, not a vague impression.</p>
+
+    <p>Deliver the role, the constraints, the architecture rules and the output format as a tidy Markdown hierarchy, and the model has far less room to wander off. Everyone knows this, and almost no one does it, for a reason: writing the thoughts that bounce around your head as well-ordered Markdown from the very first line takes real cognitive effort.</p>
+
+    <p>I went through mind-map and note apps looking for a way past that bottleneck and found nothing that fit. <strong>So I built Thinkdown.</strong> The first thing I wanted to remove was the step of translating thought into text.</p>
+
+    <p>Usually you sketch an outline of keywords in a mind-map tool, then open an editor and rewrite it as sentences. You end up writing the same thought twice. Thinkdown puts whole paragraphs, tables and code blocks right at the tips of the branches. As you branch your thinking out with Tab and Enter, the shape becomes a live Markdown document on the right side of the screen.</p>
+
+    <p>That simple connection gives more leverage across your work than you might expect.</p>
+
+    <ul>
+      <li><strong>Everyday planning</strong> — when you are shaping a daunting trip plan or the skeleton of a proposal, drop in the big chunks first and add details as branches. Copy only the chapters you need from the finished tree and hand them to an AI. Ask it to point out what is missing, or to polish the wording along the skeleton you set. Because you hold the skeleton, checking the answer is easy too.</li>
+      <li><strong>Academic research</strong> — lay out a sprawling set of hypotheses, the relations between variables and the arguments of prior work as a hierarchy. Check for logical gaps yourself first, and only then hand the analysis to the model.</li>
+      <li><strong>Vibe coding</strong> — even when you are moving fast on intuition, the data flow and API rules that form the spine of the project need structure first, or the code turns to rags. Feed in only the chapters that matter as context, and the AI has less room to stray outside the fence you designed.</li>
+    </ul>
+
+    <p>In the end it comes down to who owns the thinking. The moment you hand the AI a blank page and ask it to “just handle it,” you end up dragged along, inspecting fragmented answers. The nasty part is that, while being dragged, you believe things are going well. Something is always being produced on screen, so it looks like progress. In one study of experienced developers, those using AI tools were actually 19% slower, yet reported feeling 20% faster<sup><a href="#en-n3" id="en-r3">3</a></sup>. That is how control slips away — without you noticing it is gone.</p>
+
+    <p>Turn it around: build the logical skeleton in your head first, put it in a form the AI reads well, and hand it over. The relationship flips. The architect stays you, to the end. The AI becomes a capable assistant that builds the design and points out where it is still empty.</p>
+
+    <p class="essay-close">If you want more out of AI, look at the workbench where you shape your own thinking before you go looking for flashier prompting tricks. Once you have felt the natural rhythm of organising your thoughts become the most precise instruction you can give, it is hard to go back to vague conversation.</p>
+
+    <ol class="notes">
+      <li id="en-n1"><a href="https://arxiv.org/abs/2505.06120">LLMs Get Lost In Multi-Turn Conversation</a> (ICLR 2026) <a class="up" href="#en-r1" aria-label="Back to text">↩</a></li>
+      <li id="en-n2"><a href="https://arxiv.org/html/2502.13069v2">Ambig-SWE: Interactive Agents to Overcome Underspecificity in Software Engineering</a> <a class="up" href="#en-r2" aria-label="Back to text">↩</a></li>
+      <li id="en-n3"><a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">Measuring the Impact of Early-2025 AI on Experienced Developer Productivity</a> (METR, 2025) <a class="up" href="#en-r3" aria-label="Back to text">↩</a></li>
+    </ol>
+  </article>
+
+  <div class="essay-cta">
+    <a class="btn" href="./#download">
+      <svg class="i"><use href="#i-down"/></svg>
+      <span class="ko">내려받기</span><span class="en">Download</span></a>
+    <a class="btn outline" href="guide.html">
+      <svg class="i"><use href="#i-book"/></svg>
+      <span class="ko">사용법 보기</span><span class="en">How to use it</span></a>
+  </div>
+
+</div></main>
+
+<footer><div class="shell">
+  <span>© 2026 McNorton &amp; Education</span>
+  <span class="grow"></span>
+  <a href="https://github.com/mcnorton/thinkdown">GitHub</a>
+  <a href="think.html">Think</a>
+  <a href="guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a href="./#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <a href="./#faq"><span class="ko">자주 묻는 질문</span><span class="en">FAQ</span></a>
+  <a href="https://github.com/mcnorton/thinkdown/issues"><span class="ko">문제 신고</span><span class="en">Report an issue</span></a>
+</div></footer>
+
+<script src="app.js"></script>
+</body>
+</html>

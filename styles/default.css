@@ -1,0 +1,172 @@
+/* 기본(default) 팔레트 — 라이트와 다크 한 벌. **팔레트 하나 = 파일 하나**가 규칙이고
+   styles/palette-seoul.css · palette-palace.css 가 같은 모양이다(prefs/palette.js 가
+   <html data-palette> 로 고른다). 기본은 속성을 아예 달지 않으므로 여기가 맨 아래 층이다.
+
+   색 말고 **어느 팔레트에서도 늘 쓰이는 기본값**도 여기 있다 — --radius · --font-scale ·
+   노드 폭 · 글꼴 스택. 이 파일은 항상 실리고 팔레트 파일은 색 토큰만 덮어쓰므로, 그 값들은
+   팔레트를 바꿔도 그대로 살아 있다.
+
+   규약: styles.css 는 색을 직접 쓰지 않는다 — 언제나 hsl(var(--x)). 토큰을 새로 만들면
+   **라이트·다크 양쪽에** 정의한다(팔레트 파일도 같은 목록을 갖는다). */
+:root {
+  /* Tells the UA to render native controls (form fields, scrollbars, spin
+     buttons) in the light scheme; the dark block below flips this to `dark`.
+     Without it, native chrome stays light even under the dark palette. */
+  color-scheme: light;
+  /* shadcn/ui — light, neutral (zinc). HSL channels. */
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 10% 3.9%;
+  --radius: 0.5rem;
+  /* Update notification accent — deliberately vivid (blue-600) so the update pill
+     and bell badge stand out against the neutral zinc palette. **팔레트가 덮지 않는다** —
+     자동업데이트 표시 색은 손대지 않는 구역이다(CLAUDE.md). */
+  --update-accent: 221 83% 53%;
+  --update-accent-foreground: 0 0% 100%;
+  /* map + preview font scale (settings > 외형 > 크기). 1 = current tuned sizes. */
+  --font-scale: 1;
+
+  /* 본문 노드의 **기준** 가로폭. styles.css 의 본문 상자·표 min/max 가 모두 이 값에서
+     나온다 — 예전에는 330 이 네 군데 흩어져 있어 하나만 고치면 조용히 어긋났다.
+     --node-body-scale 은 [설정 > 외형 > 본문 편집영역 너비]가 1 / 1.5 / 2 로 바꾸며
+     (prefs/nodewidth.js), 글자 노드에만 곱해진다. --font-scale 과 같은 방식. */
+  --node-body-w: 330px;
+  --node-body-scale: 1;
+
+  /* 제목 노드와 문서제목 알약의 **상한**. 둘 다 폭은 글자를 따라가고(canvas.js
+     textInputSize → <input size>) 여기서 멈춘 뒤 … 로 줄어든다.
+     제목 상한이 본문 폭에서 나오므로 [본문 편집영역 너비]를 넓히면 제목도 그만큼
+     더 자랄 수 있다 — 제목이 본문보다 넓어지는 일은 없다(80%). */
+  --node-heading-max: calc(var(--node-body-w) * var(--node-body-scale, 1) * 0.8);
+  --node-title-max: 420px;
+
+  /* ── 글꼴 ──────────────────────────────────────────────────────────────────
+     *-system 은 앱 크롬(툴바·메뉴·설정창)이 늘 쓰는 고정 스택이고,
+     --font-ui / --font-mono 는 설정 > 외형 > 글꼴 선택이 **문서 표면에만** 덮어쓰는
+     자리다(prefs/fontfamily.js 가 documentElement 인라인으로 건다).
+
+     ⚠️ 스택 안에 한글 글꼴을 반드시 남겨 둘 것. 크로미움은 글자 단위로 뒤로 내려가며
+     대체하므로, 한글을 가진 이름이 하나도 없으면 제네릭까지 떨어져 윈도우에서
+     sans-serif = 맑은 고딕, monospace = **굴림체**가 된다(issue #20 의 원인).
+     맥에서는 -apple-system / Apple SD Gothic Neo / Menlo 가 먼저 잡혀 이 회귀가
+     보이지 않는다 — 그래서 더 쉽게 되돌아온다. */
+  --font-ui-system: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Segoe UI", "Malgun Gothic", "Noto Sans CJK KR", "Noto Sans KR",
+    system-ui, sans-serif;
+  --font-mono-system: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Cascadia Mono", "D2Coding", "Noto Sans Mono CJK KR", "Malgun Gothic", monospace;
+  --font-ui: var(--font-ui-system);
+  --font-mono: var(--font-mono-system);
+
+  /* ── Map / node surface layer ──────────────────────────────────────────────
+     The mind-map nodes/widgets are their own surface set (separate from the
+     shadcn card tokens, because in dark mode --card ≈ --background and a node
+     using it would vanish into the canvas). Light values here reproduce the
+     previous hardcoded look exactly; the dark block lifts them for elevation. */
+  --node: 0 0% 100%;                 /* .node-box base bg (#fff) */
+  --node-foreground: 240 10% 3.9%;   /* node text (matches --foreground) */
+  --node-body: 240 5% 98%;           /* 문단 node bg (#fafafa) */
+  --node-th: 240 5% 96%;             /* table header row — slightly off the body (#f4f4f5) */
+  --node-border: 240 6% 84%;         /* node / cell / field borders (#d4d4d8) */
+  --node-heading: 214 100% 97%;      /* heading node bg (#eff6ff) */
+  --node-heading-border: 213 94% 78%;/* heading border + field focus (#93c5fd) */
+  --node-code: 217 33% 17%;          /* code node — dark block in both themes (#1e293b) */
+  --node-code-foreground: 214 32% 91%; /* code text (#e2e8f0) */
+
+  /* per-kind accent hues (accent bar + tag text share one token per kind).
+     팔레트가 덮지 않는다 — 종류별 색은 팔레트가 아니라 **뜻**이다. */
+  --kind-quote: 215 14% 47%;         /* #64748b */
+  --kind-code: 213 94% 78%;          /* #93c5fd */
+  --kind-list: 45 96% 64%;           /* #fcd34d — shared 개요/불릿 bar (list family) */
+  --kind-ordered: 26 91% 37%;        /* #b45309 (개요 tag) */
+  --kind-bullet: 192 91% 36%;        /* #0891b2 */
+  --kind-table: 262 83% 58%;         /* #7c3aed */
+  --kind-media: 330 81% 51%;         /* #db2777 */
+  --kind-hyperlink: 175 84% 32%;     /* #0d9488 */
+  --kind-divider: 215 14% 47%;       /* #64748b — 중립: 구분선은 내용이 아니라 구획이다 */
+
+  /* accents: link text / heading-number, and drag-drop blue */
+  --link: 224 76% 48%;               /* #1d4ed8 */
+  --drop: 217 91% 53%;               /* #2563eb */
+
+  /* Mind-map connector line (색상 OFF). The heading "#" mark reuses this exact
+     token so a mark always reads as the line that feeds its node — see
+     .heading-mark in styles.css and drawEdge() in canvas/canvas.js. */
+  --edge: 215 20% 65%;               /* #94a3b8 */
+}
+
+/* 다크. theme.js 가 <html data-theme="dark"> 를 찍으면 위 :root 를 덮는다
+   (속성 선택자라 명시도가 높아 순서와 무관하게 이긴다). */
+:root[data-theme="dark"] {
+  /* Native controls (form fields, scrollbars, spin buttons) follow the dark scheme. */
+  color-scheme: dark;
+  /* shadcn/ui — dark, neutral (zinc). */
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+  /* Lighter blue (blue-400) reads better on the dark background; dark text on it. */
+  --update-accent: 213 94% 68%;
+  --update-accent-foreground: 240 10% 4%;
+
+  /* ── Map / node surface layer (dark) ───────────────────────────────────────
+     Nodes lift off the near-black canvas: --node is a few % lighter than
+     --background so cards read as elevated; borders lighten to match. Code
+     stays a distinct dark block. Kind hues that were too dark on white are
+     brightened (400-level) so tiny tag labels stay legible on a dark card. */
+  --node: 240 6% 13%;
+  --node-foreground: 0 0% 98%;
+  --node-body: 240 5% 16%;
+  --node-th: 240 5% 22%;             /* header lifts above the body cells on dark */
+  --node-border: 240 5% 26%;
+  --node-heading: 213 40% 18%;
+  --node-heading-border: 213 45% 40%;
+  --node-code: 217 33% 12%;
+  --node-code-foreground: 214 32% 91%;
+
+  --kind-quote: 215 20% 65%;
+  --kind-code: 213 94% 78%;
+  --kind-list: 45 96% 64%;
+  --kind-ordered: 43 96% 56%;
+  --kind-bullet: 188 86% 53%;
+  --kind-table: 255 92% 76%;
+  --kind-media: 329 86% 70%;
+  --kind-hyperlink: 172 66% 50%;
+  --kind-divider: 215 20% 65%;
+
+  --link: 213 94% 68%;
+  --drop: 217 91% 60%;
+
+  --edge: 213 27% 84%;               /* #cbd5e1 — 어두운 캔버스에는 밝은 선 */
+}
