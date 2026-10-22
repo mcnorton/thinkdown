@@ -4,296 +4,225 @@
 
 # Thinkdown
 
-### From think it down to mark it down.
+### Think it down to mark it down.
 
-Write your thinking down as a tree — it is already Markdown.
+Light on the mind, sharp on the output.
 
 [![Latest release](https://img.shields.io/github/v/release/mcnorton/thinkdown?label=latest&color=2563eb)](https://github.com/mcnorton/thinkdown/releases/latest)
 ![Platform](https://img.shields.io/badge/macOS_·_Windows_·_Linux-000)
+![No sign-up](https://img.shields.io/badge/sign--up-none-16a34a)
 
-**[⬇︎ Download](https://github.com/mcnorton/thinkdown/releases/latest)** · [한국어](README.md)
+**[⬇︎ Download](#download)** · [Guide](https://www.thinkdown.net/guide.html) · [Website](https://www.thinkdown.net/) · [한국어](README.md)
 
 </div>
 
 ![Thinkdown — document explorer, mind map canvas, and Markdown pane](assets/screenshot-light.png)
 
-## Why Thinkdown
+<p align="center"><sub>Spread your thinking out as a mind map, a Markdown document appears on the right, and <code>F5</code> turns it into a presentation.</sub></p>
 
-Thinking works best as a tree. What you hand over is Markdown. So you do the work twice —
-shape the structure in a mind map tool, then reopen an editor and retype it. The hierarchy
-drifts on the way across, and later you can't tell which copy is the current one.
+## Sound familiar?
 
-Thinkdown **removes the retyping step.** The map *is* the document.
-Every node you add is a Markdown block; move a branch and the outline moves with it.
-The pane on the right is always current, so shipping it is one **[Copy]** away.
+**The cursor blinks in the AI chat box.** The screens, the rules, the edge cases are all in your
+head — but where do you even start? So you type whatever comes first, and the one reason that
+mattered gets left out.
 
-## What people build with it
+**A blank editor is open.** You know there is something to say, but nothing starts until the
+first sentence does. Writing isn't the hard part — having to pick the order first is.
 
-|  |  |
+Thoughts never arrive in order. Thinkdown removes the wall between the freest way to get them
+out — a **mind map** — and the clearest way to hand them over — a **written document**. **The map
+is the document**, so there is nothing to retype. Get it all out first, put things in place
+later, and the order appears then.
+
+## How it gets used
+
+- **A prompt the AI gets the first time** — name what you're building, then branch out screens,
+  logic and edge cases. On the right, a Markdown prompt with headings and items is already
+  written; one **[Copy]** and it's in the AI chat. The why travels along with the what.
+- **When the first draft won't come** — "Don't write — just make a box for each thing you think
+  of." Drop words and short sentences, drag the boxes around like blocks, and a beginning, middle
+  and end take shape on their own. The draft is already waiting on the right.
+- **Plans, meeting notes, lecture notes** — rough out the big pieces, then fill them in. Hang
+  ideas on branches as they come, tidy the tree at the end, and share it as is.
+
+## Four steps
+
+| | |
 |---|---|
-| **AI prompts, skills, agent definitions** | Split role, input, rules, and output format into branches, then paste clean Markdown. Moving a whole block of rules elsewhere is one drag. |
-| **Outlines for specs and proposals** | Block out the big pieces first, fill them in after. Reorder a chapter as a whole when the flow feels wrong. |
-| **Meeting and lecture notes** | Hang points off branches as they come, tidy the tree at the end, share it as is. |
-| **READMEs and doc tables of contents** | Tables, code blocks, links, and images live in nodes — export the whole document or a single chapter. |
+| **1. Spill it out** | `Tab` goes a level down, `Enter` stays on the same level. Keep up with your thinking without touching the mouse — whole sentences and long paragraphs welcome. |
+| **2. Shape it** | Drop a box onto another and it goes underneath; drop it between two and the order changes. Move a whole chapter and the heading levels follow. |
+| **3. Harvest it** | The document is already on the right. No export, no conversion — just **[Copy]**. Click a chapter to take only that part. |
+| **4. Show it** | Press `F5` and the document becomes a slideshow as it is. Spend the time on what you'll say, not on making slides. |
 
-## The map is the Markdown
-
-The map in the screenshot above keeps this Markdown ready on the right. There is no
-conversion step in between.
+While you build the map, Markdown like this is already written on the right:
 
 ```markdown
 # Role
 
-You are a senior code reviewer. Read only the changed code and report what actually breaks.
+You are a senior code reviewer. Read only the changed code, and report what actually breaks first.
 
 # Input
 
-- The diff and the target branch
+- The diff and its target branch
 - Test results
-- Review depth (low / medium / high)
 
 # Output format
 
-| Field | Value |
+| Field | Content |
 | --- | --- |
 | Severity | high / medium / low |
 | Location | file:line |
 ```
 
-**Click a heading node and the scope narrows to that chapter** — preview, copy, and export
-follow it. Handy when you only need one slice of a long document.
+![Dark theme — the right pane switched to the rendered preview](assets/screenshot-dark.png)
 
-## What makes it good
+![The same document running as a slideshow](assets/screenshot-slideshow.png)
 
-| | |
-|---|---|
-| ⌨️ **Your hands never leave the keys** | `Tab` for a child, `Enter` for a sibling. Grow the whole tree without reaching for the mouse. |
-| 🧩 **Eight body types** | Paragraph, bullet, outline, quote, code, table, image, link. Tables are edited cell by cell in a real grid; images preview inline. |
-| 🌿 **Restructure by dragging** | Drop on a node to move under it (heading depth adjusts itself); drop between nodes to reorder. You're editing the outline, not moving coordinates. |
-| ♻️ **Lossless round trip** | Documents are stored as Markdown. Export it, import it back, and the tree comes back intact. |
-| 📁 **Folders and search** | Group documents into folders and drag them around. Search spans the current document and every other one, then takes you to the node. |
-| ↩️ **Undo / redo** | `⌘Z` and `⇧⌘Z`. A run of typing collapses into a single step. |
-| 🌗 **Light and dark** | Follow the system or pick one. An optional colour theme tints each branch. |
-| 💾 **Files in, files out** | Import and export `.md`, back up everything to a `.zip` and restore it. |
-| 🔄 **Stays current** | New versions download quietly and apply on the next restart — on macOS, Windows, and Linux alike. |
+## And also
 
-![Dark mode, with the rendered preview on the right](assets/screenshot-dark.png)
+- **Nine kinds of standard Markdown content** — paragraphs, lists, quotes, code, tables, images, links and more. Tables are edited cell by cell; links show up as cards with a title and thumbnail
+- Several layouts, including a **butterfly** layout that spreads long documents to both sides
+- **Folders**, and **search** that jumps you straight to the line
+- Polished on all three operating systems so Korean (IME) input never breaks or doubles up
+- Colour themes, **dark mode**, and a bright colour for every chapter
+- **Undo** and redo — try things freely; deleted documents wait in the **Trash**
+- Back everything up as **one .zip** and restore it on a new computer; import and export single documents as **.md**
+- Updates download without interrupting your work and install on the next start — after backing your documents up first
 
-The right pane switches between **raw Markdown** and a **rendered preview**, so you can see
-how it will actually look before you send it.
+## Pricing
+
+**Every feature is free.** Documents, folders, search, import and export, backup, the slideshow,
+and every feature added later — no account, no sign-in.
+
+**Gift 🎁** — Finding it useful? [A cup of coffee](https://buymeacoffee.com/mcnorton) for the
+developer, and a thank-you gift for you. One donation opens up to 3 devices, for life.
+
+- 🎁 Seoul City · Seoul Palace colour themes
+- 🎁 Fruit tree · Root vegetable layouts
+- 🎁 Custom fonts
+
+> 📣 **Beta event: Open the gift box** — the 🎁 gifts are open to everyone until the beta ends.
+> Receiving gifts in the app as a supporter is coming soon.
 
 ## Download
 
-**[⬇︎ Grab the file for your OS from the latest release](https://github.com/mcnorton/thinkdown/releases/latest)**
+**[⬇︎ Get the file for your OS from the latest release](https://github.com/mcnorton/thinkdown/releases/latest)**
 
 | OS | File | Install |
 |---|---|---|
-| **macOS** — Apple Silicon (M1 or newer) | `Thinkdown-<version>-arm64.dmg` | Open it and drag **Thinkdown** into Applications |
-| **macOS** — Intel | `Thinkdown-<version>-x64.dmg` | Same as above |
-| **Windows** 10 / 11 (64-bit) | `Thinkdown-Setup-<version>.exe` | Run it — no administrator rights needed |
+| **macOS** 13+ — Apple Silicon (M1 or newer) | `Thinkdown-<version>-arm64.dmg` | Open it and drag **Thinkdown** into Applications |
+| **macOS** 13+ — Intel | `Thinkdown-<version>-x64.dmg` | Same as above |
+| **Windows** 10 · 11 (64-bit) | `Thinkdown-Setup-<version>.zip` (or `.exe`) | Unzip and run `Thinkdown-Setup` — no administrator rights needed |
 | **Linux** (64-bit) | `Thinkdown-<version>.AppImage` or `.deb` | `chmod +x` the AppImage, or `sudo dpkg -i` the deb |
 
-- Not sure which Mac you have? **Apple menu → About This Mac**. "Apple M…" means arm64,
-  "Intel" means x64.
-- macOS builds are signed and notarized with an Apple Developer ID, so they open without warnings.
-- Windows builds are **code-signed**, so the install screen shows the publisher name
-  (**McNorton&Education**). Signing is new, though, so **SmartScreen may still warn** until the
-  certificate builds reputation — choose **More info → Run anyway** and it installs.
-  - **If there is no "Run anyway" at all**, that PC has **Smart App Control** turned on. It can block
-    even signed apps that have no reputation, with no per-app exception. Check under **Settings → Privacy & security →
-    Windows Security → App & browser control**; it is only on by default on **clean installs** of
-    Windows 11 (not on upgraded PCs or Windows 10).
-  - Execution is also blocked if **Reputation-based protection → Check apps and files** is set to
-    **Block** on that same screen. Switching it to **Warn** lets you through.
-- No account, no sign-in. Every feature is free to use today.
+- Not sure which Mac you have? **Apple menu → About This Mac**. "Apple M…" means arm64, "Intel" means x64.
+- The macOS build is signed and notarised by Apple, so it opens without any warning.
+- On macOS 11 · 12, v0.22.100 is the last version.
 
-## Your first sixty seconds
+<details>
+<summary><b>If Windows shows a warning</b></summary>
 
-1. Click the **document title** in the centre and name it.
-2. `Tab` gives you a child heading. `Enter` gives you a sibling on the same level.
-3. On a heading, `Shift+Enter` attaches a body node. `Alt+1`–`8` changes its type.
-4. **Click a heading** in the map and the Markdown on the right narrows to that chapter.
-5. Hit **[Copy]** at the top right — ready to paste.
+<br>
 
----
+The installer is code-signed, so the install screen shows the publisher name
+(**McNorton&Education**). Signing is new, though, so **SmartScreen** may still warn until the
+certificate builds reputation — choose **More info → Run anyway** and it installs.
 
-# How to use it
+- **If there is no "Run anyway" at all**, that PC has **Smart App Control** turned on. You can
+  check it under **Settings → Privacy & security → Windows Security → App & browser control**;
+  it is only on by default on clean installs of Windows 11.
+- If **Reputation-based protection → Check apps and files** on the same screen is set to
+  **Block**, the app is blocked too. Switching it to **Warn** lets you through.
 
-Worth knowing early. Read it in order or come back when you need it.
+</details>
 
-## A node has three states
+## Getting started
 
-One click **selects** it, a double click **edits** it, and otherwise it's read-only.
-That's why the same `Enter` does two things: while selected it creates a new node, while
-editing it finishes your input. `Enter` or `Esc` ends editing.
+1. Double-click the **document title** in the middle and give it a name.
+2. `Tab` — a heading one level down. `Enter` — another one on the same level.
+3. `Shift+Enter` — a paragraph under the heading. Headings are the skeleton, paragraphs the flesh.
+4. Move between nodes with the arrow keys, double-click to edit, `Esc` to finish.
+5. **[Copy]** at the top right — ready to paste into an AI chat, an email, anywhere.
 
-**Only `Esc` clears the selection.** Finishing your input doesn't, and neither does clicking
-empty canvas — the node you just wrote stays selected until you pick another one. Keyboard
-work never loses track of where you are.
+Typing `- ` at the start of a paragraph makes a bullet, `1. ` a numbered list, `> ` a quote. You
+don't need to know Markdown — it's just faster if you do.
 
-**The selected node never leaves the screen.** If adding a node or a late-arriving link
-thumbnail pushes the map around, that node comes back to the **centre** of the frame. A node
-you scrolled away from yourself is left alone — the view is not yanked back.
+The full guide lives in the app: the **Thinkdown Guide** folder on the left holds a **Quick
+guide** and the **Manual** (if you deleted them, **Help → Restore Guides**). On the web, see the
+[guide page](https://www.thinkdown.net/guide.html).
 
-**The app leaves the zoom level alone.** Switch on **[Auto Zoom]** above the canvas and, when the
-node you pick won't fit on screen together with its heading, the map shrinks a little to show
-both — only when you cross into another chapter, and it returns to full size as soon as you
-double-click to edit. It starts switched off.
+## Questions
 
-## Growing the tree
+<details>
+<summary><b>How is this different from other mind-map apps?</b></summary>
 
-| Key | Does |
-|---|---|
-| `Tab` | Creates a **child heading**. On the document title, that's your first chapter. |
-| `Enter` (selected) | Creates a **sibling** — a heading next to a heading, a body node of the same type next to a body node. |
-| `Shift+Enter` (on a heading) | Attaches a **body node** to that heading, at any depth. |
-| `Esc` | Ends editing and returns to the selected state. |
+<br>
 
-> A brand-new empty node won't spawn siblings (it shakes instead). It keeps you from
-> filling the map with blanks.
+Branches hold **sentences**, not keywords. A traditional mind map records keywords meant to
+trigger recall, so the detailed thinking stays inside the author's head. In Thinkdown a branch
+holds the body text itself, so branches arranged along your train of thought end up being the
+document. It exists as three views at once — map, Markdown and preview — and you can select any
+branch to copy or export just that part.
 
-## Moving around with the keyboard
+</details>
 
-Once a node is selected, the arrow keys walk you around the map.
+<details>
+<summary><b>Do I need to know Markdown?</b></summary>
 
-| Key | Does |
-|---|---|
-| `←` | Goes to the **parent**. From a top-level chapter, that's the document title. |
-| `→` | Goes to the **first child**. A heading with folded paragraphs unfolds on the way in. |
-| `↑` `↓` | Goes to the node **directly above or below** at the same level — across chapters, too. |
-| `Shift`+arrow | Leaves the selection where it is and pages **the view** that way. |
+<br>
 
-> The arrows move between nodes only while a node is **selected**. While you're editing, they
-> move the cursor inside the text as usual.
+You don't. Markdown is the output, not the input method. Write sentences on branches and grow
+them with `Tab` and `Enter`. You never have to type a marker, though they work if you do. Tables
+are filled cell by cell. A `#` inside a sentence you've already written stays plain text, so a
+stray keystroke can't scramble your outline.
 
-## Body types — `Alt+1` to `Alt+9`
+</details>
 
-Press these while a body node has focus.
+<details>
+<summary><b>Does it work alongside Obsidian and other note apps?</b></summary>
 
-| Key | Type | Markdown |
-|---|---|---|
-| `Alt+1` | Paragraph | plain text |
-| `Alt+2` | Bullet | `* item` |
-| `Alt+3` | Outline | `1. item` |
-| `Alt+4` | Quote | `> quote` |
-| `Alt+5` | Code | a fenced code block |
-| `Alt+6` | Table | a GFM table, edited in a grid |
-| `Alt+7` | Image | `![alt](url)` |
-| `Alt+8` | Link | `[text](url)` |
-| `Alt+9` | Divider | `---`, a horizontal rule (no content, and no connector line) |
+<br>
 
-You can also **click the type tag** at the node's top-left, or **right-click → change type**.
-Note that a node with content only switches among the text types (paragraph, bullet, outline,
-quote, code) — turning it into a table, image, or link would throw the text away, so those
-conversions are reserved for the `Alt` shortcuts.
+They fit together well. Note apps shine at linking what you've already written; Thinkdown
+focuses on building the skeleton of one piece from a blank screen. Shape it as a map, then
+[Copy] it or export it as `.md` into your note app — it's standard Markdown, so it reads as is.
 
-**Typing switches types too.** In a paragraph, `1. ` turns it into an outline, `* ` or `- `
-into a bullet list, and a `https://…` followed by a space into a link.
+</details>
 
-## Inside a list (bullet, outline, quote)
+<details>
+<summary><b>Will the AI draw the map for me?</b></summary>
 
-A list lives in one node, several lines deep. Markers and numbers take care of themselves.
+<br>
 
-- `Enter` — next item at the same depth.
-- `Tab` / `Shift+Tab` — indent or outdent the item (numbering recalculates).
-- `Backspace` at the start of an item — **merges it into the one above.** That's how you undo
-  an `Enter` you didn't mean. If it's the only item and it's empty, the marker drops and it
-  becomes a plain paragraph.
+Quite the opposite. **Don't hand the thinking over to AI** — that is what this project is about.
+Students who drew a concept map themselves learned far more than those handed a finished one
+([STEM concept-mapping meta-analysis](https://link.springer.com/article/10.1186/s40594-025-00554-2)).
+We think AI fits best where it points at what is missing in a structure you have already made.
+[Read more →](https://www.thinkdown.net/think.html)
 
-## Tables, images and links
+</details>
 
-- **Tables** open on a double click. `Tab` moves to the next cell, `Enter` to the row below
-  (adding a row at the end). The gutter's **＋** adds a row or column, **🗑** removes one —
-  both appear only while editing.
-- **Images and links** are edited on the line you see. Each line is read-only until you
-  **double-click the one you want to change**, and it becomes editable right there. `Tab` moves
-  to the next field, `Enter` finishes.
-  - **A new link only needs the address.** The label line isn't shown at all until it has a
-    value — not even while you're editing, so there's no second field asking to be filled in.
-    Type `example.com` without the `https://` and it is added for you on confirm.
-  - Confirm the address and the node briefly shows `가져오는 중…` before the page's **title and
-    cover image land together**. If the title can't be fetched, the label falls back to the
-    domain (`example.com`).
-  - **Once filled**, the label line appears; double-click to reword it — and a label you wrote
-    survives a change of address.
-    The **↗** at the end of the address line opens it in your browser after a confirmation.
-  - Fetching means contacting that site, so you can turn it off under
-    **Settings → General → Link node thumbnails**.
-  - **Images behave identically** — everything said above about links applies as written: the
-    address is all you enter, the label appears once it has been filled in for you, and you
-    double-click it to reword it. Paste a **YouTube URL** and you get the video's poster with a
-    **▶** on it, labelled with the video's title. Press ▶ or ↗ and it **opens in a window** to
-    play there — nothing plays inside the map itself.
-  - The picture itself is **never cropped**, though. A link's thumbnail is trimmed to the card's
-    shape, but in an image node the picture *is* the content, so its proportions are kept. For the
-    same reason a picture that fails to load **says so**, where a link thumbnail just disappears.
+<details>
+<summary><b>Can I back up or move to a new computer?</b></summary>
 
-## Restructuring with the mouse
+<br>
 
-| Gesture | Result |
-|---|---|
-| Drop a node **onto** another node | It moves **under** that node. Headings re-level themselves (`#` → `##`). |
-| Drop a node **between** two nodes | Only the sibling **order** changes; the hierarchy stays. |
-| **↑ ↓** above and below a selected heading | Swaps the heading with the one before or after it under the same parent (paragraph siblings in between are skipped). Everything nested under it comes along. |
-| **Right-click → delete** | Removes the node. If it has children, it tells you how many go with it first. |
+Back up every document and your folder structure as a single `.zip`; on a new computer, install
+the app and restore from that file. Individual documents also export as `.md`. And every time
+the app updates, it first backs your documents up automatically and keeps the last three.
 
-> **Clearing a node's text never deletes it.** Right-click delete is the only way out, so no
-> amount of `Backspace` will wipe out a branch by accident.
+</details>
 
-## Three rules about headings
+## Your documents stay on your machine
 
-- **A `#` typed in a paragraph is just a character** — it stays a tag and never promotes,
-  so one paragraph can't jump the hierarchy.
-- **The `#` mark in front of a heading is display only.** It is set apart from the title in size
-  and colour, and it isn't editable, so it can't be deleted by accident. The level (how many `#`)
-  changes only when you add a child with `Tab` or drag a branch somewhere else — one stray
-  keystroke can never flatten the tree.
-- **An empty heading** turns into a paragraph with one `Backspace` (as long as it has no children).
-
-## Documents and panes
-
-| Key | Does |
-|---|---|
-| `⌘N` | New document (an existing empty one is reused) |
-| `⌘B` | Show / hide the explorer on the left |
-| `⌘⌥B` | Show / hide the Markdown pane on the right |
-| `⌘,` | Settings — theme, font, text size, editing width, connectors, backup, updates |
-| `⌘Z` / `⇧⌘Z` | Undo / redo |
-| `Ctrl` + wheel, or pinch | Zoom the map (drag empty space to pan) |
-
-The **[Explorer]** and **[MD]** buttons in the bar on the left do the same — press once to open,
-again to close. The Markdown pane on the right opens **only when you open it**; editing a
-paragraph no longer pops it open, so close it whenever you want the canvas to yourself.
-
-> On Windows and Linux, use `Ctrl` instead of `⌘`.
-
-> While you're editing a node's text, `⌘Z` is the text field's own character-level undo.
-> Finish editing (`Esc`) to undo changes to the map itself.
-
----
-
-## Your data stays on your machine
-
-No account, no server, no telemetry. Documents live on this computer and never leave it.
-The app reaches the network for exactly two things — checking whether a newer version exists,
-and fetching a link node's thumbnail (only from that link's own site, and you can switch it off).
-You can take everything with you at any point via `.zip` backup or `.md` export.
-
-## Development
-
-It's a **vanilla JS ES module** single-page app with no build step, packaged for the desktop
-with Electron. No bundler, no framework, no virtual DOM — every mutation goes through
-`core/model.js` and a single observer redraws the view. Architecture, module, and data-model
-documents live under `docs/` in the repository (written in Korean).
-
-```bash
-npm start      # run the Electron desktop app (dev)
-npm test       # pure-logic tests (node --test test/*.test.mjs)
-npm run dist   # build the desktop app → dist/<version>/
-```
+No account, no server, no tracking. Every document lives on this computer and none of it leaves.
+The app touches the network for two things only — **checking for updates** and **fetching link
+thumbnails** (only from that link's site, and you can turn it off). Opening, editing, saving and
+exporting all work with no connection at all. Take everything out any time as a `.zip` backup or
+`.md` files — nothing you've written is ever locked behind a paywall.
 
 ---
 
 <div align="center">
-<sub>© 2026 mcnorton · Found a problem or want a feature? Open an <a href="https://github.com/mcnorton/thinkdown/issues">issue</a>.</sub>
+<sub>© 2026 McNorton &amp; Education · Found a problem or want a feature? Tell us in <a href="https://github.com/mcnorton/thinkdown/issues">Issues</a>.</sub>
 </div>
