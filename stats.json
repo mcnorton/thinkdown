@@ -1,0 +1,134 @@
+{
+  "pruned": {
+    "mac": 23,
+    "win": 11,
+    "linux": 10
+  },
+  "history": [
+    {
+      "version": "0.27.118",
+      "through": "v0.26.117",
+      "date": "2026-10-26",
+      "windows": 5,
+      "macos": 6,
+      "linux": 0,
+      "snapshot": {
+        "v0.26.115": {
+          "mac": 2,
+          "win": 1,
+          "linux": 0
+        },
+        "v0.26.116": {
+          "mac": 0,
+          "win": 1,
+          "linux": 0
+        },
+        "v0.26.117": {
+          "mac": 1,
+          "win": 1,
+          "linux": 0
+        }
+      }
+    },
+    {
+      "version": "0.28.120",
+      "through": "v0.27.118",
+      "date": "2026-10-29",
+      "windows": 5,
+      "macos": 7,
+      "linux": 0,
+      "snapshot": {
+        "v0.26.116": {
+          "mac": 0,
+          "win": 1,
+          "linux": 0
+        },
+        "v0.26.117": {
+          "mac": 1,
+          "win": 1,
+          "linux": 0
+        },
+        "v0.27.118": {
+          "mac": 1,
+          "win": 0,
+          "linux": 0
+        }
+      }
+    },
+    {
+      "version": "0.29.122",
+      "through": "v0.28.120",
+      "date": "2026-11-02",
+      "windows": 11,
+      "macos": 23,
+      "linux": 8,
+      "snapshot": {
+        "v0.26.117": {
+          "mac": 5,
+          "win": 3,
+          "linux": 2
+        },
+        "v0.27.118": {
+          "mac": 5,
+          "win": 2,
+          "linux": 2
+        },
+        "v0.28.120": {
+          "mac": 8,
+          "win": 2,
+          "linux": 4
+        }
+      }
+    },
+    {
+      "version": "0.30.123",
+      "through": "v0.29.122",
+      "date": "2026-11-05",
+      "windows": 13,
+      "macos": 29,
+      "linux": 12,
+      "snapshot": {
+        "v0.27.118": {
+          "mac": 5,
+          "win": 2,
+          "linux": 3
+        },
+        "v0.28.120": {
+          "mac": 8,
+          "win": 2,
+          "linux": 5
+        },
+        "v0.29.122": {
+          "mac": 6,
+          "win": 2,
+          "linux": 2
+        }
+      }
+    },
+    {
+      "version": "0.30.124",
+      "through": "v0.30.123",
+      "date": "2026-11-06",
+      "windows": 15,
+      "macos": 34,
+      "linux": 14,
+      "snapshot": {
+        "v0.28.120": {
+          "mac": 8,
+          "win": 2,
+          "linux": 5
+        },
+        "v0.29.122": {
+          "mac": 6,
+          "win": 2,
+          "linux": 2
+        },
+        "v0.30.123": {
+          "mac": 5,
+          "win": 2,
+          "linux": 2
+        }
+      }
+    }
+  ]
+}
