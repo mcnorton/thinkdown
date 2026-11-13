@@ -4,9 +4,11 @@
 
 # Thinkdown
 
-### Think it down to mark it down.
+### Think it down to mark it down
 
-복잡한 생각은 맵으로 가볍게, AI 프롬프트와 글 초안은 정교하게.
+**마인드맵처럼 보이지만, 소스코드입니다.**
+
+AI 시대의 생각코드 에디터. 생각을 가지로 펼쳐 쓰면, AI가 그대로 읽는 마크다운이 됩니다.
 
 [![최신 버전](https://img.shields.io/github/v/release/mcnorton/thinkdown?label=최신%20버전&color=2563eb)](https://github.com/mcnorton/thinkdown/releases/latest)
 ![플랫폼](https://img.shields.io/badge/macOS_·_Windows_·_Linux-000)
@@ -16,7 +18,7 @@
 
 </div>
 
-![Thinkdown 화면 — 왼쪽 문서 탐색기, 가운데 마인드맵, 오른쪽 마크다운](assets/screenshot-light.png)
+![Thinkdown 화면 — 왼쪽 문서 탐색기, 가운데 마인드맵, 오른쪽 마크다운](assets/screenshot-1-markdown.png)
 
 <p align="center"><sub>생각을 마인드맵으로 펼치면 오른쪽에 마크다운 문서가 생기고, <code>F5</code> 를 누르면 그대로 발표 화면이 됩니다.</sub></p>
 
@@ -72,9 +74,9 @@
 | 위치 | 파일:줄 |
 ```
 
-![다크 테마 — 오른쪽 패널을 미리보기로 바꾼 화면](assets/screenshot-dark.png)
+![다크 테마 — 오른쪽 패널을 미리보기로 바꾼 화면](assets/screenshot-2-preview.png)
 
-![같은 문서를 슬라이드쇼로 띄운 화면](assets/screenshot-slideshow.png)
+![같은 문서를 슬라이드쇼로 띄운 화면](assets/screenshot-3-slideshow.png)
 
 ## 그 밖에
 
@@ -150,6 +152,24 @@
 볼 수 있습니다.
 
 ## 자주 묻는 질문
+
+<details>
+<summary><b>마크다운 에디터인가요?</b></summary>
+
+<br>
+
+네. 결과물은 표준 마크다운입니다. 다만 마크다운을 줄로 쓰는 대신 생각을 가지로 펼쳐 쓰면, 그것이 마크다운이 됩니다. 복사하거나 `.md` 파일로 내보낼 수 있습니다.
+
+</details>
+
+<details>
+<summary><b>생각코드가 뭔가요?</b></summary>
+
+<br>
+
+의사코드(pseudocode)에서 따온 말입니다. 의사코드는 코드를 짜기 전에 무엇을 어떤 순서로 할지 사람의 말로 적은 설계입니다. Thinkdown의 가지는 들여쓰기이고, 가지 끝의 문장은 의사코드 한 줄입니다. 생각은 당신이 쓰고, 그것을 코드나 글로 빌드하는 일은 AI가 합니다.
+
+</details>
 
 <details>
 <summary><b>다른 마인드맵 앱과 무엇이 다른가요?</b></summary>

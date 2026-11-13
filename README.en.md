@@ -4,9 +4,11 @@
 
 # Thinkdown
 
-### Think it down to mark it down.
+### Think it down to mark it down
 
-Light on the mind, sharp on the output.
+**Looks like a mind map. It's source code.**
+
+The thoughtcode editor for the AI era. Write your thinking out in branches, and it becomes Markdown any AI can read as is.
 
 [![Latest release](https://img.shields.io/github/v/release/mcnorton/thinkdown?label=latest&color=2563eb)](https://github.com/mcnorton/thinkdown/releases/latest)
 ![Platform](https://img.shields.io/badge/macOS_·_Windows_·_Linux-000)
@@ -16,7 +18,7 @@ Light on the mind, sharp on the output.
 
 </div>
 
-![Thinkdown — document explorer, mind map canvas, and Markdown pane](assets/screenshot-light.png)
+![Thinkdown — document explorer, mind map canvas, and Markdown pane](assets/screenshot-1-markdown.png)
 
 <p align="center"><sub>Spread your thinking out as a mind map, a Markdown document appears on the right, and <code>F5</code> turns it into a presentation.</sub></p>
 
@@ -74,9 +76,9 @@ You are a senior code reviewer. Read only the changed code, and report what actu
 | Location | file:line |
 ```
 
-![Dark theme — the right pane switched to the rendered preview](assets/screenshot-dark.png)
+![Dark theme — the right pane switched to the rendered preview](assets/screenshot-2-preview.png)
 
-![The same document running as a slideshow](assets/screenshot-slideshow.png)
+![The same document running as a slideshow](assets/screenshot-3-slideshow.png)
 
 ## And also
 
@@ -152,6 +154,24 @@ guide** and the **Manual** (if you deleted them, **Help → Restore Guides**). O
 [guide page](https://www.thinkdown.net/guide.html).
 
 ## Questions
+
+<details>
+<summary><b>Is this a Markdown editor?</b></summary>
+
+<br>
+
+Yes. What comes out is standard Markdown. Instead of writing Markdown line by line, you write your thinking out in branches, and that becomes the Markdown. You can copy it or export it as a `.md` file.
+
+</details>
+
+<details>
+<summary><b>What is thoughtcode?</b></summary>
+
+<br>
+
+The name comes from pseudocode: the plan you write in plain words, before any code, of what to do and in what order. In Thinkdown the branches are the indentation, and the sentence at the end of each branch is a line of pseudocode. You write the thinking; building it into code or prose is the AI's job.
+
+</details>
 
 <details>
 <summary><b>How is this different from other mind-map apps?</b></summary>
