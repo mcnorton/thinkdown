@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-lang="en" data-palette="palace">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Help — Thinkdown</title>
+<meta name="description" content="Answers to common questions about Thinkdown, and a way to reach us.">
+<link rel="icon" href="/assets/icon.png">
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="https://www.thinkdown.net/helpdesk/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.thinkdown.net/helpdesk/">
+<meta property="og:site_name" content="Thinkdown">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:title" content="Help — Thinkdown">
+<meta property="og:description" content="Answers to common questions about Thinkdown, and a way to reach us.">
+<meta property="og:image" content="https://www.thinkdown.net/assets/thinkdown.png?v=20261023">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Thinkdown — thoughts written as a mind map become a Markdown document on the right">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.thinkdown.net/assets/thinkdown.png?v=20261023">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<link rel="stylesheet" href="/styles/default.css">
+<link rel="stylesheet" href="/styles/palette-palace.css">
+<script>
+  (function () {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var apply = function () {
+      var t = null;
+      try { t = localStorage.getItem('thinkdown.site.theme'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t === 'dark' || t === 'light' ? t : (mq.matches ? 'dark' : 'light'));
+    };
+    apply(); mq.addEventListener('change', apply);
+
+    var saved = null;
+    try { saved = localStorage.getItem('thinkdown.site.lang'); } catch (e) {}
+    var lang = saved || (/^ko\b/i.test(navigator.language || '') ? 'ko' : 'en');
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+  })();
+</script>
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5m0 0l6-6m-6 6l6 6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zm0 0v16M8 7h7"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4l1.4-1.4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+</defs></svg>
+
+<nav class="nav" id="nav"><div class="shell">
+  <a class="brand" href="/"><img src="/assets/icon.png" width="256" height="256" alt=""> Thinkdown</a>
+  <div class="nav-menu" id="nav-menu">
+    <a class="btn ghost navlink think" href="/think.html">Think</a>
+    <a class="btn ghost navlink" href="/guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+    <a class="btn ghost navlink" href="/#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+    <a class="btn ghost navlink" href="/helpdesk/" aria-current="page"><span class="ko">도움말</span><span class="en">Help</span></a>
+    <span class="grow"></span>
+    <button class="btn ghost" id="lang-btn" type="button"></button>
+  </div>
+  <a class="btn" href="/#download"><span class="ko">내려받기</span><span class="en">Download</span></a>
+  <button class="btn ghost nav-icon" id="theme-btn" type="button"><svg class="i i-moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="i i-sun" aria-hidden="true"><use href="#i-sun"/></svg></button>
+  <button class="btn ghost nav-icon nav-burger" id="nav-burger" type="button" aria-expanded="false" aria-controls="nav-menu"><svg class="i i-menu" aria-hidden="true"><use href="#i-menu"/></svg><svg class="i i-x" aria-hidden="true"><use href="#i-x"/></svg></button>
+</div></nav>
+
+<main class="doc"><div class="shell">
+
+  <div class="tree">
+    <div class="t-root">
+      <div class="t-pill">Help</div>
+      <header class="t-title">
+        <h1><span class="ko">도움말</span><span class="en">Help</span></h1>
+        <p class="essay-sub"><span class="ko">자주 묻는 질문을 먼저 살펴보고, 해결되지 않으면 의견을 보내 주세요.</span><span class="en">Check the common questions first. If that doesn't help, send us your feedback.</span></p>
+      </header>
+      <nav class="toc t-title t-toc">
+        <details open>
+          <summary><span class="ko">차례</span><span class="en">Contents</span></summary>
+          <p class="cap"><span class="ko">차례</span><span class="en">Contents</span></p>
+          <ol>
+            <li><a href="#faq"><span class="ko">자주 묻는 질문</span><span class="en">FAQ</span></a></li>
+            <li><a href="#feedback"><span class="ko">의견 보내기</span><span class="en">Send feedback</span></a></li>
+          </ol>
+        </details>
+      </nav>
+    </div>
+    <div class="t-branches">
+      <section class="t-branch b1" id="faq">
+        <h2 class="t-head"><span class="t-mark" aria-hidden="true">#</span><span class="t-txt"><span class="ko">자주 묻는 질문</span><span class="en">FAQ</span></span></h2>
+        <div class="t-nodes t-qa">
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">마크다운 에디터인가요?</span><span class="en">Is this a Markdown editor?</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">네. 결과물은 표준 마크다운입니다. 다만 마크다운을 줄로 쓰는 대신 생각을 가지로 펼쳐 쓰면, 그것이 마크다운이 됩니다. 복사하거나 <code>.md</code> 파일로 내보낼 수 있습니다.</span><span class="en">Yes. What comes out is standard Markdown. Instead of writing Markdown line by line, you write your thinking out in branches, and that becomes the Markdown. You can copy it or export it as a <code>.md</code> file.</span></div>
+          </details>
+          </div>
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">생각코드가 뭔가요?</span><span class="en">What is thoughtcode?</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">의사코드(pseudocode)에서 따온 말입니다. 의사코드는 코드를 짜기 전에 무엇을 어떤 순서로 할지 사람의 말로 적은 설계입니다. Thinkdown의 가지는 들여쓰기이고, 가지 끝의 문장은 의사코드 한 줄입니다. 생각은 당신이 쓰고, 그것을 코드나 글로 빌드하는 일은 AI가 합니다.</span><span class="en">The name comes from pseudocode: the plan you write in plain words, before any code, of what to do and in what order. In Thinkdown the branches are the indentation, and the sentence at the end of each branch is a line of pseudocode. You write the thinking; building it into code or prose is the AI's job.</span></div>
+          </details>
+          </div>
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">다른 마인드맵 앱과 무엇이 다른가요?</span><span class="en">How is this different from other mind-map apps?</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">가지 끝에 <strong>단어가 아니라 문장</strong>이 들어갑니다. 전통적인 마인드맵은 연상을 촉발하는 키워드를 적기 때문에, 자세한 생각은 만든 사람의 머릿속에만 남습니다. Thinkdown은 가지 끝에 본문을 그대로 풀어쓸 수 있기 때문에, 생각의 흐름에 따라 정리된 가지들이 결국 하나의 문서가 됩니다. 작성된 문서는 <strong>맵 · 마크다운 · 미리보기</strong> 세 가지 모습으로 동시에 존재하고, 필요한 가지를 선택해서 내보내거나 복사할 수 있습니다.</span><span class="en">Branches hold <strong>sentences, not keywords</strong>. A traditional mind map records keywords meant to trigger recall, so the detailed thinking stays inside the author's own head. In Thinkdown a branch holds the body text itself, so branches arranged along your train of thought end up being the document. What you write exists as <strong>three views at once — map, Markdown and preview</strong>, and you can select any branch to copy or export just that part.</span></div>
+          </details>
+          </div>
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">마크다운을 몰라도 쓸 수 있나요?</span><span class="en">Do I need to know Markdown?</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">쓸 수 있습니다. 마크다운은 <strong>결과물이지 입력 방식이 아닙니다.</strong> 가지에 문장을 적고 <code>Tab</code> 과 <code>Enter</code> 로 가지를 늘리면 됩니다. 기호를 칠 필요는 없지만 쳐도 알아서 바뀝니다 — <code>-</code> 는 불릿, <code>1.</code> 은 개요, <code>&gt;</code> 는 인용이 됩니다. 표는 격자에서 칸을 직접 채웁니다. 제목은 <code>Tab</code> 으로 만들거나 빈 문단에서 <code>#</code> 를 치면 되고, 이미 쓴 문장 속의 <code>#</code> 은 글자 그대로 남습니다 — 오타 하나로 문서의 구조가 흐트러지지 않습니다.</span><span class="en">You don't. Markdown is <strong>the output, not the input method.</strong> Write sentences on branches and grow them with <code>Tab</code> and <code>Enter</code>. You never have to type a marker, though they work if you do — <code>-</code> for a bullet, <code>1.</code> for an outline, <code>&gt;</code> for a quote. Tables are filled cell by cell. For a heading, press <code>Tab</code> or type <code>#</code> in an empty paragraph; a <code>#</code> inside a sentence you have already written stays plain text, so a stray keystroke can't scramble your outline.</span></div>
+          </details>
+          </div>
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">Obsidian 같은 노트 앱과 함께 쓸 수 있나요?</span><span class="en">Does it work alongside Obsidian and other note apps?</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">잘 맞습니다. 노트 앱이 이미 쓴 글들을 서로 <strong>잇는</strong> 데 강하다면, Thinkdown은 빈 화면에서 글 하나의 <strong>뼈대를 처음 세우는</strong> 데 집중합니다. 맵으로 구조를 잡고 <strong>[복사]</strong> 하거나 <code>.md</code> 로 내보내 노트 앱에 넣으면 됩니다. 표준 마크다운이라 그대로 읽힙니다.</span><span class="en">They fit together well. Note apps shine at <strong>linking</strong> what you've already written; Thinkdown focuses on <strong>building the skeleton</strong> of one piece from a blank screen. Shape it as a map, then <strong>[Copy]</strong> it or export it as <code>.md</code> into your note app — it's standard Markdown, so it reads as-is.</span></div>
+          </details>
+          </div>
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">AI가 맵을 대신 그려 주나요?</span><span class="en">Will the AI draw the map for me?</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">정반대입니다. <strong>생각의 주도권을 인공지능에게 넘겨주지 마세요. 이 프로젝트의 핵심 가치입니다.</strong> 개념도를 완성된 채로 받았을 때의 학습 효과는 g=0.653이었고, 학생이 직접 그렸을 때는 g=0.933이었습니다(<a href="https://link.springer.com/article/10.1186/s40594-025-00554-2">STEM 개념도 메타분석</a>). 생각을 AI가 대신 그려 주면 직접 만들면서 얻게 되는 많은 것들이 사라집니다. AI의 역할은 이미 만들어진 구조에서 <strong>빠진 곳을 짚어 주는</strong> 정도가 가장 알맞다고 봅니다. <a href="/think.html">더 읽기 →</a></span><span class="en">Quite the opposite. <strong>Don't hand the thinking over to AI — that is what this project is about.</strong> Students handed a finished concept map showed a learning effect of g=0.653; students who drew it themselves, g=0.933 (<a href="https://link.springer.com/article/10.1186/s40594-025-00554-2">STEM concept-mapping meta-analysis</a>). Having AI draw your thinking for you removes much of what building it would have taught. We think AI fits best where it <strong>points at what is missing</strong> in a structure you have already made. <a href="/think.html">Read more →</a></span></div>
+          </details>
+          </div>
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">내 문서는 어디에 저장되나요?</span><span class="en">Where are my documents stored?</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">설치한 컴퓨터 안에만 저장됩니다. 계정도 서버도 없습니다. 앱이 네트워크를 쓰는 경우는 <strong>새 버전 확인</strong>과 <strong>붙여넣은 링크의 썸네일 가져오기</strong> 두 가지뿐이고, 썸네일은 설정에서 끌 수 있습니다. 연결이 없어도 열기 · 편집 · 저장 · 내보내기가 모두 그대로 동작합니다.</span><span class="en">Only on the computer you installed it on. There is no account and no server. The app uses the network for two things — <strong>checking for updates</strong> and <strong>fetching a thumbnail for a link you pasted</strong> — and thumbnails can be turned off in settings. Opening, editing, saving and exporting all work with no connection at all.</span></div>
+          </details>
+          </div>
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">백업하거나 새 컴퓨터로 옮길 수 있나요?</span><span class="en">Can I back up or move to a new computer?</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">문서와 폴더 구조 전체를 <code>.zip</code> 파일 하나로 내보내 저장할 수 있습니다. 새 컴퓨터에서는 앱을 설치하고 그 파일을 그대로 불러들여 복구하면 됩니다. 문서를 하나씩 <code>.md</code> 로 내보낼 수도 있습니다. 또 새 버전으로 업데이트할 때마다 앱이 먼저 문서를 자동으로 백업해 두고 최근 3회분을 보관합니다.</span><span class="en">Export every document and your folder structure as a single <code>.zip</code>, then restore from that file. On a new machine, install the app and restore the <code>.zip</code>. Individual documents also export as <code>.md</code>. And every time the app updates, it first backs your documents up automatically and keeps the last three.</span></div>
+          </details>
+          </div>
+          <div class="t-node">
+          <details>
+            <summary><span><span class="ko">Windows에서 경고 화면이 뜹니다.</span><span class="en">Windows shows me a warning.</span></span>
+              <svg class="i"><use href="#i-chevron"/></svg></summary>
+            <div class="a"><span class="ko">설치 파일은 코드 서명되어 있어 설치 화면에 게시자 이름 <strong>McNorton&amp;Education</strong> 이 표시됩니다. 다만 서명을 시작한 지 얼마 되지 않아 평판이 쌓이기 전까지는 SmartScreen 경고가 뜰 수 있습니다. 이때는 <strong>추가 정보 → 실행</strong>을 누르면 설치됩니다. "실행" 선택지가 아예 없다면 그 PC는 <strong>스마트 앱 컨트롤</strong>이 켜져 있는 상태입니다 — Windows 11을 새로 설치한 PC에서만 기본으로 켜지며, <strong>설정 → 개인 정보 및 보안 → Windows 보안 → 앱 및 브라우저 컨트롤</strong>에서 확인할 수 있습니다. macOS 빌드는 Apple Developer ID로 서명·공증되어 있어 경고 없이 열립니다.</span><span class="en">The Windows installer is code-signed, so the install screen shows the publisher name <strong>McNorton&amp;Education</strong>. Signing is new, though, so SmartScreen may still warn until the certificate builds reputation — choose <strong>More info → Run anyway</strong> and it installs. If there is no "Run anyway" at all, that PC has <strong>Smart App Control</strong> turned on — it is only on by default on clean installs of Windows 11, and you can check it under <strong>Settings → Privacy &amp; security → Windows Security → App &amp; browser control</strong>. The macOS build is signed and notarised with an Apple Developer ID, so it opens without any warning.</span></div>
+          </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="t-branch b2" id="feedback">
+        <h2 class="t-head"><span class="t-mark" aria-hidden="true">#</span><span class="t-txt"><span class="ko">의견 보내기</span><span class="en">Send feedback</span></span></h2>
+        <div class="t-nodes">
+          <div class="t-node">
+        <form id="feedback-form">
+          <label class="field"><span><span class="ko">분류</span><span class="en">Category</span></span>
+            <select name="category" required>
+              <option value="" data-ko="분류를 선택해 주세요" data-en="Choose a category"></option>
+              <option value="bug" data-ko="버그 및 오류 신고" data-en="Bug or error"></option>
+              <option value="feature" data-ko="기능 요청" data-en="Feature request"></option>
+              <option value="case" data-ko="활용 사례" data-en="Use case"></option>
+              <option value="general" data-ko="그 밖의 이야기" data-en="General feedback"></option>
+            </select></label>
+          <label class="field"><span><span class="ko">내용</span><span class="en">Your message</span></span>
+            <textarea name="message" required maxlength="2000" data-ko="소중한 이야기를 남겨 주세요.&#10;개인정보는 입력하지 말아주세요." data-en="We'd love to hear from you.&#10;Please don't include personal information."></textarea></label>
+          <label class="field"><span><span class="ko">별명(선택)</span><span class="en">Nickname (optional)</span></span>
+            <input type="text" name="nickname" maxlength="30" autocomplete="nickname" data-ko="릴리스 노트에 별명(닉네임)을 남길 수도 있어요" data-en="We may credit you in the release notes"></label>
+          <div class="hp" aria-hidden="true"><label>Leave this blank <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <p class="form-note"><span class="ko">보내 주신 내용은 운영자의 Slack으로 전달됩니다. 작성 중인 문서나 개인정보는 넣지 말아 주세요.</span><span class="en">Your message goes to the developer's Slack. Please don't include your documents or personal information.</span></p>
+          <button class="btn" type="submit"><span class="ko">보내기</span><span class="en">Send</span></button>
+          <p class="status" id="status" role="status"></p>
+        </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</div></main>
+
+<footer><div class="shell">
+  <span>© 2026 McNorton &amp; Education</span>
+  <span class="grow"></span>
+  <a href="https://github.com/mcnorton/thinkdown">GitHub</a>
+  <a href="/think.html">Think</a>
+  <a href="/guide.html"><span class="ko">사용법</span><span class="en">Guide</span></a>
+  <a href="/#pricing"><span class="ko">요금제</span><span class="en">Pricing</span></a>
+  <a href="/helpdesk/#faq"><span class="ko">자주 묻는 질문</span><span class="en">FAQ</span></a>
+  <a href="/helpdesk/" aria-current="page"><span class="ko">도움말</span><span class="en">Help</span></a>
+</div></footer>
+
+<script src="/app.js"></script>
+<script>
+(function () {
+  // 언어 전환은 app.js 가 맡는다. <option> 과 placeholder 에는 .ko/.en span 을 넣을 수 없어 여기서 칠한다.
+  var URL_ = 'https://thinkdown.vercel.app/api/feedback';
+  var root = document.documentElement;
+  var form = document.getElementById('feedback-form');
+  var status = document.getElementById('status');
+  var button = form.querySelector('button');
+  var MSG = {
+    missing: { ko: '분류와 내용을 모두 입력해 주세요.', en: 'Please choose a category and write your message.' },
+    sending: { ko: '보내는 중입니다.', en: 'Sending…' },
+    sent: { ko: '보냈습니다. 고맙습니다.', en: 'Sent. Thank you!' },
+    failed: { ko: '보내지 못했습니다. 인터넷 연결을 확인하고 다시 보내 주세요.', en: "Couldn't send. Please check your connection and try again." }
+  };
+  var lang = function () { return root.getAttribute('data-lang') === 'ko' ? 'ko' : 'en'; };
+  var shown = null;
+  function say(key, cls) { shown = key; status.className = 'status' + (cls ? ' ' + cls : ''); status.textContent = MSG[key][lang()]; }
+  function paint() {
+    var l = lang();
+    [].forEach.call(form.querySelectorAll('option[data-ko]'), function (o) { o.textContent = o.getAttribute('data-' + l); });
+    [].forEach.call(form.querySelectorAll('textarea[data-ko], input[data-ko]'), function (i) { i.placeholder = i.getAttribute('data-' + l); });
+    if (shown) status.textContent = MSG[shown][l];
+  }
+  paint();
+  document.addEventListener('td:lang', paint);
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var category = form.category.value;
+    var message = form.message.value;
+    if (!category || !message.trim()) { say('missing', 'bad'); return; }
+    button.disabled = true;
+    say('sending');
+    try {
+      var res = await fetch(URL_, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category: category, message: message, nickname: form.nickname.value, website: form.website.value, lang: lang() })
+      });
+      if (!res.ok) throw new Error('server');
+      form.reset();
+      say('sent', 'good');
+    } catch (err) {
+      say('failed', 'bad');
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

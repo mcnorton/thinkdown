@@ -1,0 +1,79 @@
+/* Seoul Palace — 단청. 설정 > 외형 > 색상 테마에서 고른다(prefs/palette.js).
+   주어진 색은 모드마다 둘뿐이고(바탕·강조) 나머지 토큰은 그 둘에서 파생했다:
+     바탕 #f2f2f9(240 37% 96%) · 강조 #c1997b(26 36% 62%)
+     바탕 #2a322b(128 9% 18%)  · 강조 #474747(0 0% 28%)
+   가지색(노드 색) 목록은 CSS 에 없다 — prefs/palette.js 가 갖고 인라인 --ct 로 넣는다.
+   라이트 블록의 :not([data-theme="dark"]) 와 손대지 않는 토큰에 대해서는
+   palette-seoul.css 의 머리말 참고. */
+
+:root[data-palette="palace"]:not([data-theme="dark"]) {
+  --background: 240 36.8% 96.3%;     /* #f2f2f9 — 지정색. 정수로 반올림하면 #f1f1f9 가 된다 */
+  --foreground: 240 15% 12%;
+  --card: 240 40% 99%;
+  --card-foreground: 240 15% 12%;
+  --popover: 240 40% 99%;
+  --popover-foreground: 240 15% 12%;
+  --primary: 240 15% 18%;
+  --primary-foreground: 240 30% 98%;
+  --secondary: 30 28% 88%;
+  --secondary-foreground: 26 30% 16%;
+  --muted: 30 28% 88%;
+  --muted-foreground: 26 12% 40%;
+  --accent: 26 36% 62%;
+  --accent-foreground: 26 30% 12%;
+  --border: 240 18% 84%;
+  --input: 240 18% 84%;
+  --ring: 26 36% 45%;
+
+  /* 바탕이 거의 흰색(96%)이라 노드는 더 밝게 띄울 수 없다 — 테두리가 경계를 맡는다. */
+  --node: 0 0% 100%;
+  --node-foreground: 240 15% 12%;
+  --node-body: 240 30% 98%;
+  --node-th: 240 25% 95%;
+  --node-border: 240 15% 84%;
+  --node-heading: 26 50% 93%;
+  --node-heading-border: 26 40% 70%;
+
+  --edge: 26 22% 58%;
+}
+
+:root[data-palette="palace"][data-theme="dark"] {
+  --background: 128 9% 18%;
+  --foreground: 120 10% 96%;
+  --card: 128 9% 26%;
+  --card-foreground: 120 10% 96%;
+  --popover: 128 9% 26%;
+  --popover-foreground: 120 10% 96%;
+  --primary: 120 10% 96%;
+  --primary-foreground: 128 12% 14%;
+  --secondary: 0 0% 28%;
+  --secondary-foreground: 120 10% 96%;
+  --muted: 0 0% 28%;
+  --muted-foreground: 120 6% 72%;
+  /* 다크 강조는 이 팔레트의 가지색 중 하나인 초록(#28a96d)이다 — 회색(#474747)은 너무
+     옅어 선택된 행이 눈에 띄지 않았다. 중간 밝기(L 41%)라 **그 위의 글자는 어둡게** 둔다:
+     흰 글자는 대비가 3.0:1 뿐이고 어두운 잉크는 5.0:1 이다. */
+  --accent: 152 62% 41%;             /* #28a96d — 지정색 */
+  --accent-foreground: 128 25% 10%;
+  --border: 128 8% 32%;
+  --input: 128 8% 32%;
+  --ring: 120 8% 70%;
+
+  --node: 128 9% 26%;
+  --node-foreground: 120 10% 96%;
+  --node-body: 128 9% 29%;
+  --node-th: 128 8% 34%;
+  --node-border: 128 8% 40%;
+  --node-heading: 128 10% 32%;
+  --node-heading-border: 0 0% 45%;
+
+  /* 강조(28%)를 그대로 쓰면 바탕(18%)에 묻힌다 — 선은 보여야 하므로 밝은 쪽으로. */
+  --edge: 120 5% 58%;
+}
+
+/* 캔버스 [색상] 토글의 켜짐 트랙 — 그 팔레트의 가지색을 그대로 보여 준다. */
+:root[data-palette="palace"] {
+  --palette-track: linear-gradient(90deg,
+    #861802, #d36f09, #e6ca69, #f1f000, #4dd7af, #28a96d,
+    #007648, #0080ff, #005eee, #013796);
+}
